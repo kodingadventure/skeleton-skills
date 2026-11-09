@@ -1,0 +1,11 @@
+# Files written by tools, not by hand: folded on the page, never grouped.
+# One fnmatch pattern per line, matched against the repo path and the file name.
+# Portable defaults only: a project lists its own generator outputs in
+# .claude/what-you-did-generated.txt (same format), which skill updates leave alone.
+*.generated.ts
+swagger.json
+swagger.yaml
+yarn.lock
+*.lock
+*.sum
+skills-lock.json

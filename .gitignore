@@ -1,0 +1,7 @@
+# Maintainer-local notes (workspaces, plans, consumer list, catalog
+# maintenance skills). _local/ is its own git repository with a private remote.
+_local/
+
+# Issue tracker (markdown issues per feature) until the repo is opened and
+# issues move to GitHub Issues.
+.scratch/
