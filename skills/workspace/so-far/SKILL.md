@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # So Far
 
-Catch the user up on a **workspace** (a feature folder set up by `kickoff`, `.scratch/plan/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) after they lost the thread: away for a while, or decisions moving faster than they could follow. The output is a **recap page** (HTML, opened in the browser): how the work arrived where it is, told so the user takes back control of the next step. `resume-here` briefs the agent's next move; this skill briefs the person.
+Catch the user up on a **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) after they lost the thread: away for a while, or decisions moving faster than they could follow. The output is a **recap page** (HTML, opened in the browser): how the work arrived where it is, told so the user takes back control of the next step. `resume-here` briefs the agent's next move; this skill briefs the person.
 
 `scripts/recap.py` in this skill's directory does the mechanical work: `new` wraps a drafted `<main>` in the page's styling and fixed strings, `check` turns the wording and layout rules below into errors and warnings. A run ends like this:
 

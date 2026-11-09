@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Kickoff
 
-A **workspace** is one folder per feature or task, `.scratch/plan/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root. The user writes `PRD.md` there and discusses it with an agent; this skill turns that discussion into the three living documents every later agent works from:
+A **workspace** is one folder per feature or task, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root. The user writes `PRD.md` there and discusses it with an agent; this skill turns that discussion into the three living documents every later agent works from:
 
 - `CONTEXT.md`: the refined spec and the **workspace rules** (language, layout, conventions). Every agent reads it first.
 - `TRACKER.md`: progress, decisions, questions, blockers, and the rules for progress reports.

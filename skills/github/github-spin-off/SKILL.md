@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # GitHub Spin Off
 
-`/spin-off` for work that arrives as a GitHub issue. It runs after `/triage` accepted the issue and the work is big enough for a workspace (a folder under the workspace root, `.scratch/plan/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another). Each workspace records its issues in `github.md`, which `/github-send-update` reads.
+`/spin-off` for work that arrives as a GitHub issue. It runs after `/triage` accepted the issue and the work is big enough for a workspace (a folder under the workspace root, `.scratch/workspaces/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another). Each workspace records its issues in `github.md`, which `/github-send-update` reads.
 
 GitHub is read-only here: labels, assignees, and state stay as they are.
 

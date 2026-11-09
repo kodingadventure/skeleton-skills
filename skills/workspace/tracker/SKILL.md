@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Tracker
 
-Works on the `TRACKER.md` of a **workspace** (a feature folder set up by `kickoff`, `.scratch/plan/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root).
+Works on the `TRACKER.md` of a **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root).
 
 ## Before any command
 

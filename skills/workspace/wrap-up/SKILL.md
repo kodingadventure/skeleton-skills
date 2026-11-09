@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Wrap Up
 
-The last stage of a **workspace** (a feature folder set up by `kickoff`, `.scratch/plan/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root). The folder is deleted after this, so anything still only in it is about to be lost: this skill is the sweep that moves what must survive into the committed repo.
+The last stage of a **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root). The folder is deleted after this, so anything still only in it is about to be lost: this skill is the sweep that moves what must survive into the committed repo.
 
 It is a sweep, not the main transfer. Decisions become ADRs as the code that embodies them lands (`execute-plan` Step C / `review-phase`), and shipped behaviour is documented as it ships. What reaches this skill is the remainder.
 

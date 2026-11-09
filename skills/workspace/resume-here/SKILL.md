@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Resume Here
 
-Pick up a **workspace** (a feature folder set up by `kickoff`, `.scratch/plan/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) where `pause-here` left it.
+Pick up a **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) where `pause-here` left it.
 
 ## Steps
 

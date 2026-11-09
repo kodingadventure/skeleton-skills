@@ -13,7 +13,7 @@ Drafts one chat message the user copies into the team chat (Discord, Slack, …;
 ## Inputs
 
 - **TEAM.md**: `.scratch/TEAM.md` (or `TEAM.md` at the root the repo's `CLAUDE.md` / `AGENTS.md` names for `.scratch`). Missing → create it with the first person you are asked to write to. One `## <Name>` section per person with fields such as Role, Language, Tone, Technical detail, Channel, Example messages. Fields the entry has win over the defaults below.
-- **Source**: a path (usually `.scratch/plan/<slug>/questions/<file>.md`; also WHATNEXT, TRACKER, a finding) or a free-text topic.
+- **Source**: a path (usually `.scratch/workspaces/<slug>/questions/<file>.md`; also WHATNEXT, TRACKER, a finding) or a free-text topic.
 - **Who**: optional. When omitted, take it from the source's `For:` line. Neither given → ask.
 
 ## Steps

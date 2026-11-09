@@ -7,7 +7,7 @@ disable-model-invocation: false
 
 # Pause Here
 
-Leave the **workspace** (a feature folder set up by `kickoff`, `.scratch/plan/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) so that a fresh agent picks up exactly where the work stands by reading `CONTEXT.md` and `WHATNEXT.md`, and nothing else unless a step needs it.
+Leave the **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) so that a fresh agent picks up exactly where the work stands by reading `CONTEXT.md` and `WHATNEXT.md`, and nothing else unless a step needs it.
 
 Two cases, same steps:
 

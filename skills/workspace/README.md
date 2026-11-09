@@ -15,7 +15,7 @@ Feature workspaces: one git-ignored folder per feature or task, from a hand-writ
 ## The flow
 
 ```
-0. User writes PRD.md             .scratch/plan/<slug>/PRD.md (+ input files)
+0. User writes PRD.md             .scratch/workspaces/<slug>/PRD.md (+ input files)
 1. Discuss the PRD                free, or /grill-me
 2. /kickoff <slug>                CONTEXT.md, TRACKER.md, WHATNEXT.md, layout, INDEX.md row
 3. /to-plan                       plans/01-<name>/IMPLEMENTATION_PLAN.md (+ phases/)
@@ -34,7 +34,7 @@ Feature workspaces: one git-ignored folder per feature or task, from a hand-writ
 ## Layout
 
 ```
-.scratch/plan/
+.scratch/workspaces/
   INDEX.md                  # one row per workspace (English): active, seeded, shipped
   <slug>/
     PRD.md                  # written by the user
@@ -45,7 +45,7 @@ Feature workspaces: one git-ignored folder per feature or task, from a hand-writ
     findings/  questions/  handoffs/  reports/  docs/  logs/ (optional)
 ```
 
-The root is `.scratch/plan/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another. It must be git-ignored by the main repo; giving `.scratch/` its own git repository keeps a history of the notes after a workspace is deleted (the skills never run git inside it).
+The root is `.scratch/workspaces/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another. It must be git-ignored by the main repo; giving `.scratch/` its own git repository keeps a history of the notes after a workspace is deleted (the skills never run git inside it).
 
 The user picks the root once, on the repo's first workspace, and `spin-off` or `kickoff` writes it as a `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, which every skill and the commit reminder hook read: `kickoff/references/workspace-root.md`.
 

@@ -6,7 +6,7 @@ argument-hint: "[<workspace> | new <slug>] [topic]"
 
 # Spin Off
 
-A long session wandered through many things, and one of them deserves its own focus. This skill moves that **thread** into a **workspace** (a feature folder set up by `kickoff`, `.scratch/plan/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root), so a later agent can pick it up from the workspace's files alone, without this conversation.
+A long session wandered through many things, and one of them deserves its own focus. This skill moves that **thread** into a **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root), so a later agent can pick it up from the workspace's files alone, without this conversation.
 
 The thread is a **slice**: only what belongs to it moves. The rest of the session stays out of the workspace, and out of its tracker and the reports built from it.
 
@@ -59,7 +59,7 @@ Done when: a fresh agent reading `CONTEXT.md`, `WHATNEXT.md` and the brief can t
 
 ### 4. Seed a new workspace
 
-**First workspace in this repo** (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `.scratch/plan/INDEX.md`): ask the user once where workspaces live — `.scratch/plan/` (the default) or a folder they name — and write the answer as that line, per `.claude/skills/kickoff/references/workspace-root.md`. List the instructions-file edit among the files written: it is a repo change to commit.
+**First workspace in this repo** (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `.scratch/workspaces/INDEX.md`): ask the user once where workspaces live — `.scratch/workspaces/` (the default) or a folder they name — and write the answer as that line, per `.claude/skills/kickoff/references/workspace-root.md`. List the instructions-file edit among the files written: it is a repo change to commit.
 
 Create `<root>/<slug>/` and check it is git-ignored (`git check-ignore`). Write in the language the user speaks in this conversation: `kickoff` takes the workspace language from the PRD's prose.
 

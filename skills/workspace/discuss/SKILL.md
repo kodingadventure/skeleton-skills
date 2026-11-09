@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Discuss
 
-Talk about a **workspace** (a feature folder set up by `kickoff`, or seeded by `spin-off` and not kicked off yet; `.scratch/plan/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) without starting work on it. `resume-here` takes the next step; this skill thinks about it instead, and makes sure nothing the discussion settles is lost.
+Talk about a **workspace** (a feature folder set up by `kickoff`, or seeded by `spin-off` and not kicked off yet; `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) without starting work on it. `resume-here` takes the next step; this skill thinks about it instead, and makes sure nothing the discussion settles is lost.
 
 ## Resolving the workspace
 

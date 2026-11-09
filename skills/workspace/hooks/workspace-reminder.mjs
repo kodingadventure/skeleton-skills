@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // PostToolUse hook (matcher: Bash) for the feature workspace skills.
 //
-// After a `git commit`, when `.scratch/plan/INDEX.md` lists active
+// After a `git commit`, when `.scratch/workspaces/INDEX.md` lists active
 // workspaces, it reminds the agent to keep the matching workspace current
 // (WHATNEXT.md, TRACKER.md, the INDEX.md row). A session that never opened
 // the workspace does not know its conventions; this is the nudge it misses.
@@ -14,7 +14,7 @@
 //     "timeout": 10 }] }] }
 // The workspace root is WORKSPACE_ROOT (relative to the project directory)
 // when set, else the `Workspace root:` line of the project's CLAUDE.md or
-// AGENTS.md (see kickoff/references/workspace-root.md), else .scratch/plan.
+// AGENTS.md (see kickoff/references/workspace-root.md), else .scratch/workspaces.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -65,7 +65,7 @@ function workspaceRoot(projectDir) {
     const root = rootFromInstructions(fs.readFileSync(file, "utf8"));
     if (root) return root;
   }
-  return ".scratch/plan";
+  return ".scratch/workspaces";
 }
 
 function main() {

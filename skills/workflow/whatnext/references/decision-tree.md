@@ -25,7 +25,7 @@
 
 | Completed                                                                                                                                    | Next → Skill                                                                     |
 | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| PRD discussed in a `.scratch/plan/<slug>/` workspace without `CONTEXT.md`, or still under `## Seeded` in `INDEX.md` (a seed from `spin-off`) | Set up the workspace → `/kickoff <slug>`                                         |
+| PRD discussed in a `.scratch/workspaces/<slug>/` workspace without `CONTEXT.md`, or still under `## Seeded` in `INDEX.md` (a seed from `spin-off`) | Set up the workspace → `/kickoff <slug>`                                         |
 | Spec written                                                                                                                                 | Plan directly → `/to-plan`, or break into tickets → `/to-tickets` (if installed) |
 | Spec/request is one feature to build end to end (backend + frontend + tests + docs)                                                          | Orchestrate → `/orchestrate-feature` (if installed)                              |
 | Issues created                                                                                                                               | Plan first issue → `/to-plan <path>`                                             |
@@ -38,7 +38,7 @@
 
 ## Workspace sessions
 
-Feature workspaces (`.scratch/plan/<slug>/`, set up by `/kickoff`) — only when the workspace skills are installed.
+Feature workspaces (`.scratch/workspaces/<slug>/`, set up by `/kickoff`) — only when the workspace skills are installed.
 
 | Situation                                                                     | Next → Skill                                                                          |
 | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
