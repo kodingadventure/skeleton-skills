@@ -1,7 +1,7 @@
 ---
 name: so-far
-description: Recaps a workspace for the user — what was done and decided, where they approved unread or skipped a review, why the next step is next, and what it needs from them. Read-only. Use when the user lost the thread of a workspace ("kemarin kita ngapain?").
-argument-hint: "<workspace> [period, e.g. kemarin, minggu ini]"
+description: Run only when the user asks for it by name. Recaps a workspace for the user — what was done and decided, where they approved unread or skipped a review, why the next step is next, and what it needs from them. Read-only. Use when the user lost the thread of a workspace ("what did we do yesterday?", "kemarin kita ngapain?").
+argument-hint: "<workspace> [period, e.g. yesterday, this week]"
 disable-model-invocation: true
 ---
 
@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 Catch the user up on a **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) after they lost the thread: away for a while, or decisions moving faster than they could follow. The output is a **recap page** (HTML, opened in the browser): how the work arrived where it is, told so the user takes back control of the next step. `resume-here` briefs the agent's next move; this skill briefs the person.
 
-`scripts/recap.py` in this skill's directory does the mechanical work: `new` wraps a drafted `<main>` in the page's styling and fixed strings, `check` turns the wording and layout rules below into errors and warnings. A run ends like this:
+`scripts/recap.py` in this skill's directory does the mechanical work: `new` wraps a drafted `<main>` in the page's styling and fixed strings, `check` turns the wording and layout rules below into errors and warnings. If `python3` is not on the PATH, use `python` or `py` instead. A run ends like this:
 
 ```bash
 python3 <skill-dir>/scripts/recap.py new repo-foundation --lang id --main <draft>/main.html
@@ -41,7 +41,7 @@ Never pick between two live workspaces. Name the one you resolved in one line: `
    - no period → the whole workspace: the earliest date in the tracker's Action Log to today.
 3. The history inside the window:
    - the tracker's Action Log rows dated in the window (`TRACKER.md`);
-   - the repo's commits, with times, run from the repo root with the window's dates (here, a one-day window):
+   - the repo's commits, with times, run from the repo root with the window's dates (here, a one-day window; not a git repository → skip the commits and say so on the page):
 
      ```bash
      git log --reverse --since="2026-10-27 00:00" --until="2026-10-27 23:59" \
@@ -100,6 +100,6 @@ Done when: the check prints `ok` or only warnings you can justify, the page is o
 
 ### 4. Boundaries and close
 
-Read-only toward the repo and the workspace: no workspace file writes, no commits. The only files written are the draft and the page in the OS temp directory: `recap.py new` writes one new file under `<tmpdir>/so-far/`, `check` only reads, and neither touches the network. The opened page loads fonts from Google Fonts and runs only the template's own script; it sits unencrypted in the temp directory, so put nothing secret on it. A user who decides something in reply has started a discussion: record it per step 3 of `.claude/skills/discuss/SKILL.md`.
+Read-only toward the repo and the workspace: no workspace file writes, no commits. The only files written are the draft and the page in the OS temp directory: `recap.py new` writes one new file under `<tmpdir>/so-far/`, `check` only reads, and neither touches the network. The opened page loads fonts from Google Fonts and runs only the template's own script; it sits unencrypted in the temp directory, so put nothing secret on it. A user who decides something in reply has started a discussion: record it as the `discuss` skill's "Record before the end" step says.
 
 Close with the line to continue: `/resume-here <slug>` to start the next step, or `/discuss <slug> <topic>` to talk one through first.

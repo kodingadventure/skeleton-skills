@@ -7,13 +7,14 @@ formatting alone.
 
 ## Gates
 
-| Touched path                      | Gate                                                                                          |
-| --------------------------------- | --------------------------------------------------------------------------------------------- |
-| `skills/**`, `plugins/**`         | `npm run format:check`                                                                        |
-| `**/*.mjs`                        | `node --check <file>` per changed file                                                        |
-| `**/*.py`                         | `python3 -m py_compile <file>` per changed file                                               |
-| `**/.claude-plugin/*.json`        | `node -e "JSON.parse(require('fs').readFileSync('<file>','utf8'))"` per changed file          |
-| `docs/**`, `.scratch/**`, `README.md` | none — `.prettierignore` excludes them                                                    |
+| Touched path                          | Gate                                                                                 |
+| ------------------------------------- | ------------------------------------------------------------------------------------ |
+| `skills/**`, `plugins/**`             | `npm run format:check`                                                               |
+| `**/*.mjs`                            | `node --check <file>` per changed file                                               |
+| `skills/workspace/hooks/**`           | `node --test "skills/workspace/hooks/*.test.mjs"`                                    |
+| `**/*.py`                             | `python3 -m py_compile <file>` per changed file                                      |
+| `**/.claude-plugin/*.json`            | `node -e "JSON.parse(require('fs').readFileSync('<file>','utf8'))"` per changed file |
+| `docs/**`, `.scratch/**`, `README.md` | none — `.prettierignore` excludes them                                               |
 
 `npm run format:check` is `prettier --check skills/ plugins/`. It covers both trees at
 once, so run it once per phase rather than per file. Fix with `npm run format`.
@@ -43,11 +44,11 @@ on their own.
 
 ## Surfaces
 
-| Change reaches                    | Surface                                                                                         |
-| --------------------------------- | ----------------------------------------------------------------------------------------------- |
-| A skill's `SKILL.md` frontmatter  | `skills add <repo path> --list` from a scratch dir — the listing must show it                    |
-| `.claude-plugin/marketplace.json` | same listing — every entry must resolve to a directory that exists                               |
-| A skill's body or references      | invoke the skill in a session and confirm it reaches the material it points at                  |
+| Change reaches                    | Surface                                                                        |
+| --------------------------------- | ------------------------------------------------------------------------------ |
+| A skill's `SKILL.md` frontmatter  | `skills add <repo path> --list` from a scratch dir — the listing must show it  |
+| `.claude-plugin/marketplace.json` | same listing — every entry must resolve to a directory that exists             |
+| A skill's body or references      | invoke the skill in a session and confirm it reaches the material it points at |
 
 A skill whose text changed has no automated surface: the gate proves it is formatted,
 not that it still works. When a phase rewrites a skill's workflow, say so in the

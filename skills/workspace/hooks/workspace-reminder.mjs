@@ -12,6 +12,7 @@
 //     "type": "command",
 //     "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/workspace-reminder.mjs\"",
 //     "timeout": 10 }] }] }
+// A ready-to-copy version of this block is settings-snippet.json next to this file.
 // The workspace root is WORKSPACE_ROOT (relative to the project directory)
 // when set, else the `Workspace root:` line of the project's CLAUDE.md or
 // AGENTS.md (see kickoff/references/workspace-root.md), else .scratch/workspaces.
@@ -68,6 +69,27 @@ function workspaceRoot(projectDir) {
   return ".scratch/workspaces";
 }
 
+// True when the commit runs from a directory inside the workspace root (or
+// inside `.scratch`), found by following the command's `cd <dir>` and
+// `git -C <dir>` targets as paths. A folder name that merely appears
+// elsewhere in the command does not count.
+export function commitsInsideRoot(command, projectDir, root) {
+  const rootAbs = path.resolve(projectDir, root);
+  const scratchAbs = path.resolve(projectDir, ".scratch");
+  const inside = (dir, base) => {
+    const rel = path.relative(base, dir);
+    return rel === "" || (!rel.startsWith("..") && !path.isAbsolute(rel));
+  };
+  const target = /(?:\bcd\s+|\bgit\s+(?:\S+\s+)*?-C\s+)("[^"]+"|'[^']+'|[^\s;&|]+)/g;
+  let dir = path.resolve(projectDir);
+  let moved = false;
+  for (const m of command.matchAll(target)) {
+    dir = path.resolve(dir, m[1].replace(/^["']|["']$/g, ""));
+    moved = true;
+  }
+  return moved && (inside(dir, rootAbs) || inside(dir, scratchAbs));
+}
+
 function main() {
   const input = readStdin();
   const command = input?.tool_input?.command ?? "";
@@ -76,8 +98,7 @@ function main() {
   const projectDir = process.env.CLAUDE_PROJECT_DIR || input?.cwd || ".";
   const root = workspaceRoot(projectDir);
   // A commit inside the workspace root's own repository is not project work.
-  const top = root.split("/")[0];
-  if ((/\.scratch\b/.test(command) || command.includes(top)) && /\bcd\b|-C\b/.test(command)) return;
+  if (commitsInsideRoot(command, projectDir, root)) return;
   const indexPath = path.join(projectDir, root, "INDEX.md");
   if (!fs.existsSync(indexPath)) return;
 

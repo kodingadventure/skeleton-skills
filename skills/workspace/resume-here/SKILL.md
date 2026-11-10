@@ -1,6 +1,6 @@
 ---
 name: resume-here
-description: Resume work on a workspace in a fresh session — reads WHATNEXT.md, CONTEXT.md and the linked handoff, reconciles drift with the repo, briefs the user, then starts the first next step.
+description: Run only when the user asks for it by name. Resume work on a workspace in a fresh session — reads WHATNEXT.md, CONTEXT.md and the linked handoff, reconciles drift with the repo, briefs the user, then starts the first next step.
 argument-hint: "<workspace> [what to do today, if different]"
 disable-model-invocation: true
 ---
@@ -29,7 +29,7 @@ Done when: you can state the first next step, who acts on it, and every guardrai
 
 ### 3. Check for drift
 
-Compare `## State now` with the repo, read-only: `git branch --show-current`, `git log --oneline <recorded commit>..HEAD`, `git status --short`. Note each mismatch: a different branch, commits made since, uncommitted files that appeared or vanished.
+Compare `## State now` with the repo, read-only: `git branch --show-current`, `git log --oneline <recorded commit>..HEAD`, `git status --short`. Not a git repository → skip this and say "not a git repo" in the brief. Note each mismatch: a different branch, commits made since, uncommitted files that appeared or vanished.
 
 Drift means work happened after `WHATNEXT.md` was written. Map each new commit (and each plan checkbox ticked since) to the next steps: done, partly done, or unrelated. Anything you cannot place is a question for the user, not a guess.
 
@@ -46,10 +46,10 @@ In the workspace language, short:
 
 ### 5. Start
 
-**Drift first.** Once the user confirms the mapping, bring the workspace up to date with steps 2–6 of `.claude/skills/pause-here/SKILL.md`, then re-read the new next step 1.
+**Drift first.** Once the user confirms the mapping, bring the workspace up to date with the `pause-here` skill's steps from "Reconcile what happened" to "Rewrite `WHATNEXT.md`" (if the `pause-here` skill is not installed, update `WHATNEXT.md` State now and Next steps, and the `INDEX.md` row), then re-read the new next step 1.
 
 Take next step 1 (or what the argument asks for instead), under the repo's own rules and the guardrails. A step that belongs to the user — a manual test, a decision, a message to someone — becomes guidance: tell them exactly what to do and what to report back.
 
-From here on, the workspace's conventions in `CONTEXT.md` apply: settled decisions go into `CONTEXT.md` (with their `ADR:` tag) and `TRACKER.md`, each finished next step updates `WHATNEXT.md` and this workspace's row in the root `INDEX.md` — by rewriting `State now` and `Next steps`, never by patching around them: a finished step is deleted (not struck through, not kept as "done" or numbered 0), and a half-done step keeps only what remains (the full rules are in step 6 of `.claude/skills/pause-here/SKILL.md`) — and `/pause-here` closes the session when those files are behind (new findings, open questions, a half-done step, a handoff to write). If every finished step already updated them as it went, the session can end without it: the next `/resume-here` reads the same files.
+From here on, the workspace's conventions in `CONTEXT.md` apply: settled decisions go into `CONTEXT.md` (with their `ADR:` tag) and `TRACKER.md`, each finished next step updates `WHATNEXT.md` and this workspace's row in the root `INDEX.md` — by rewriting `State now` and `Next steps`, never by patching around them: a finished step is deleted (not struck through, not kept as "done" or numbered 0), and a half-done step keeps only what remains (the full rules are in the `pause-here` skill's "Rewrite `WHATNEXT.md`" step) — and `/pause-here` closes the session when those files are behind (new findings, open questions, a half-done step, a handoff to write). If every finished step already updated them as it went, the session can end without it: the next `/resume-here` reads the same files.
 
 Two neighbours of this skill: the user who wants to think a topic through rather than work on it → `/discuss <slug> <topic>`; every work item `done` → `/wrap-up <slug>`.

@@ -1,6 +1,6 @@
 ---
 name: discuss
-description: Open a discussion about a feature workspace's topic — loads CONTEXT.md, WHATNEXT.md and only the files the topic touches, then talks it through and records whatever gets settled. No code changes, no commits.
+description: Run only when the user asks for it by name. Open a discussion about a feature workspace's topic — loads CONTEXT.md, WHATNEXT.md and only the files the topic touches, then talks it through and records whatever gets settled. No code changes, no commits.
 argument-hint: "<workspace> [topic]"
 disable-model-invocation: true
 ---
@@ -47,8 +47,8 @@ In the workspace language. Lead with what the existing decisions and findings al
 
 A discussion that changes nothing on disk is how decisions get lost. Before your closing message, write down whatever the discussion produced, in the workspace's own language and format:
 
-- **Settled something** → a `## Decisions` entry in `CONTEXT.md`, carrying its `ADR:` tag (see `## Conventions` there), plus a Decision row and an Action Log row in `TRACKER.md`, unticked.
-- **A question for someone outside the session** → its file in `questions/`, its `TRACKER.md` row and its `CONTEXT.md` index line (format: the files already in `questions/`, else `.claude/skills/kickoff/references/question-template.md`). `/msg <file>` drafts the message.
+- **Settled something** → a `## Decisions` entry in `CONTEXT.md`, carrying its `ADR:` tag (see `## Conventions` there), plus a Decision row and an Action Log row in `TRACKER.md`, unticked. Say in the entry how the user decided, in the words `so-far` looks for: "after reviewing" / "saat meninjau" (read the material and chose), "without reviewing" / "tanpa meninjaunya" (approved unread), skipped (waived a scheduled checkpoint or review), "agree to all" / "setuju semua" (accepted a proposal, nothing said about reading it). Where the user said none of this, add nothing and do not guess.
+- **A question for someone outside the session** → its file in `questions/`, its `TRACKER.md` row and its `CONTEXT.md` index line (format: the files already in `questions/`, else [`references/question-template.md`](references/question-template.md)). `/msg <file>` drafts the message.
 - **A discovery a later agent must not re-learn** → `findings/YYYY-MM-DD-<topic>.md`, with its one-line entry and `scope:` tag in `CONTEXT.md` `## Findings`.
 - **Changed what comes next** → rewrite the affected part of `WHATNEXT.md` (Next steps, Waiting on) and refresh the workspace's `INDEX.md` row.
 - **Settled nothing** → say so, and write nothing.

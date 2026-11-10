@@ -1,7 +1,8 @@
 ---
 name: spin-off
-description: Carves one thread out of the current session and hands it to a feature workspace, an existing one or a new one seeded for /kickoff. Use when the user wants a thread moved out of this session ("spin this off", "pisahin ke workspace"), or asks to keep a settled design for later in its own workspace.
+description: Carves one thread out of the current session and hands it to a feature workspace, an existing one or a new one seeded for /kickoff. Use when the user wants a thread moved out of this session ("split this into its own workspace", "spin this off", "pisahin ke workspace"), or asks to keep a settled design for later in its own workspace. Not for GitHub issues — that is `github-spin-off`.
 argument-hint: "[<workspace> | new <slug>] [topic]"
+disable-model-invocation: false
 ---
 
 # Spin Off
@@ -26,7 +27,7 @@ From the topic in the argument, or, with none, from what the conversation was la
 - **Out**: the other things this session dealt with, named in a few words each, so the user sees the boundary.
 - **Open**: what is still unknown or undecided.
 
-Read the repo for the "changed" part rather than relying on memory: `git log --oneline` for this session's commits, `git status --short` for uncommitted files. When the conversation was summarized and the early detail is thin, say which parts come from the summary and the repo, and ask the user for what is missing.
+Read the repo for the "changed" part rather than relying on memory: `git log --oneline` for this session's commits, `git status --short` for uncommitted files (not a git repository → skip this and write "not a git repo" in the brief). When the conversation was summarized and the early detail is thin, say which parts come from the summary and the repo, and ask the user for what is missing.
 
 Done when: the user has confirmed the slice, every commit and file listed under **In** is checked against the repo, and every uncommitted file is assigned to the thread or to the rest of the session.
 
@@ -46,7 +47,7 @@ Write, in the workspace language and the format of the files already there:
 
 - **The brief** as `handoffs/YYYY-MM-DD-<topic>.md` (shape below).
 - **Findings** → one `findings/YYYY-MM-DD-<topic>.md` per discovery, with its one-line `scope:` entry in `CONTEXT.md` `## Findings`.
-- **Questions** for someone outside the session → their file in `questions/`, their `TRACKER.md` row and their `CONTEXT.md` index line (format: the files already in `questions/`, else `.claude/skills/kickoff/references/question-template.md`).
+- **Questions** for someone outside the session → their file in `questions/`, their `TRACKER.md` row and their `CONTEXT.md` index line (format: the files already in `questions/`, else [`references/question-template.md`](references/question-template.md)).
 - **Decisions** the session settled for this feature → `CONTEXT.md` `## Decisions` with their `ADR:` tag, plus a Decision row in `TRACKER.md`.
 - **Commits** from the slice that already moved this feature's work → Action Log rows under the tracker's `## How this tracker works`. Work from the rest of the session gets no row: the Action Log feeds the stakeholder's report.
 - **A new work item** only when the user says yes, its weight set by the tracker's own rules.
@@ -59,15 +60,15 @@ Done when: a fresh agent reading `CONTEXT.md`, `WHATNEXT.md` and the brief can t
 
 ### 4. Seed a new workspace
 
-**First workspace in this repo** (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `.scratch/workspaces/INDEX.md`): ask the user once where workspaces live — `.scratch/workspaces/` (the default) or a folder they name — and write the answer as that line, per `.claude/skills/kickoff/references/workspace-root.md`. List the instructions-file edit among the files written: it is a repo change to commit.
+**First workspace in this repo** (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `.scratch/workspaces/INDEX.md`): ask the user once where workspaces live — `.scratch/workspaces/` (the default) or a folder they name — and write the answer as that line, per [`references/workspace-root.md`](references/workspace-root.md). List the instructions-file edit among the files written: it is a repo change to commit.
 
 Create `<root>/<slug>/` and check it is git-ignored (`git check-ignore`). Write in the language the user speaks in this conversation: `kickoff` takes the workspace language from the PRD's prose.
 
 - **`PRD.md`**: the seed — the problem, why it matters, what is known, what is open, what is out of scope. First line: `Seeded by /spin-off on YYYY-MM-DD from a session about <one line>. Refine before /kickoff.` The user owns it from here.
 - **The brief** as `docs/YYYY-MM-DD-<topic>-origin.md` (shape below). Findings and questions stay inside it: `kickoff` turns them into files.
-- **`INDEX.md`**: a row under `## Seeded` — slug, goal in one line, today's date, areas — in English. Create the section above `## Shipped` when it is missing; a missing `INDEX.md` starts from `.claude/skills/kickoff/references/index-template.md`. Before writing, compare the areas with every `## Active` row and tell the user about any overlap.
+- **`INDEX.md`**: a row under `## Seeded` — slug, goal in one line, today's date, areas — in English. Create the section above `## Shipped` when it is missing; a missing `INDEX.md` starts from [`references/index-template.md`](references/index-template.md). Before writing, compare the areas with every `## Active` row and tell the user about any overlap.
 
-- **`CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`** in minimal form, from `.claude/skills/kickoff/references/`, so that `/discuss` has somewhere to record. Fill what the thread already answers and write `TBD (kickoff)` for what is the user's to answer; never guess it.
+- **`CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`** in minimal form, shaped by the `kickoff` skill's `references/context-template.md` and `references/tracker-template.md` and by [`references/whatnext-template.md`](references/whatnext-template.md) (if the `kickoff` skill is not installed, keep the headings the other workspace skills name: `## Workspace rules`, `## Summary`, `## Decisions`, `## Findings`, `## Open questions`), so that `/discuss` has somewhere to record. Fill what the thread already answers and write `TBD (kickoff)` for what is the user's to answer; never guess it.
   - `CONTEXT.md`: `## Workspace rules` complete (the language of this conversation; exceptions the user stated; the layout, with the root's own-repository note when it applies); `## Summary` = `TBD (kickoff)` plus a pointer to `PRD.md` and the brief; `## Decisions` = the decisions the thread settled, each with its `ADR:` tag; the other sections empty.
   - `TRACKER.md`: baseline 0; report audience `TBD (kickoff)`; one **placeholder work item** of weight 100, `Refine the PRD, then run /kickoff`, status `todo`; a Decision row per decision above; every row unticked.
   - `WHATNEXT.md`: next steps `1.` the user shapes the PRD with `/discuss <slug>`, `2.` `/kickoff <slug>` fills the `TBD (kickoff)` fields and replaces the placeholder work item; waiting on the user.

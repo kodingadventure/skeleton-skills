@@ -1,6 +1,6 @@
 ---
 name: pause-here
-description: Brings a workspace's WHATNEXT.md, TRACKER.md, findings and questions up to date, with a handoff when needed. Use when the user stops for now ("udahan dulu", "lanjut besok", "stop for today"), or when WHATNEXT.md is stale because work happened without it ("phase 4 sudah selesai", "update WHATNEXT").
+description: Brings a workspace's WHATNEXT.md, TRACKER.md, findings and questions up to date, with a handoff when needed. Use when the user stops for now ("stop for today", "pick this up tomorrow", "udahan dulu", "lanjut besok"), or when WHATNEXT.md is stale because work happened without it ("update WHATNEXT", "phase 4 is done", "phase 4 sudah selesai").
 argument-hint: "<workspace> [what happened, or what the next session will focus on]"
 disable-model-invocation: false
 ---
@@ -18,11 +18,11 @@ Two cases, same steps:
 
 ### 1. Locate and read
 
-Resolve the workspace in the same order as every workspace skill: the slug or path in the argument (in any position); else the workspace this conversation has already been working in; else `INDEX.md` at the workspace root, the only row under `## Active` (no `INDEX.md` → the only `*/WHATNEXT.md` under the root); else ask, listing the `## Active` rows. Never pick between two live workspaces, and name the one you resolved in one line (`Workspace: <slug>`) before writing anything.
+Resolve the workspace in the same order as every workspace skill: the slug or path in the argument (in any position); else the workspace this conversation has already been working in; else `INDEX.md` at the workspace root, the only row under `## Active` (no `INDEX.md` → the only `*/WHATNEXT.md` under the root); else ask, listing the `## Active` rows. If there is no workspace root, no `INDEX.md`, or neither a `## Active` row nor any `*/WHATNEXT.md`, reply in one sentence ("No workspace here; `kickoff` starts one.") and stop without writing any file. Never pick between two live workspaces, and name the one you resolved in one line (`Workspace: <slug>`) before writing anything.
 
 Read `CONTEXT.md` (`## Workspace rules` names the languages and the layout), `TRACKER.md` and `WHATNEXT.md`.
 
-Capture the repo state, read-only: `git branch --show-current`, `git status --short`, and `git log --oneline <last commit in WHATNEXT's state>..HEAD` (or `-10` when it names none).
+Capture the repo state, read-only: `git branch --show-current`, `git status --short`, and `git log --oneline <last commit in WHATNEXT's state>..HEAD` (or `-10` when it names none). Not a git repository → skip this and write "not a git repo" in State now.
 
 Done when: you know the workspace, its languages, the branch, the uncommitted files and every commit since the last WHATNEXT.
 
@@ -54,8 +54,8 @@ Done when: every action, status change and settled question has its row.
 ### 4. Record findings and questions
 
 - A **finding** is a discovery a later agent must not re-learn the hard way: a test result, a root cause, a dead end and why it failed, a tool or device gotcha. Each new one gets `findings/YYYY-MM-DD-<topic>.md` (what was observed, the evidence such as log lines or commands, what it means, what follows from it) and a one-line entry in `CONTEXT.md` `## Findings` carrying its `scope:` tag (`scope: workspace`, or `repo: <path>` once its content has moved into the repo). An existing finding that moved gets updated in place.
-- A **question** someone outside this session must answer gets its file in `questions/`, its tracker row and its index line, in the format of the files already in `questions/` (an empty folder → `.claude/skills/kickoff/references/question-template.md`). A question settled in this session gets its file updated (status, answer, consequences).
-- Decisions settled in this session go into `CONTEXT.md` `## Decisions`, each with its `ADR:` tag (the criteria are in `### Conventions` there). A `candidate` whose code has already landed and that still has no ADR becomes a next step in `WHATNEXT.md` — written with `domain-modeling` (from `mattpocock/skills`) in the next session, not left to `/wrap-up` when the reasoning has gone cold.
+- A **question** someone outside this session must answer gets its file in `questions/`, its tracker row and its index line, in the format of the files already in `questions/` (an empty folder → [`references/question-template.md`](references/question-template.md)). A question settled in this session gets its file updated (status, answer, consequences).
+- Decisions settled in this session go into `CONTEXT.md` `## Decisions`, each with its `ADR:` tag (the criteria are in `### Conventions` there) and how the user decided it, in the words `so-far` looks for ("after reviewing" / "saat meninjau", "without reviewing" / "tanpa meninjaunya", skipped, "agree to all" / "setuju semua"; where the user said none of this, add nothing and do not guess). A `candidate` whose code has already landed and that still has no ADR becomes a next step in `WHATNEXT.md` — written with `domain-modeling` (from `mattpocock/skills`) in the next session, not left to `/wrap-up` when the reasoning has gone cold.
 
 Done when: every discovery lives in exactly one finding file, every open question in exactly one question file, and `CONTEXT.md` lists both.
 
@@ -74,7 +74,7 @@ Done when: either a handoff exists that covers every bullet above that applies, 
 
 ### 6. Rewrite `WHATNEXT.md`
 
-Overwrite it, keeping its section headings (the shape is in `.claude/skills/kickoff/references/whatnext-template.md`). Fill:
+Overwrite it, keeping its section headings (the shape is in [`references/whatnext-template.md`](references/whatnext-template.md)). Fill:
 
 - **How to resume**: the reading order, naming the new handoff if one was written. Mark an older handoff whose plan is finished as not needed.
 - **State now**: progress %, the items in progress, branch, last commit, uncommitted files and why.

@@ -34,7 +34,12 @@ VOID = {"input", "br", "meta", "link", "img", "hr", "source", "wbr"}
 def load_strings(lang):
     path = STRINGS / f"{lang}.json"
     if not path.exists():
-        sys.exit(f"No strings for '{lang}'. Add {path} by copying en.json and translating it.")
+        print(
+            f"warning: no strings for '{lang}'; falling back to 'en'. "
+            f"Add {path} by copying en.json and translating it.",
+            file=sys.stderr,
+        )
+        path = STRINGS / "en.json"
     return path, json.loads(path.read_text(encoding="utf-8"))
 
 
