@@ -8,6 +8,10 @@
 
 Issues and specs live as markdown files under `.scratch/<feature-slug>/` (gitignored).
 
+### Adding or changing a skill
+
+Gates and sequencing: `docs/agents/verify.md`. Steps for a new skill (group, manifest, README bullet, invocation choice): `docs/agents/publish-skill.md`. Known failure modes: `docs/agents/failure-modes.md`.
+
 ### Feature workspaces
 
 Workspace root: `_local/workspaces/`

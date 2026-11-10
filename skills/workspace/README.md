@@ -3,7 +3,7 @@
 Feature workspaces: one git-ignored folder per feature or task, from a hand-written PRD to a shipped feature whose knowledge has moved into the repo. The nine skills reference each other — install them together.
 
 - **[kickoff](./kickoff/SKILL.md)** — Turns a PRD discussion into a workspace: `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`, the folder layout and the `INDEX.md` row, in the PRD's language.
-- **[tracker](./tracker/SKILL.md)** — `log` a session, record a stakeholder's `answer`, draft a progress `report` (always English), mark it `sent`.
+- **[tracker](./tracker/SKILL.md)** — `log` a session, record a stakeholder's `answer`, and — when the workspace has a report audience — draft a progress `report` and mark it `sent`.
 - **[pause-here](./pause-here/SKILL.md)** — Closes a session (or syncs a stale `WHATNEXT.md`): tracker logged, findings and questions written, `WHATNEXT.md` rewritten, a handoff when needed. The model may invoke it on its own.
 - **[resume-here](./resume-here/SKILL.md)** — Opens a session: reads `WHATNEXT.md`, `CONTEXT.md` and the handoff, reconciles drift with git, then takes next step 1.
 - **[discuss](./discuss/SKILL.md)** — Talks a topic through without starting work; loads only what the topic touches and records whatever gets settled.
@@ -16,13 +16,13 @@ Feature workspaces: one git-ignored folder per feature or task, from a hand-writ
 
 ```
 0. User writes PRD.md             .scratch/workspaces/<slug>/PRD.md (+ input files)
-1. Discuss the PRD                free, or /grill-me
+1. Discuss the PRD                free, or /grilling (mattpocock/skills)
 2. /kickoff <slug>                CONTEXT.md, TRACKER.md, WHATNEXT.md, layout, INDEX.md row
 3. /to-plan                       plans/01-<name>/IMPLEMENTATION_PLAN.md (+ phases/)
 4. /execute-plan                  phase by phase; after each: tracker status, Action Log, WHATNEXT.md,
    │                              and the ADR of any decision the phase's code just settled
    ├─ stakeholder answers         /tracker answer "<answer>"
-   └─ report due                  /tracker report → user sends → /tracker sent <date> <N>%
+   └─ report due (optional)       /tracker report → user sends → /tracker sent <date> <N>%
  * Think, don't work yet          /discuss <slug> <topic>
  * Lost the thread                /so-far <slug> [period]
  * A thread from another session  /spin-off <slug> | new <slug>
@@ -52,14 +52,18 @@ The user picks the root once, on the repo's first workspace, and `spin-off` or `
 ## Principles
 
 - **Self-describing.** A workspace's rules live in its own files (`CONTEXT.md` `## Workspace rules`, `TRACKER.md` `## How this tracker works` / `## Report rules`). A plain prompt — "read `CONTEXT.md`, continue with `WHATNEXT.md`" — works without any skill, and where a file and a skill differ, the file wins.
-- **Languages.** The workspace language is the language of the PRD's prose; progress reports and `INDEX.md` are always English; code, commits and committed docs follow the repo's rules.
+- **Languages.** The workspace language is the language of the PRD's prose; progress reports are written in the language `kickoff` asked for (the `Language:` line of `TRACKER.md`), and `INDEX.md` is always English; code, commits and committed docs follow the repo's rules.
 - **Status records work, the checkbox records reporting.** Only `/tracker sent` ticks a row; a work item is ticked once a sent report called it `done`.
 - **Knowledge moves into the repo as it is learned.** Decisions carry an `ADR:` tag when written (`candidate` / `no`); the phase whose code embodies a candidate writes its ADR (`execute-plan` Step C, or `review-phase` under guardian). `wrap-up` only sweeps the remainder and triages `findings/` (`repo: <path>` or `scope: workspace`). Never cite a workspace by its folder name from the repo — it will be deleted.
 - **Ask, don't guess, which workspace.** Every skill resolves the workspace the same way (argument → this conversation's workspace → the only `## Active` row of `INDEX.md` → ask) and names it (`Workspace: <slug>`) before writing. `spin-off` never falls back: the destination is always the user's choice.
 
+## Progress reports are optional
+
+`kickoff` asks whether anyone receives progress reports on the work. The default is `Audience: none`: the tracker is then only the work log, `tracker report` and `tracker sent` decline, and `wrap-up` skips the final report. Answer with an audience and a language and the report skills switch on.
+
 ## Optional hook: reminder after a commit
 
-`hooks/workspace-reminder.mjs` is a `PostToolUse` hook (matcher `Bash`). After a `git commit`, when the workspace root's `INDEX.md` has rows under `## Active`, it tells the agent which workspaces are live and asks it to update the one the commit moved (`WHATNEXT.md`, `TRACKER.md`, the `INDEX.md` row) — the nudge a session that never opened the workspace would otherwise miss. Silent in every other case. Copy it to `.claude/hooks/` and register it in `.claude/settings.json` with the block in `hooks/settings-snippet.json`. It is not installed by `skills add`.
+`hooks/workspace-reminder.mjs` is a `PostToolUse` hook (matcher `Bash`). After a `git commit`, when the workspace root's `INDEX.md` has rows under `## Active`, it tells the agent which workspaces are live and asks it to update the one the commit moved (`WHATNEXT.md`, `TRACKER.md`, the `INDEX.md` row) — the nudge a session that never opened the workspace would otherwise miss. Silent in every other case. Claude Code only, and safe to skip. Copy it to `.claude/hooks/` and register it in `.claude/settings.json` with the block in `hooks/settings-snippet.json`. It is not installed by `skills add`.
 
 ## Companion changes in other groups
 
@@ -70,4 +74,9 @@ These workflow skills are workspace-aware and do nothing different when no works
 - `writing-great-plan` puts split phase files in `phases/`.
 - `whatnext` reads `INDEX.md` first and routes to `/resume-here`, `/kickoff`, `/discuss` or `/wrap-up`.
 
-They also rely on `grill-me` / `grilling`, `domain-modeling` (ADRs and the glossary) and the repo's own docs skill (for example `refine-docs`). Without those, `wrap-up` still triages findings and sends the final report — record in `CONTEXT.md` `### Conventions` where knowledge goes instead.
+They also rely on skills from [`mattpocock/skills`](https://github.com/mattpocock/skills): `domain-modeling` (required by `wrap-up` for ADRs and the glossary, and by `execute-plan` and `review-phase` when an ADR is due; each stops with a clear message when it is missing), `grilling` (recommended, used by `discuss` if installed) and `setup-matt-pocock-skills` (creates `docs/agents/`). The full table and the pinned install command are in the [root README](../../README.md).
+
+## Notes
+
+- Three skills may start on their own: `kickoff`, `pause-here` and `spin-off`. The rest run only when called by name.
+- `msg` sets `model: haiku` in its frontmatter; only Claude Code honours it.
