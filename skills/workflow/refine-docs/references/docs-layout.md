@@ -30,14 +30,14 @@ doesn't exist on disk is itself a finding — the block has drifted from the rep
 
 Follow the Matt Pocock defaults, which most repos satisfy already:
 
-| Signal                       | Inference                                                       |
-| ---------------------------- | ---------------------------------------------------------------- |
-| `GLOSSARY.md` at root        | Single-context. That's the only glossary.                        |
-| `GLOSSARY-MAP.md` at root    | Multi-context. It points at one `GLOSSARY.md` per context — those are the glossaries. |
-| `docs/adr/`                  | ADR location. Also check `<context>/docs/adr/` for scoped decisions. |
-| `ARCHITECTURE*.md` in `docs/` | Reference docs.                                                 |
-| No `ARCHITECTURE*.md` at all | This repo keeps no reference docs. Audit glossary + ADR coverage only; do not invent an ARCHITECTURE file. |
-| Package/module dirs with their own manifest (`go.mod`, `Cargo.toml`, `package.json`, `pyproject.toml`) or a workspace glob | Candidate code units. |
+| Signal                                                                                                                     | Inference                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `GLOSSARY.md` at root                                                                                                      | Single-context. That's the only glossary.                                                                  |
+| `GLOSSARY-MAP.md` at root                                                                                                  | Multi-context. It points at one `GLOSSARY.md` per context — those are the glossaries.                      |
+| `docs/adr/`                                                                                                                | ADR location. Also check `<context>/docs/adr/` for scoped decisions.                                       |
+| `ARCHITECTURE*.md` in `docs/`                                                                                              | Reference docs.                                                                                            |
+| No `ARCHITECTURE*.md` at all                                                                                               | This repo keeps no reference docs. Audit glossary + ADR coverage only; do not invent an ARCHITECTURE file. |
+| Package/module dirs with their own manifest (`go.mod`, `Cargo.toml`, `package.json`, `pyproject.toml`) or a workspace glob | Candidate code units.                                                                                      |
 
 A single-context repo with a root `GLOSSARY.md`, `docs/adr/`, and no reference docs is a
 perfectly valid input. It just means most audit steps report "not applicable."
@@ -49,7 +49,7 @@ where drift comes from.
 
 Emit only the tables the repo actually has. Every path relative to the repo root.
 
-````markdown
+```markdown
 ## Docs Layout
 
 > Read by `audit-docs` and `refine-docs`. Those skills carry no hardcoded paths — this
@@ -60,61 +60,61 @@ Emit only the tables the repo actually has. Every path relative to the repo root
 
 ### Glossaries
 
-| Scope | File |
-| ----- | ---- |
+| Scope | File          |
+| ----- | ------------- |
 | Root  | `GLOSSARY.md` |
 
 ### Reference docs
 
-| Scope | File |
-| ----- | ---- |
+| Scope | File                   |
+| ----- | ---------------------- |
 | Root  | `docs/ARCHITECTURE.md` |
 
 ### Topic guides
 
-| Subject | Guide |
-| ------- | ----- |
+| Subject    | Guide                    |
+| ---------- | ------------------------ |
 | Auth flows | `docs/AUTHENTICATION.md` |
 
 ### Code units
 
-| Unit | Where | Registry | Documented in | Vocab in |
-| ---- | ----- | -------- | ------------- | -------- |
+| Unit  | Where       | Registry                              | Documented in          | Vocab in      |
+| ----- | ----------- | ------------------------------------- | ---------------------- | ------------- |
 | Crate | `crates/*/` | `docs/ARCHITECTURE.md` → `### Crates` | `docs/ARCHITECTURE.md` | `GLOSSARY.md` |
 
 ### Deep-context tier
 
-| Key | Value |
-| --- | ----- |
-| Nominate if | 15+ files |
-| Flag only if | AND non-trivial state/status logic, or multiple sub-concepts |
-| Never flag | scaffold-shaped CRUD / master-data / lookup units, whatever their file count |
+| Key          | Value                                                                        |
+| ------------ | ---------------------------------------------------------------------------- |
+| Nominate if  | 15+ files                                                                    |
+| Flag only if | AND non-trivial state/status logic, or multiple sub-concepts                 |
+| Never flag   | scaffold-shaped CRUD / master-data / lookup units, whatever their file count |
 
-| Unit | Glossary path | Registered in |
-| ---- | ------------- | ------------- |
+| Unit  | Glossary path                    | Registered in                          |
+| ----- | -------------------------------- | -------------------------------------- |
 | Crate | `crates/<unit>/docs/GLOSSARY.md` | `GLOSSARY.md` → `## Crate Context Map` |
 
 ### ADRs
 
-| Key | Value |
-| --- | ----- |
-| Location | `docs/adr/NNNN-title.md` |
-| Format | `.claude/skills/domain-modeling/ADR-FORMAT.md` |
+| Key      | Value                                          |
+| -------- | ---------------------------------------------- |
+| Location | `docs/adr/NNNN-title.md`                       |
+| Format   | `.claude/skills/domain-modeling/ADR-FORMAT.md` |
 
 ### Preferred terms
 
-| Use | Not | Scope |
-| --- | --- | ----- |
+| Use       | Not             | Scope                          |
+| --------- | --------------- | ------------------------------ |
 | `Handler` | endpoint, route | `docs/ARCHITECTURE-BACKEND.md` |
 
 ### Plan runner
 
-| Key | Value |
-| --- | ----- |
-| Plan writer | `writing-great-plan` |
-| Executor | `execute-plan` |
+| Key         | Value                                                           |
+| ----------- | --------------------------------------------------------------- |
+| Plan writer | `writing-great-plan`                                            |
+| Executor    | `execute-plan`                                                  |
 | Plan output | `.scratch/triage/docs-audit-<timestamp>/IMPLEMENTATION_PLAN.md` |
-````
+```
 
 ## Table semantics
 
@@ -137,7 +137,7 @@ from the tables above.
 
 `Registry` and `Documented in` do different jobs, and conflating them is what makes an audit
 scream. A **registry** is a table that must enumerate every unit — a missing row is a real,
-cheap gap. **Documented in** teaches patterns by worked example, so only a unit that *deviates*
+cheap gap. **Documented in** teaches patterns by worked example, so only a unit that _deviates_
 from the pattern belongs there. Without this split, an audit reports every conventional unit as
 undocumented and demands prose that would duplicate the pattern N times. Set `Registry` to `—`
 when a unit type has none; then only deviation and vocabulary are checked.

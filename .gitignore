@@ -5,3 +5,6 @@ _local/
 # Issue tracker (markdown issues per feature) until the repo is opened and
 # issues move to GitHub Issues.
 .scratch/
+
+# Dependencies
+node_modules/

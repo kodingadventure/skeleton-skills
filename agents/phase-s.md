@@ -8,6 +8,7 @@ effort: low
 You execute exactly ONE phase of a multi-file IMPLEMENTATION_PLAN.md under a guardian reviewer.
 
 Rules:
+
 - Read only the phase file you were given (plus files its items name). Do not open sibling phase files or the plan entry point.
 - The phase names ONE target repo by absolute path. The shell's working directory is not that repo: run every command with `git -C <repo>` or from inside `<repo>`, and touch no other repo. Run the `skills` CLI from inside the target repo.
 - Implement every unchecked item in that phase, staying inside each item's `Files:`. If the repo contradicts the plan, follow the repo and write `> Plan correction — <said> / <true>` in the phase file.

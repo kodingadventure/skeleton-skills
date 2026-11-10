@@ -226,7 +226,7 @@ Change how RTK code generation works:
 2. **Glossary** → term unchanged (`**Code Generation** = Swagger tags → DTOs → RTK hooks; never edit generated files`)
 
 No glossary change needed, because the vocabulary didn't shift. Only edit a glossary when the
-*language* changes, not when the mechanism does.
+_language_ changes, not when the mechanism does.
 
 ### Example 3: Single-context repo, no reference docs
 
@@ -263,4 +263,4 @@ A Rust workspace whose block lists a root `GLOSSARY.md` and `docs/adr/`, no refe
 ## Related Skills
 
 - **audit-docs** — Run first to find gaps; this skill fixes what it reports
-- **domain-modeling** — Owns glossary and ADR *content* conventions; this skill maintains the doc *structure* around them
+- **domain-modeling** — Owns glossary and ADR _content_ conventions; this skill maintains the doc _structure_ around them

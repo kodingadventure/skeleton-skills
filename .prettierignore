@@ -1,0 +1,7 @@
+node_modules
+tmp
+.scratch
+docs
+.claude-plugin
+claude-plugin
+_local
