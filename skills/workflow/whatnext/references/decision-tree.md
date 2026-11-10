@@ -1,40 +1,40 @@
 # Decision Tree — What Next
 
+Generic routing for any repo. Skills marked _(if installed)_ come from outside this repo; when one is missing, fall back to the nearest installed skill or describe the step in plain words. Commands such as "the project's test command" are found in the project's own config (see SKILL.md Step 0.4), never assumed.
+
 ## Contents
 
 - [After Discovery / Design](#after-discovery--design)
 - [After Specification](#after-specification)
 - [After Planning](#after-planning)
 - [Workspace sessions](#workspace-sessions)
-- [During Implementation (backend)](#during-implementation-backend)
-- [During Implementation (frontend)](#during-implementation-frontend)
-- [During Implementation (E2E)](#during-implementation-e2e)
+- [During Implementation](#during-implementation)
 - [After Quality / Fixes](#after-quality--fixes)
 - [After Commit](#after-commit)
-- [After Documentation](#after-documentation)
 - [When Stuck](#when-stuck)
 
 ## After Discovery / Design
 
-| Completed                        | Next → Skill                                                                                                                                                        |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| /grill-with-docs session         | Hand the thread to a workspace → `/spin-off <slug> <topic>` (workspace skills installed), or write a spec → `/to-spec` (if installed)                               |
-| /prototype answered the question | Hand the thread to a workspace → `/spin-off <slug> <topic>` (workspace skills installed), or write a spec → `/to-spec` (if installed), or skip to plan → `/to-plan` |
+| Completed                        | Next → Skill                                                                                                                                                  |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| /grilling session                | Hand the thread to a workspace → `/spin-off <slug> <topic>` (workspace skills installed), or write a spec → `/to-spec` _(if installed)_, or plan → `/to-plan` |
+| /prototype answered the question | Hand the thread to a workspace → `/spin-off <slug> <topic>` (workspace skills installed), or write a spec → `/to-spec` _(if installed)_, or plan → `/to-plan` |
 
 ## After Specification
 
-| Completed                                                                                                                                          | Next → Skill                                                                     |
-| -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| PRD discussed in a `.scratch/workspaces/<slug>/` workspace without `CONTEXT.md`, or still under `## Seeded` in `INDEX.md` (a seed from `spin-off`) | Set up the workspace → `/kickoff <slug>`                                         |
-| Spec written                                                                                                                                       | Plan directly → `/to-plan`, or break into tickets → `/to-tickets` (if installed) |
-| Spec/request is one feature to build end to end (backend + frontend + tests + docs)                                                                | Orchestrate → `/orchestrate-feature` (if installed)                              |
-| Issues created                                                                                                                                     | Plan first issue → `/to-plan <path>`                                             |
+| Completed                                                                                                                                          | Next → Skill                                                                       |
+| -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| PRD discussed in a `.scratch/workspaces/<slug>/` workspace without `CONTEXT.md`, or still under `## Seeded` in `INDEX.md` (a seed from `spin-off`) | Set up the workspace → `/kickoff <slug>`                                           |
+| Spec written                                                                                                                                       | Plan directly → `/to-plan`, or break into tickets → `/to-tickets` _(if installed)_ |
+| Issues created                                                                                                                                     | Plan first issue → `/to-plan <path>`                                               |
 
 ## After Planning
 
-| Completed    | Next → Skill              |
-| ------------ | ------------------------- |
-| Plan created | Execute → `/execute-plan` |
+| Completed                                      | Next → Skill                                          |
+| ---------------------------------------------- | ----------------------------------------------------- |
+| Plan created                                   | Execute inline → `/execute-plan`                      |
+| Plan created, many phases or a guardian wanted | Execute by subagents under a guardian → `/guard-plan` |
+| Phase staged under a `Review: guardian` plan   | Check it before commit → `/review-phase`              |
 
 ## Workspace sessions
 
@@ -51,83 +51,46 @@ Feature workspaces (`.scratch/workspaces/<slug>/`, set up by `/kickoff`) — onl
 | Work moved, or a stakeholder answered                                         | Update the tracker → `/tracker log` or `/tracker answer "<answer>"`                   |
 | Report due                                                                    | Draft → `/tracker report`; once sent → `/tracker sent <date> <N>%`                    |
 
-## During Implementation (backend)
+## During Implementation
 
-| Completed                     | Next → Skill                                      |
-| ----------------------------- | ------------------------------------------------- |
-| Entity + DTO + migration done | Build repository → `/api-module-repository`       |
-| Repository done               | Build service → `/api-module-service`             |
-| Service done                  | Build handlers → `/api-module-handler`            |
-| Handlers done                 | Wire module → `/api-module-wire`                  |
-| Module wired                  | Verify → `/verify`                                |
-| Verify failed (lint)          | `/lint-dispatch`                                  |
-| Verify passed                 | Write integration tests → `/api-integration-test` |
-
-**After backend integration tests are committed, run the full-stack gate before recommending wiki:**
-
-1. Check `apps/<app>/src/features/` for a matching frontend feature directory.
-2. If **missing** → recommend frontend CRUD pages first: `/ts-react-crud-feature`
-3. If frontend exists, check `apps/<app>/e2e/` for a matching `.spec.ts`.
-4. If **missing** → recommend E2E tests: `/ts-e2e-test`
-5. Only after frontend pages **and** E2E tests exist → recommend `/update-wiki`
-
-## During Implementation (frontend)
-
-| Completed           | Next → Skill                                         |
-| ------------------- | ---------------------------------------------------- |
-| Swagger regenerated | Build CRUD pages → `/ts-react-crud-feature`          |
-| CRUD pages done     | Write tests → `/ts-gen-test`                         |
-| Custom page done    | Write tests → `/ts-gen-test`                         |
-| Component done      | Write tests → `/ts-gen-test`                         |
-| Tests pass          | Type-check → `moon run <app>:typecheck` or `/verify` |
-
-## During Implementation (E2E)
-
-| Completed           | Next → Skill                                         |
-| ------------------- | ---------------------------------------------------- |
-| Feature UI complete | Write E2E spec → `/ts-e2e-test`                      |
-| E2E tests fail      | Debug → `/diagnosing-bugs` or fix selectors manually |
-| E2E tests pass      | Commit → `/caveman-commit`                           |
+| Completed                                    | Next → Skill                                                                             |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Code written for a plan item                 | Tick the item, run the next one → `/execute-plan`                                        |
+| Code written, no plan                        | Verify → `/verify`                                                                       |
+| New behaviour with no test beside it         | Write the test first or now → `/tdd` _(if installed)_, otherwise add it directly         |
+| Verify passed                                | Commit under the repo's own rules; read the change back → `/what-you-did`                |
+| Verify failed                                | Fix the reported gate; a cause that is not obvious → `/diagnosing-bugs` _(if installed)_ |
+| Unsure the design holds before building more | Throwaway experiment → `/prototype` _(if installed)_                                     |
+| A choice needs the user's eyes               | Show it on a page → `/review-page`                                                       |
 
 ## After Quality / Fixes
 
-| Completed                    | Next → Skill                                         |
-| ---------------------------- | ---------------------------------------------------- |
-| Integration tests pass       | Commit → `/caveman-commit`                           |
-| Unit tests pass              | Commit → `/caveman-commit`                           |
-| Bug diagnosed and fixed      | Add regression test, then commit → `/caveman-commit` |
-| Backend lint fixed           | Re-verify → `/verify`                                |
-| Frontend fallow fixed        | Type-check → `moon run <app>:typecheck`              |
-| Code review feedback applied | Re-verify → `/verify`                                |
-| Translations synced          | No next step needed                                  |
+| Completed                    | Next → Skill                                                  |
+| ---------------------------- | ------------------------------------------------------------- |
+| Tests pass                   | Commit under the repo's own rules (see below)                 |
+| Bug diagnosed and fixed      | Add a regression test, then commit under the repo's own rules |
+| Lint or type errors fixed    | Re-verify → `/verify`                                         |
+| Code review feedback applied | Re-verify → `/verify`                                         |
+| Branch ready for review      | Review the changes → `/code-review` _(if installed)_          |
 
 ## After Commit
 
-Before recommending `/update-wiki`, always run the **full-stack completeness check**:
+Commit under the repo's own commit rules (`CONTRIBUTING.md`, `CLAUDE.md` / `AGENTS.md`, recent `git log` style). The optional `caveman-commit` skill from `JuliusBrussee/caveman` can draft the message if installed.
 
-1. Does `apps/<app>/src/features/<module>/` exist? If **no** → `/ts-react-crud-feature` first.
-2. Does `apps/<app>/e2e/<module>/` (or equivalent spec) exist? If **no** → `/ts-e2e-test` first.
-3. Only when both exist → `/update-wiki`
-
-| Completed                                    | Next → Skill                                |
-| -------------------------------------------- | ------------------------------------------- |
-| Feature committed, frontend + E2E both exist | Document → `/update-wiki`                   |
-| Feature committed, frontend missing          | Build CRUD pages → `/ts-react-crud-feature` |
-| Feature committed, E2E missing               | Write E2E spec → `/ts-e2e-test`             |
-| Quick fix committed                          | (done)                                      |
-
-## After Documentation
-
-| Completed            | Next → Skill                                             |
-| -------------------- | -------------------------------------------------------- |
-| Wiki page written    | Code health → `/lint-dispatch` if needed                 |
-| Full feature shipped | Start next feature, or run `/handoff` if session is long |
+| Completed                          | Next → Skill                                                          |
+| ---------------------------------- | --------------------------------------------------------------------- |
+| Plan phase committed, items remain | Next phase → `/execute-plan` (or `/guard-plan` for a multi-file plan) |
+| Plan finished                      | Read the whole change back → `/what-you-did`                          |
+| Workspace work item finished       | Update the tracker and handoff → `/pause-here`                        |
+| Feature committed, no plan left    | Start the next thing → `/whatnext` again, or `/to-plan` for a new one |
+| Quick fix committed                | (done)                                                                |
 
 ## When Stuck
 
-| Situation                | Next → Skill                     |
-| ------------------------ | -------------------------------- |
-| Complex failure          | `/diagnosing-bugs`               |
-| Architecture feels wrong | `/improve-codebase-architecture` |
-| Session too long         | `/handoff`                       |
-| Docs out of sync         | `/audit-docs` → `/refine-docs`   |
+| Situation                      | Next → Skill                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| Complex failure                | `/diagnosing-bugs` _(if installed)_                                            |
+| Not sure what the user wants   | `/grilling` _(if installed)_                                                   |
+| Architecture feels wrong       | `/codebase-design` _(if installed)_, otherwise `/review-page` with the options |
+| Session too long               | In a workspace → `/pause-here`; otherwise summarise state in chat              |
+| Docs out of sync with the code | `/refine-docs`                                                                 |
