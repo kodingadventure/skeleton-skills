@@ -6,7 +6,7 @@ description: >
   itself, checks the executor's report against the repo, fixes what's wrong, then prepares the
   commit. Use when the user says "review this phase", "guardian review", or wants an executor's
   work checked before it's committed. Do not use for a full code review (use /code-review
-  instead), for re-planning, or to widen a phase beyond what the plan specified.
+  if installed), for re-planning, or to widen a phase beyond what the plan specified.
 ---
 
 # Review Phase
@@ -70,7 +70,7 @@ and verification it runs itself.
       and Next steps: the review step leaves, and what follows the phase becomes step 1.
     - **ADR candidates.** `grep -n "ADR: candidate" CONTEXT.md`. A decision tagged that way whose
       reasoning this phase's code now embodies gets its ADR written now — with the
-      `domain-modeling` skill, where the repo keeps them — and its tag replaced by the ADR id;
+      `domain-modeling` skill (from `mattpocock/skills`), where the repo keeps them — and its tag replaced by the ADR id;
       terms the phase coined go into the repo's glossary in the same pass. Under guardian this is
       the reviewer's, like the `done` status. An ADR is a repo file: stage it with the phase. Not
       left to the wrap-up, when the alternatives that lost are gone from everyone's memory.
@@ -104,7 +104,7 @@ the executor's own blind spots, because the diff is exactly what the executor al
 
 ## What this is not
 
-Not a full code review — that's `/code-review`, and covers standards and spec compliance across a
+Not a full code review — that's `/code-review` (if installed), and covers standards and spec compliance across a
 whole branch. Not a re-planning session — a phase that's wrong gets a `> Plan correction`, not a
 redesign. And not permission to widen the phase's scope: fix what the phase touched, note anything
 else as follow-up, and stop there.

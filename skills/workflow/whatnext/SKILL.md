@@ -66,7 +66,7 @@ state against those descriptions. Never treat any prose doc as the skill catalog
 hand-written list drifts, and it drifts worst for exactly the case that sent you here — a skill
 too new to be in it.
 
-Skills from outside this repo (the grilling, spec, ticket, tdd, diagnosing, code-review and prototype family) are recommended only when they are installed. Not installed → pick the nearest installed skill, or describe the step in plain words with no `Invoke` skill.
+Skills from outside this repo (from `mattpocock/skills`: the grilling, spec, ticket, tdd, diagnosing, code-review and prototype family) are recommended only when they are installed. Not installed → pick the nearest installed skill, or describe the step in plain words with no `Invoke` skill.
 
 ### Step 3: Output next action + rationale + skill invocation
 

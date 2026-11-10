@@ -1,6 +1,6 @@
 ---
 name: what-you-did
-description: Builds an HTML page of recent code changes, grouped by purpose, with before/after diffs and Explain-this prompts. Use when the user asks to see or explain what was just changed in the code, or sends a message starting with `/what-you-did focus`, typed or pasted. Not for judging code quality (use code-review).
+description: Builds an HTML page of recent code changes, grouped by purpose, with before/after diffs and Explain-this prompts. Use when the user asks to see or explain what was just changed in the code, or sends a message starting with `/what-you-did focus`, typed or pasted. Not for judging code quality (use code-review, if installed).
 argument-hint: "[commit | A..B | workspace range like 'phase 4' or 'since the last report'] | focus <snapshot> …"
 ---
 

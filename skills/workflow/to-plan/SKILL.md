@@ -24,7 +24,7 @@ At least one checkpoint must exercise the changed behavior **in its enabled stat
 ## Workflow
 
 - [ ] **1. Locate source material** — spec, issue, or conversation
-- [ ] **2. Explore the codebase** — read `docs/agents/domain.md`, follow its Consumer Rules, identify files to touch, classify phases, assign weights
+- [ ] **2. Explore the codebase** — read `docs/agents/domain.md` (if present), follow its Consumer Rules, identify files to touch, classify phases, assign weights
 - [ ] **3. Write the plan** — location per `writing-great-plan`'s `plan-location.md`
 - [ ] **4. Present and iterate** — show the user, refine, hand off to execute-plan
 
@@ -40,7 +40,7 @@ If no source is passed, synthesise from the current conversation context. **Capt
 
 ### 2. Explore the codebase
 
-Read `docs/agents/domain.md` and follow its **Consumer Rules** — determine context, read the matching glossary, check ADRs. Then identify the files that will be touched. **Read the actual files** — don't guess their contents.
+Read `docs/agents/domain.md` and follow its **Consumer Rules** — determine context, read the matching glossary, check ADRs. If that file does not exist, carry on with the root `GLOSSARY.md` and `docs/adr/` where they exist, and suggest once that the user run `/setup-matt-pocock-skills` (from `mattpocock/skills`) to create it; do not stop, and do not create the file yourself. Then identify the files that will be touched. **Read the actual files** — don't guess their contents.
 
 As you establish facts about the codebase — a file's location, whether something exists, what a command does — note the command or read that established each one. A claim needs this only when the executor would otherwise act on it without rechecking, not every sentence; carry it into the plan as that item's `Provenance:` field, or the literal marker `unverified — check first` when you couldn't verify it. Most items need no `Provenance:` line: a file the item edits is one the executor opens anyway, and a path the item creates or a command it prints is pinned down by the item's own text. "Read during planning" is not provenance — it names no command and tells the executor nothing; when that is all you could write, omit the line.
 

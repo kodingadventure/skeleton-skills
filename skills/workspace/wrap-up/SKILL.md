@@ -34,7 +34,7 @@ Done when: either every item is `done`, or the user has said to continue with th
 
 ### 2. Write the ADRs still owed
 
-`grep -n "ADR: candidate" CONTEXT.md`. For each hit: write the ADR with the `domain-modeling` skill, where the repo keeps them, then replace the tag with the ADR id in `CONTEXT.md`.
+`grep -n "ADR: candidate" CONTEXT.md`. For each hit: write the ADR with the `domain-modeling` skill (from `mattpocock/skills`), where the repo keeps them, then replace the tag with the ADR id in `CONTEXT.md`.
 
 Each one is a decision whose reasoning now exists nowhere else. Write what was decided, the alternatives that were on the table and why they lost — the workspace's decision entry, its question file and the findings it rests on are the sources; the ADR must stand on its own once they are gone.
 

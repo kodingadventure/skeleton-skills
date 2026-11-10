@@ -39,8 +39,8 @@ Done when: you can state what the workspace already settled about this topic, an
 In the workspace language. Lead with what the existing decisions and findings already fix, then the part that is genuinely open — a question that is already answered in `CONTEXT.md` gets the answer, not a fresh debate.
 
 - Contradiction between what the user says now and a settled decision or finding → surface it immediately, naming the decision ("decision 9 says the row is deleted on logout; you are describing it staying").
-- The topic is a term or a model boundary → bring in the `domain-modeling` skill.
-- The user wants their own thinking stress-tested → `grilling`.
+- The topic is a term or a model boundary → bring in the `domain-modeling` skill (from `mattpocock/skills`), if installed.
+- The user wants their own thinking stress-tested → `grilling` (if installed).
 - The question is empirical and cheap to answer from the repo → read the code and answer it, rather than speculating.
 
 ### 3. Record before the end

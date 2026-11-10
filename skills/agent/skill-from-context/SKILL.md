@@ -11,7 +11,7 @@ description: >
 
 Turn a pattern from this conversation into a skill — new or refined.
 
-Everything about **how** to write a skill well — description wording, structure, pruning, leading words — belongs to `writing-for-agents`, with the
+Everything about **how** to write a skill well — description wording, structure, pruning, leading words — belongs to `writing-for-agents` (from `mattpocock/skills`; required for this skill), with the
 skill-only mechanics (frontmatter, invocation choice, router skills) disclosed to its `SKILL-MECHANICS.md`. Read both before writing or editing any `SKILL.md`. This file covers only what's specific to extracting a pattern out of a conversation.
 
 ## 1. Confirm the pattern is real
@@ -21,7 +21,7 @@ to say what's invariant (always true) versus variable (changes per use).
 
 - Clear on both → go to step 2.
 - Not clear — fuzzy scope, only one instance, or you can't tell what should
-  generalize — **stop**. Ask the user directly what should generalize, or offer to run `grilling` to work it out with them.
+  generalize — **stop**. Ask the user directly what should generalize, or offer to run `grilling` (if installed) to work it out with them.
 
 ## 2. Generate or refine
 

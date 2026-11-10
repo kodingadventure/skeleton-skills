@@ -23,7 +23,7 @@ workflows. Never write to a path you remember from another repo.
 
 ## Step 0: Load the layout
 
-Read `docs/agents/domain.md` and find its `## Docs Layout` block — it names this repo's
+Read `docs/agents/domain.md` and find its `## Docs Layout` block. This skill writes that block, so it needs the file: if it does not exist, stop and tell the user to run `/setup-matt-pocock-skills` (from `mattpocock/skills`) first, which creates it, then run this skill again. Do not create the file yourself. The block names this repo's
 glossaries, reference docs, topic guides, code units, deep-context tier, ADR location, and
 preferred terms. Full spec: `references/docs-layout.md`.
 
@@ -87,7 +87,7 @@ layout drift (a block path that doesn't exist on disk).
 4. **Emit only tables the repo actually has** — an empty Reference docs table invites inventing files
 
 Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And never edit
-`setup-matt-pocock-skills` or `domain-modeling` to accommodate the block — it's additive, they ignore it.
+`setup-matt-pocock-skills` or `domain-modeling` (both from `mattpocock/skills`) to accommodate the block — it's additive, they ignore it.
 
 ### Workflow 1: Add new architectural pattern
 
