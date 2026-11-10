@@ -1,8 +1,8 @@
 ---
 name: kickoff
-description: Turn a PRD discussion into a feature workspace — writes CONTEXT.md, TRACKER.md and WHATNEXT.md in the PRD's language and lays out the folder. Run mid-discussion or at its end; re-run to refresh.
+description: Turn a PRD discussion into a feature workspace — writes CONTEXT.md, TRACKER.md and WHATNEXT.md in the PRD's language and lays out the folder. Run mid-discussion or at its end; re-run to refresh. Also when the user says "turn this into a workspace" or "let's track this properly" (in any language).
 argument-hint: "<feature-slug or workspace path>"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Kickoff
@@ -19,23 +19,25 @@ The workspace is **self-describing**: its rules live in its own files, so a plai
 
 ### 1. Locate the workspace
 
-From the argument (a slug or a path), else the folder of the PRD discussed in this conversation. It must contain `PRD.md`; if there is none, ask the user for it and stop. On the repo's first workspace (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `INDEX.md` at the root), confirm with the user that the folder holding the PRD's workspace is the root they want for every workspace, and write it as that line, per [`references/workspace-root.md`](references/workspace-root.md); that line is a repo change to commit. Check the root is git-ignored (`git check-ignore <path>`); if it is not, tell the user before writing. If the root or its parent holds its own `.git`, it is a separate repository: say so in `### Layout` — never staged from the main repo, and no git commands inside it unless the user asks. If it has none, tell the user once that `git init <root>` would keep a history of these notes, which are otherwise lost when a workspace is deleted — their call, not yours.
+From the argument (a slug or a path), else the folder of the PRD discussed in this conversation. It must contain `PRD.md`; if there is none, ask the user for it and stop. On the repo's first workspace (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `INDEX.md` at the root), ask the one root question from [`references/workspace-root.md`](references/workspace-root.md) — the default, or another folder — and write the answer as that line; that line is a repo change to commit. Check the root is git-ignored (`git check-ignore <path>/x`); if it is not, **offer** to add the root to `.gitignore` and write nothing, in the repo or the workspace, until the user has answered. If the root or its parent holds its own `.git`, it is a separate repository: say so in `### Layout` — never staged from the main repo, and no git commands inside it unless the user asks. If it has none, tell the user once that `git init <root>` would keep a history of these notes, which are otherwise lost when a workspace is deleted — their call, not yours.
 
 Done when: you have one workspace path holding a `PRD.md`.
 
 ### 2. Detect the languages
 
 - **Workspace language**: the language of the PRD's prose (ignore code blocks and quoted UI text). It is the language for talking with the user and for every document in the workspace.
-- **Report language**: English, always.
+- **Report language**: the `Language:` line of `TRACKER.md` `## Report rules`, set in step 3 (default English).
 - **Repo language**: whatever the repo's own rules say for code, commits and committed docs.
 
-On a re-run, keep the languages already recorded in `CONTEXT.md`, exceptions included.
+On a re-run, keep the languages already recorded in `CONTEXT.md` and `TRACKER.md`, exceptions included.
 
-Done when: all three are named.
+Done when: the workspace and repo languages are named.
 
 ### 3. Fill the gaps
 
-Collect from the PRD, the conversation, and the origin brief when `spin-off` seeded this folder (`docs/*-origin.md`: what was already tried, learned and left open; its minimal `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` already hold the decisions made since, and say `TBD (kickoff)` where an answer is owed): the feature summary, decisions settled, open questions (and who answers each), the **report audience** (name, role, how technical), the **baseline %** (work done before the tracker exists, default 0), the work items with weights, and the **areas** this work will touch (the modules, apps or paths) for the index row. Ask the user, in one round, only for what the conversation does not already answer.
+Collect from the PRD, the conversation, and the origin brief when `spin-off` seeded this folder (`docs/*-origin.md`: what was already tried, learned and left open; its minimal `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` already hold the decisions made since, and say `TBD (kickoff)` where an answer is owed): the feature summary, decisions settled, open questions (and who answers each), whether anyone receives progress reports (see below), the **baseline %** (work done before the tracker exists, default 0), the work items with weights, and the **areas** this work will touch (the modules, apps or paths) for the index row. Ask the user, in one round, only for what the conversation does not already answer.
+
+**Report audience.** Ask: "Does anyone receive progress reports on this work? If so, who, and in which language?" Record the answer on the `Audience:` and `Language:` lines of `TRACKER.md` `## Report rules`. The defaults are `Audience: none` and `Language: English`. Ask for the audience's name, role and how technical they are only when there is an audience. With `Audience: none` the tracker is still the work log (status, weights, Action Log); `tracker report` and `tracker sent` decline, and `wrap-up` skips the final report. Other skills read these two lines and never assume a report language.
 
 Done when: every placeholder in the three templates has a value or is deliberately left empty.
 

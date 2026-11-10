@@ -8,8 +8,6 @@ Workspace root: `.scratch/workspaces/`
 
 Every workspace skill, and the commit reminder hook, reads that line. Without it the root is `.scratch/workspaces/`.
 
-Older versions defaulted to `.scratch/plan/`. A repo that still keeps its workspaces there without a `Workspace root:` line needs `Workspace root: .scratch/plan/` added, or its workspaces are no longer found.
-
 ## Asking once
 
 On the repo's first workspace — no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `.scratch/workspaces/INDEX.md` — ask the user one question: keep `.scratch/workspaces/` (the default) or name another folder.

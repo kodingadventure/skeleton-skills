@@ -1,6 +1,6 @@
 ---
 name: msg
-description: Draft a chat message (Discord, Slack, …) to a teammate about workspace work — ask a question file, give a short update, or follow up — in the recipient's language and tone from TEAM.md.
+description: Run only when the user asks for it by name. Draft a chat message (Discord, Slack, …) to a teammate about workspace work — ask a question file, give a short update, or follow up — in the recipient's language and tone from TEAM.md. Also marks a message as sent when the user says "sent" or "udah dikirim".
 argument-hint: "[<who>] <question file | workspace file | topic> | sent"
 disable-model-invocation: true
 model: haiku
@@ -12,7 +12,7 @@ Drafts one chat message the user copies into the team chat (Discord, Slack, …;
 
 ## Inputs
 
-- **TEAM.md**: `.scratch/TEAM.md` (or `TEAM.md` at the root the repo's `CLAUDE.md` / `AGENTS.md` names for `.scratch`). Missing → create it with the first person you are asked to write to. One `## <Name>` section per person with fields such as Role, Language, Tone, Technical detail, Channel, Example messages. Fields the entry has win over the defaults below.
+- **TEAM.md**: `TEAM.md` in the folder that holds the workspace root's `INDEX.md`. Keep it git-ignored; it holds names and contacts. Missing → create it with the first person you are asked to write to. One `## <Name>` section per person with fields such as Role, Language, Tone, Technical detail, Channel, Example messages. Fields the entry has win over the defaults below.
 - **Source**: a path (usually `.scratch/workspaces/<slug>/questions/<file>.md`; also WHATNEXT, TRACKER, a finding) or a free-text topic.
 - **Who**: optional. When omitted, take it from the source's `For:` line. Neither given → ask.
 
@@ -35,4 +35,4 @@ Drafts one chat message the user copies into the team chat (Discord, Slack, …;
 
 ## `sent`
 
-When the user says the message was sent (`/msg sent`, "udah dikirim", "sent"): if the source was a question file, add or update the line under `Raised:` as `Asked: YYYY-MM-DD via <channel>` (append `, follow-up YYYY-MM-DD` for later follow-ups). Nothing else changes — the answer is recorded later with `/tracker answer`.
+When the user says the message was sent (`/msg sent`, "sent", "udah dikirim"): if the source was a question file, add or update the line under `Raised:` as `Asked: YYYY-MM-DD via <channel>` (append `, follow-up YYYY-MM-DD` for later follow-ups). Nothing else changes — the answer is recorded later with `/tracker answer`.

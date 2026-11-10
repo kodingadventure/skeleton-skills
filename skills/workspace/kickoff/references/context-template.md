@@ -8,7 +8,7 @@
 
 - **Workspace language: <language>.** Talk with the user in it, and write every document in this folder in it (this file, `TRACKER.md`, `WHATNEXT.md`, plans, findings, questions, handoffs).
 - **Exceptions:** <none, or "file or section: language">
-- **Progress reports** (`reports/`): English, always.
+- **Progress reports** (`reports/`): the language on `TRACKER.md`'s `Language:` line.
 - **Code, commits and files committed to the repo:** follow the repo's own rules (`CLAUDE.md` / `AGENTS.md`).
 - Keep literal in every language: file names, code, status tokens, UI strings.
 
@@ -34,6 +34,7 @@ Everything about this <feature> stays in `<workspace path>/` (git-ignored). The 
 
 - When a discussion settles something, update `## Decisions` here and the question's file, **and** log it in `TRACKER.md` (see its rules).
 - **Every decision carries an `ADR:` tag**, set when the decision is written and the reasoning is still fresh: `candidate` when all three hold — hard to reverse · a later reader will ask why · the result of a real trade-off — else `no`. It is a note to the agent that closes the phase, not a promise to the user.
+- **Every decision says how the user decided**, in the user's recorded words, so a later recap can tell what was read from what was waved through: "after reviewing" / "saat meninjau" (the user read the material and chose), "without reviewing" / "tanpa meninjaunya" (approved unread), skipped (the user waived a checkpoint or review the plan scheduled), "agree to all" / "setuju semua" (accepted a proposal, nothing said about reading it). Where the user said none of this, add nothing and do not guess.
 - **An `ADR: candidate` becomes an ADR when the code that embodies it lands**, not when this folder is deleted: the phase that ships it writes the ADR (`execute-plan` Step C, or `review-phase` under guardian) and replaces the tag with the ADR id. Terms this work coins go into the repo's glossary in the same pass.
 - **Nothing in this folder is visible to other work.** A decision, term or gotcha another feature would need is shared only once it is in the repo; cite it by ADR id or doc path, never by this folder's name. The repo's own `CONTEXT.md` is a different document with different rules (a glossary); this file is a spec and shared memory.
 - **Keep `WHATNEXT.md` current.** When a session finishes one of its next steps (a plan phase, a test, an answer received), update its State now and Next steps before the session ends: done steps leave, a partly done step keeps only what remains. Keep this workspace's row in the root `INDEX.md` in step with it.

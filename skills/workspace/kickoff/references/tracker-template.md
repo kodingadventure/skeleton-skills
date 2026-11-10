@@ -13,8 +13,8 @@ The single source for progress reports on <feature>. Technical context is in `CO
 
 ## Report rules
 
-- **Audience:** <name, role, how technical>.
-- **Language:** English, whatever the language of this tracker.
+- **Audience:** <none, or name, role, how technical>. With `none`, no reports are written: `tracker report` and `tracker sent` decline, and `wrap-up` skips the final report.
+- **Language:** <English, or the language the audience reads>, whatever the language of this tracker.
 - **Sections, in this order:** What was done · In Progress · Next · Blockers · Open Questions.
 - **Style:** short sentences, plain words the audience understands. No file names, paths, code names, symbols, markdown tables or emoji. Bullets are fine.
 - **Coverage:** everything unticked; ticked rows only as one-line context.
@@ -31,6 +31,8 @@ The single source for progress reports on <feature>. Technical context is in `CO
 | [ ]       | <ID> | <w>    | todo   | <item> |
 
 Total remaining weight: <100 − B>.
+
+The `Reported?` columns here and in the tables below, and `## Report History`, stay empty when `Audience: none`.
 
 ## Decisions
 

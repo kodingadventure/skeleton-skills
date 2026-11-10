@@ -1,6 +1,6 @@
 ---
 name: wrap-up
-description: Close a finished feature workspace — writes the ADRs still owed, moves durable findings and vocabulary into the repo, sends the final report, updates the workspace index, and hands the folder to the user to delete.
+description: Run only when the user asks for it by name. Close a finished feature workspace — writes the ADRs still owed, moves durable findings and vocabulary into the repo, sends the final report when the workspace has a report audience, updates the workspace index, and hands the folder to the user to delete.
 argument-hint: "<workspace>"
 disable-model-invocation: true
 ---
@@ -27,6 +27,8 @@ Never pick between two live workspaces. Before writing anything, name the one yo
 ### 1. Check the work is actually finished
 
 Read `CONTEXT.md` (`## Workspace rules`, `## Decisions`, `## Findings`, `## Conventions`), `TRACKER.md` and `WHATNEXT.md`.
+
+**Check the dependency before anything is written.** If `CONTEXT.md` holds an `ADR: candidate` or a coined term to move (steps 2 and 3) and the `domain-modeling` skill is not installed, stop here, before changing anything, with one message: the `domain-modeling` skill is missing, it comes from `mattpocock/skills`, and see this repo's README for the pinned install command. Do not write an ADR or glossary format of your own.
 
 Every work item `done`? If not, list the items that are not and ask the user whether to wrap up anyway — a feature parked indefinitely is a legitimate reason, a feature still in progress is not. Stop until they answer.
 
@@ -70,12 +72,15 @@ Done when: the ADRs, glossary, docs and moved findings are committed, and the co
 
 ### 6. Final report
 
+`Audience: none` on `TRACKER.md` `## Report rules` → skip this step: no final report is written, and say so in step 8. Otherwise write it in the language of the `Language:` line.
+
 `/tracker report` → the user sends it → `/tracker sent <date> <N>%`. The progress number should land at 100% once every item is `done` and reported; if it does not, say which item's weight is missing rather than adjusting the arithmetic.
 
-Done when: the final report is sent and ticked, or the user has said they will send it later.
+Done when: the final report is sent and ticked, or the user has said they will send it later, or `Audience: none` made the step moot.
 
 ### 7. Close the index and hand over the folder
 
+- If the workspace has a `github.md`, offer (do not run) a closing comment on its issue with the `github-send-update` skill, when that skill is installed, and check the issue is closed: `gh issue view <url> --json state`. Report the state; closing the issue is the user's call.
 - Move the workspace's row from `## Active` to `## Shipped` in the root `INDEX.md`: the slug, today's date, and **where the knowledge landed** (ADR ids, doc paths, glossary terms). That row outlives the folder and is the only pointer from the feature's name to its reasoning.
 - Rewrite `WHATNEXT.md` one last time: state that the wrap-up is done, and that the only step left is the user deleting the folder.
 - Tell the user the exact path to delete, and that you are not deleting it. When the root has its own git repository, note that its history keeps these notes recoverable after the folder is gone — committing or tagging there is theirs to do, not yours.
@@ -84,4 +89,4 @@ Done when: the index shows the feature shipped, and the user has been told exact
 
 ### 8. Report
 
-In the workspace language: the ADRs written, the docs and glossary terms updated, the findings moved (and to where), the commit, the report status, and the deletion line for the user.
+In the workspace language: the ADRs written, the docs and glossary terms updated, the findings moved (and to where), the commit, the report status (or that no report was due), and the deletion line for the user.
