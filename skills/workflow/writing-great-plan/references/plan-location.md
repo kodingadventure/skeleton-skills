@@ -28,7 +28,7 @@ Each plan is `<root>/<YYYY-MM-DD>-<slug>/IMPLEMENTATION_PLAN.md` (+ `phases/`). 
 
 ## Which plan runs
 
-`**Status:**` is one of `pending`, `in-progress`, `done`, `abandoned`. `pending` and `in-progress` are _open_.
+`**Status:**` is one of `pending`, `in-progress`, `done`, `abandoned`; nothing else. Progress text goes on a separate `**Progress:**` line, so reading `Status` stays exact. `pending` and `in-progress` are _open_.
 
 When the user gives no path, list the plan folders (in a workspace `plans/*`, otherwise `<root>/*`), read each `**Status:**` line, and
 

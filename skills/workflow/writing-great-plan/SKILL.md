@@ -12,7 +12,7 @@ plan-producing skill in this repo invokes this skill when it's ready to write or
 
 The invoking skill has already done the domain legwork — located the source material, gathered or classified the items, decided phase/session grouping. Apply the rules below to that material:
 cut it to what the executor needs (**Economy**), assign Weight/Tier, attach capability recommendations, pick single-file vs multi-file, and format against `references/template.md`. Hand the
-finished plan back to the invoker to present.
+finished plan back to the invoker to present. Before handing back, run `references/runner-check.md` — it reads the plan as the runner will and puts the evidence in the plan.
 
 The invoker hands over **more material than belongs in the plan**. It gathered evidence to convince itself a gap is real; that job is done. Transcribing its findings verbatim is the single
 biggest source of bloat in plans this repo has produced. Filtering is your job, not the invoker's.
@@ -38,17 +38,17 @@ existence. Cut the proof.
 ```markdown
 <!-- Bad: 24 lines proving a doc qualifies as a reference doc. The executor cannot act on any of it. -->
 
-**`docs/FORM_PATTERNS.md` is missing from that table** but is unambiguously a reference doc:
+**`docs/forms.md` is missing from that table** but is unambiguously a reference doc:
 
-- 15.6K of pattern documentation (the repo's largest doc outside the three ARCHITECTURE files)
-- `docs/ARCHITECTURE-FRONTEND.md:638` explicitly delegates the entire form-pattern platform to it: "..."
-- Two skills build on it: `form-adopt`, `form-focus-input`
+- 15.6K of pattern documentation (the repo's largest doc outside the architecture files)
+- `docs/architecture.md`, section "Forms", explicitly delegates the entire form platform to it: "..."
+- Two skills build on it (fictional names): `form-builder`, `form-checker`
   Because the block omits it, the docs audit doesn't know it's a reference doc and would keep re-flagging...
 
 <!-- Good -->
 
-- [ ] **Add `docs/FORM_PATTERNS.md` to `### Reference docs`** (S)
-  - What: Scope `Frontend`. Follow the table's format spec at `.claude/skills/refine-docs/references/docs-layout.md`. Change nothing else in the block.
+- [ ] **Add `docs/forms.md` to `### Reference docs`** (S)
+  - What: Scope `Frontend`. Follow the table's format spec in the `refine-docs` skill's `references/docs-layout.md`. Change nothing else in the block.
   - Files: `docs/agents/domain.md`
   - Skill: `refine-docs`
 ```
@@ -139,6 +139,10 @@ A question that is still open when the plan is written goes in `## Open Question
 - [ ] `**Repo:**` names an absolute path (or `## Environment` does, for a plan that touches 2+ repos).
 - [ ] Every `## Open Questions` bullet has a `Default:` and an `Affects:`; no `## Decisions` section.
 - [ ] The header has no `Source`, `Format`, Weight legend or `## Relevant Files`; `PlanType` appears only in a maintenance plan.
+- [ ] Every `## Notes` bullet starts `Applies to: all` or `Applies to: <phases>`.
+- [ ] Every item the executor cannot do alone (waits for a person, needs a permission) carries `Runner:`; every phase file carries `Repo:` and uses no placeholder defined only in the entry point.
+- [ ] `Status:` is one of the four values; progress text is on a separate `Progress:` line.
+- [ ] Ran `references/runner-check.md` and applied what it found.
 
 ## Weight vs Tier
 
@@ -148,9 +152,9 @@ Two axes, easy to conflate — keep them separate.
 the phase, not the session, is what gets checked off) — by how much work it is and which agent capability it needs. It is the one term for this concept in a plan. "Effort" means the same
 thing; don't use it — a plan must not carry both words for one axis.
 
-**Tier** (Quick win / Normal / Involved) orders checkable units by severity or priority. It is a separate axis, not a sizing signal — a Tier: Quick win item can still be Weight: L.
+Some producers also order units by a priority tier; that axis never replaces Weight.
 
-Whichever axis(es) a plan uses, phases/items must be listed in actual execution-priority order — dependency first, then tier/severity — never left in raw discovery order.
+Phases/items must be listed in actual execution-priority order — dependency first, then severity or priority — never left in raw discovery order.
 
 ## Capability recommendation
 
@@ -163,8 +167,7 @@ This table is authoritative and is **read by you, not copied into the plan**:
 | L      | reasoning, design decisions     | `phase-l`      |
 | XL     | cross-cutting, architecture     | `phase-xl`     |
 
-> Which model and effort level each tier actually runs at is bound in the `phase-<letter>` agent definition (`.claude/agents/phase-<letter>.md`, or the `phase-agents` plugin's `agents/` folder), and that is the only place it is written down. Never restate a model or effort level
-> here or in a plan — the letter is the whole interface, and `execute-plan` resolves it at dispatch.
+> Which model and effort level each tier runs at is bound in the executor definitions, never in a plan. The plan carries only the letter; the dispatching skill resolves it to the name the harness lists (see its Executor names).
 
 Size each unit by the capability it genuinely needs, not by how important it feels. The letter picks the executor: an over-weighted item burns a reasoning-tier agent on a find-and-replace,
 and an under-weighted one hands a design decision to an agent told to apply instructions literally and escalate rather than improvise.
@@ -175,14 +178,14 @@ and an under-weighted one hands a design decision to an agent told to apply inst
 
 One checkbox = one atomic invocation. It may span multiple files, as long as they're all dispatched in a single skill call with no pause needed partway through.
 
-**Partial-completion convention**: when a checkbox batches multiple sub-files (a `revive`
-per-package pass, a fallow pass touching three functions), list those sub-files as visible sub-bullets under the item — not folded into prose:
+**Partial-completion convention**: when a checkbox batches multiple sub-files (a `go vet`
+per-package pass, a lint-cleanup pass touching three functions), list those sub-files as visible sub-bullets under the item — not folded into prose:
 
 ```markdown
-- [ ] **Fix revive — internal/modules/patient** (S)
-  - [ ] `internal/modules/patient/patient.model.go`
-  - [ ] `internal/modules/patient/patient.repository.go`
-  - [ ] `internal/modules/patient/patient.service.go`
+- [ ] **Fix go vet — internal/orders** (S)
+  - [ ] `internal/orders/order.model.go`
+  - [ ] `internal/orders/order.repository.go`
+  - [ ] `internal/orders/order.service.go`
 ```
 
 If execution stops mid-item (context/token budget), the sub-bullets let it tick off finished sub-files inline and leave the parent unchecked, so a fresh session resumes from exactly what's
@@ -206,11 +209,14 @@ once per X" as the only signal. Checkbox atomicity's default is one checkbox, on
 repeating phase overrides that default, so the override has to be written down, not implied:
 
 ```markdown
-**Execution unit:** one `<module>` per agent run. Guardian reviews and commits before the next
-module starts — never batch modules into one invocation.
+- **Execution unit:** one `<module>` per agent run. Guardian reviews and commits before the next
+  module starts — never batch modules into one invocation.
+  - [ ] `orders`
+  - [ ] `invoices`
+  - [ ] `shipments`
 ```
 
-Place it right after the phase header, next to `Prone to:`.
+Place it right after the phase header, next to `Prone to:`. List the units as checkbox sub-bullets of the `Execution unit:` item, one per unit, not as a prose or `Order:` list: the dispatcher sends the executor once per unchecked unit and ticks the unit when it lands.
 
 **A human-in-the-loop step inside the unit forces this regardless of N.** If any item in the
 repeating checklist needs a person — manual device testing, a click in an external dashboard, an
@@ -245,7 +251,7 @@ The split **unit** depends on plan shape:
 
 - **Feature-shape** (heterogeneous phases, e.g. `to-plan`) → split **per phase**:
   `phase-01-<name>.md`, `phase-02-<name>.md`, ...
-- **Maintenance-shape** (homogeneous, mechanical phases, e.g. the triage skills) → split
+- **Maintenance-shape** (homogeneous, mechanical phases, e.g. a lint-cleanup plan) → split
   **per session**: `session-01.md`, `session-02.md`, ... — each session is the same ~5–7-phase batch the plan shape already groups for execution efficiency.
 
 Either way, the split files go in a `phases/` folder next to the entry point, and a lightweight index/entry-point file lists every phase/session and its file pointer — see `references/template.md` for the exact shape.
@@ -256,7 +262,7 @@ Multi-file plans mark phases that an executor with sub-agent capability may run 
 executor would have to re-derive it from a cold start on every checkpoint.
 
 **`Depends on:` must count shared-file writes, not just logical order.** Two phases that write the same file are dependent even when neither needs the other's result. This is the single trap:
-in a real 10-phase docs plan, seven phases declared `Depends on: nothing` while four of them wrote `docs/GLOSSARY.md` — a naive fan-out on that field would have clobbered it.
+in a 10-phase docs plan, seven phases declared `Depends on: nothing` while four of them wrote `docs/GLOSSARY.md` — a naive fan-out on that field would have clobbered it.
 
 **Detect this mechanically, don't eyeball it while writing each phase.** Once every phase's `Files:` (or sub-bullet) list is drafted, build one flat list of every file across every phase and
 sort it — any file appearing under 2+ phases is shared, full stop, regardless of whether the phases look independent. Do this as one discrete pass over the finished draft, not from memory
@@ -285,7 +291,7 @@ encode agent counts, spawn instructions, or a sequential fallback in the plan.
 
 ## Manual Test Checkpoints
 
-Every plan carries a **Manual Test Checkpoints** section, including maintenance/triage plans.
+Every plan carries a **Manual Test Checkpoints** section, including maintenance and audit plans.
 Automated verify (build/typecheck/lint) confirms the code compiles, not that the behavior is correct — this section is where a human-observable checkpoint gets flagged so `execute-plan` can
 surface it.
 
@@ -307,10 +313,22 @@ Every phase/commit-checkpoint carries a `Suggested commit:` line, written when t
 spec/conversation context a fresh executor won't; write the literal, ready-to-use message (type, scope/phase-tag, description):
 
 ```markdown
-Suggested commit: refactor(phase-02): extract validation helpers in internal/modules/patient
+Suggested commit: refactor(phase-02): extract validation helpers in internal/orders
 ```
 
 `execute-plan` surfaces this line as the starting point for the commit message (the optional `caveman-commit` skill from `JuliusBrussee/caveman`, or the repo's own commit rules) instead of generating a message from nothing.
+
+A phase that changes nothing in the repo (it only writes notes elsewhere, or only runs checks) writes `Suggested commit: none — <reason>`. Nothing is staged or committed for it, but the phase's gates still run. Never invent a commit message for such a phase, and never omit the line.
+
+## Standard fields
+
+These are fixed forms; do not invent variants.
+
+- **`Runner:`** — an optional item field, `Runner: guardian` or `Runner: human`. No line means the executor does it. An item with the field is not dispatched to an executor agent: the guardian does it after the phase, or the run stops and waits for the person. Use it for work an agent cannot finish alone — a page that waits for an answer, installing a tool, a login, a click in a dashboard.
+- **`Applies to:`** — every `## Notes` bullet starts with `Applies to: all` or `Applies to: <phase or range>`. The dispatcher attaches the bullets that apply to the phase it sends out, so a bullet without it may never reach the executor.
+- **`Repo:`** — every phase file carries a `Repo: <absolute path>` line (from the plan's `**Repo:**` line or its `## Environment` table). Phase files use absolute paths, or placeholders defined in the file itself, never ones defined only in the entry point: the executor does not open the entry point.
+- **`Execution unit:`** — for a repeating phase, one checkbox sub-bullet per unit (see "Repeating (per-unit) phases").
+- **`Status:`** — exactly one of `pending`, `in-progress`, `done`, `abandoned`. Progress text goes on a separate `Progress:` line, because skills select the plan to run by reading `Status:`.
 
 ## Where the plan goes
 
@@ -325,4 +343,4 @@ Every template header carries `**Review:** guardian`: `execute-plan` stops after
 repo has `review-phase` installed; delete it when the user wants `execute-plan` to commit each phase itself, or when `review-phase` is not installed, since nothing would pick up
 the staged phase.
 
-The header is four lines: `Status`, `Review`, `Verify`, `Repo`. `Verify` appears only when the repo has no `docs/agents/verify.md`; `PlanType` only on a maintenance plan.
+The header is four lines: `Status`, `Review`, `Verify`, `Repo`, plus an optional `Progress` line. `Verify` appears only when the repo has no `docs/agents/verify.md`; `PlanType` only on a maintenance plan.

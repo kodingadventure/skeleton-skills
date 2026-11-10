@@ -3,7 +3,7 @@
 Two shapes — pick by plan homogeneity, per `SKILL.md`:
 
 - **Feature-shape** — heterogeneous phases (database → backend → frontend), per-item checkboxes. Used by `to-plan`.
-- **Maintenance-shape** — homogeneous, mechanical phases (lint/complexity/fallow fixes), one `[ ] Done` checkbox per phase. Used by the triage skills.
+- **Maintenance-shape** — homogeneous, mechanical phases (lint and complexity fixes), one `[ ] Done` checkbox per phase. Used by lint-cleanup and audit plans.
 
 Each shape has a **single-file** and a **multi-file** variant — pick the file variant by the splitting triggers in `SKILL.md` ("Splitting large plans").
 
@@ -32,7 +32,9 @@ Use when the plan stays under every splitting trigger.
 **Verify:** `<command that proves the work, e.g. npm test>`
 **Repo:** `/absolute/path`
 
-<!-- Review: keep only when the repo has review-phase installed.
+<!-- Status: only pending | in-progress | done | abandoned. Progress text goes on a separate optional
+     `**Progress:**` line below it, never in Status.
+     Review: keep only when the repo has review-phase installed.
      Verify: only when the repo has no docs/agents/verify.md; otherwise omit the line.
      Repo: one repo. For 2+ repos replace the line with a `## Environment` table
      (| What | Absolute path |, one row per repo). -->
@@ -82,13 +84,13 @@ Suggested commit: feat(phase-02): wire <entity> form to the API
 
 ### Phase 3: <Name> — Weight: L
 
-**Execution unit:** one `<module>` per agent run. Guardian reviews and commits before the next
-module starts — never batch modules into one invocation.
-
-**Order:** <list the named units in execution order, e.g. simple → complex>
+- **Execution unit:** one `<module>` per agent run. Guardian reviews and commits before the next
+  module starts — never batch modules into one invocation.
+  - [ ] `<unit-1>`
+  - [ ] `<unit-2>`
 
 - [ ] **`<UNIT>` — <item title>** (L)
-  - What: <Same instructions apply to every unit; fill in `<UNIT>` at execution time.>
+  - What: <Same instructions apply to every unit; fill in `<UNIT>` at execution time. The executor is dispatched once per unchecked unit above.>
   - Files: `path/to/<unit>/**`
 
 Suggested commit: feat(phase-03): <verb> <unit-placeholder>
@@ -99,8 +101,13 @@ Suggested commit: feat(phase-03): <verb> <unit-placeholder>
 
 ## Notes
 
-<Only what spans two or more phases: cross-cutting constraints, ADR references, traps an executor
-would otherwise fall into. Phase-local warnings belong in their phase, not here. In a workspace, point at the workspace's decision instead of copying it.>
+- Applies to: all — <rule that holds for every phase, e.g. the target repo's commit and push rule>
+- Applies to: <phase or range, e.g. 2-4> — <constraint that spans those phases>
+
+<!-- Only what spans two or more phases: cross-cutting constraints, ADR references, traps an executor
+     would otherwise fall into. Every bullet starts `Applies to:` so the dispatcher can attach the ones
+     that apply. Phase-local warnings belong in their phase, not here. In a workspace, point at the
+     workspace's decision instead of copying it. -->
 ```
 
 ---
@@ -119,7 +126,9 @@ Use once any splitting trigger fires. Entry point holds no checklist items; each
 **Verify:** `<command that proves the work, e.g. npm test>`
 **Repo:** `/absolute/path`
 
-<!-- Review: keep only when the repo has review-phase installed.
+<!-- Status: only pending | in-progress | done | abandoned. Progress text goes on a separate optional
+     `**Progress:**` line below it, never in Status.
+     Review: keep only when the repo has review-phase installed.
      Verify: only when the repo has no docs/agents/verify.md; otherwise omit the line.
      Repo: one repo. For 2+ repos replace the line with a `## Environment` table
      (| What | Absolute path |, one row per repo). -->
@@ -153,7 +162,10 @@ Use once any splitting trigger fires. Entry point holds no checklist items; each
 
 ## Notes
 
-<Only what spans two or more phases. See single-file variant. In a workspace, point at the workspace's decision instead of copying it.>
+- Applies to: all — <rule that holds for every phase>
+- Applies to: <phase or range> — <constraint that spans those phases>
+
+<!-- See single-file variant: every bullet starts `Applies to:`. -->
 ```
 
 ### Per-phase file: `phases/phase-<NN>-<name>.md`
@@ -163,7 +175,11 @@ Use once any splitting trigger fires. Entry point holds no checklist items; each
 
 Weight: <S | M | L | XL>
 Depends on: <phases that must complete first, or "nothing">
+Repo: `/absolute/path` <!-- from the entry point's **Repo:** line or its Environment table; one repo per phase file -->
 Prone to: <failure-mode name from the repo's docs/agents/failure-modes.md>, <another> <!-- omit the line if that file doesn't exist -->
+
+<!-- A phase file stands alone: absolute paths, or placeholders defined in this file. Never a marker
+     that only the entry point defines — the executor does not open the entry point. -->
 
 ## Context
 
@@ -183,17 +199,22 @@ has none. Shared data only: business rules, DTO shapes, mockups, lookup tables.>
   - Provenance: <command that established the factual claim in What:, or `unverified — check first`>
   - Files: `path/to/other-file.go`
 
+- [ ] **<Item the executor cannot do alone>** (S)
+  - Runner: guardian <!-- or `human`; omit the line when the executor does it -->
+  - What: <e.g. publish the review page and wait for the answer. Not dispatched to an executor.>
+
 Suggested commit: feat(phase-01): add <entity> model and migration
+<!-- A phase that changes nothing in the repo: `Suggested commit: none — <reason>`. -->
 ```
 
 ---
 
 ## Maintenance-shape — single-file
 
-Use for triage/audit plans. One `[ ] Done` checkbox per phase — a phase may
+Use for lint-cleanup and audit plans. One `[ ] Done` checkbox per phase — a phase may
 bundle many files behind one skill invocation.
 
-<!-- `Verify` and `Repo` follow the same rules as in the feature-shape header. -->
+<!-- `Status`, `Verify` and `Repo` follow the same rules as in the feature-shape header. -->
 
 ```markdown
 # Implementation Plan: <Description>
@@ -292,28 +313,30 @@ session's range — including each phase's `Suggested commit:` line.>
 
 ## Field reference
 
-| Field                     | Applies to                | Description                                                                                                                                                                                                                 |
-| ------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Status`                  | header                    | `pending` at authoring time; `execute-plan` sets `in-progress` / `done`; the owner may set `abandoned`.                                                                                                                     |
-| `Review`                  | header                    | `guardian` when `review-phase` is installed, else omit.                                                                                                                                                                     |
-| `Verify`                  | header                    | Only when the repo has no `docs/agents/verify.md`; the command that proves the work.                                                                                                                                        |
-| `Repo`                    | header                    | The single absolute path of the target repo.                                                                                                                                                                                |
-| `PlanType`                | header                    | Maintenance plans only (e.g. `backend-refactor`, `fallow`, `docs-fix`, `skill-fix`); no line means a feature plan.                                                                                                          |
-| `Environment`             | plan header               | Only for a plan that touches 2+ repos: a table with one absolute path per repo. A plan with one repo uses the `Repo` line instead.                                                                                          |
-|                           |                           | Declared per-phase (feature-shape, phases differ in type) or once at the plan header (maintenance-shape, every phase shares one type).                                                                                      |
-| `Weight`                  | item / phase              | Bare `(S)`/`(M)`/`(L)`/`(XL)` on the checkable unit. Required, no exceptions.                                                                                                                                               |
-| `Depends on`              | phase file                | Phases that must complete first, or `nothing`. Counts shared-file writes, not just logical order — see "Parallel batches" in `SKILL.md`.                                                                                    |
-| `Prone to`                | phase file                | One line, phase-level only, next to `Depends on`. Failure-mode name(s) from the repo's `docs/agents/failure-modes.md`; omit if that file doesn't exist. Feature-shape only.                                                 |
-| `Execution unit`          | phase file                | Required once a phase's checklist repeats across 5+ named units (modules, files, endpoints), is Weight L/XL, or any unit-checklist item needs a human. Next to `Prone to`. See "Repeating (per-unit) phases" in `SKILL.md`. |
-| `Batch`                   | Phase / Session Index     | Letter marking phases an executor may run concurrently. Multi-file plans only; `—` for a phase that runs alone; drop the column when no batch qualifies.                                                                    |
-| `Context`                 | phase file                | Facts shared by 2+ items. Omit entirely for single-item phases.                                                                                                                                                             |
-| `What`                    | item                      | Item-specific detail inline — DTO shapes, mockups, business rules, no external chasing. Never restates `Context`.                                                                                                           |
-| `Why`                     | item                      | L/XL items only — the constraint that ruled out the obvious approach. See "Scale Economy by Weight" in `SKILL.md`. Feature-shape only.                                                                                      |
-| `Provenance`              | item                      | Data, not evidence — exempt from the evidence cut. Required only on a codebase claim the executor would otherwise take on faith; never on a decision. See "Data is not evidence" in `SKILL.md`. Feature-shape only.         |
-| `Files`                   | item                      | Files to create/modify. Omit for no-file items, or when sub-bullets already name them.                                                                                                                                      |
-| `Skill`                   | item                      | Skill to invoke. Omit if no skill covers it.                                                                                                                                                                                |
-| `Sub-bullets`             | item                      | Required when an item batches multiple files — see partial-completion convention in `SKILL.md`.                                                                                                                             |
-| `Manual Test Checkpoints` | plan-level                | Mandatory section, every plan. Default text when no phase changes observable behavior.                                                                                                                                      |
-| `Open Questions`          | plan-level                | Question + `Default:` + `Affects:`; deleted once answered, the answer written into the affected item.                                                                                                                       |
-| `Notes`                   | plan-level                | Only what spans 2+ phases. Phase-local traps live in their phase file. In a workspace it points at the workspace's decision.                                                                                                |
-| `Suggested commit:`       | phase / commit-checkpoint | Literal, ready-to-use commit message, written at plan-authoring time.                                                                                                                                                       |
+| Field                     | Applies to                | Description                                                                                                                                                                                                                                                   |
+| ------------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Status`                  | header                    | `pending` at authoring time; `execute-plan` sets `in-progress` / `done`; the owner may set `abandoned`. Only these four values; free text goes on `Progress`.                                                                                                 |
+| `Progress`                | header                    | Optional separate line for progress text (e.g. "phases 1-3 done"). Never put it in `Status`.                                                                                                                                                                  |
+| `Review`                  | header                    | `guardian` when `review-phase` is installed, else omit.                                                                                                                                                                                                       |
+| `Verify`                  | header                    | Only when the repo has no `docs/agents/verify.md`; the command that proves the work.                                                                                                                                                                          |
+| `Repo`                    | header / phase file       | Header: the single absolute path of the target repo. Phase file: a `Repo: <absolute path>` line, filled from the header's `**Repo:**` or the `## Environment` table; phase files use absolute paths or placeholders defined in the file itself.               |
+| `PlanType`                | header                    | Maintenance plans only (e.g. `backend-refactor`, `lint-cleanup`, `docs-fix`); no line means a feature plan.                                                                                                                                                   |
+| `Environment`             | plan header               | Only for a plan that touches 2+ repos: a table with one absolute path per repo. A plan with one repo uses the `Repo` line instead.                                                                                                                            |
+|                           |                           | Declared per-phase (feature-shape, phases differ in type) or once at the plan header (maintenance-shape, every phase shares one type).                                                                                                                        |
+| `Weight`                  | item / phase              | Bare `(S)`/`(M)`/`(L)`/`(XL)` on the checkable unit. Required, no exceptions.                                                                                                                                                                                 |
+| `Depends on`              | phase file                | Phases that must complete first, or `nothing`. Counts shared-file writes, not just logical order — see "Parallel batches" in `SKILL.md`.                                                                                                                      |
+| `Prone to`                | phase file                | One line, phase-level only, next to `Depends on`. Failure-mode name(s) from the repo's `docs/agents/failure-modes.md`; omit if that file doesn't exist. Feature-shape only.                                                                                   |
+| `Execution unit`          | phase file                | Required once a phase's checklist repeats across 5+ named units (modules, files, endpoints), is Weight L/XL, or any unit-checklist item needs a human. Next to `Prone to`; one checkbox sub-bullet per unit. See "Repeating (per-unit) phases" in `SKILL.md`. |
+| `Batch`                   | Phase / Session Index     | Letter marking phases an executor may run concurrently. Multi-file plans only; `—` for a phase that runs alone; drop the column when no batch qualifies.                                                                                                      |
+| `Context`                 | phase file                | Facts shared by 2+ items. Omit entirely for single-item phases.                                                                                                                                                                                               |
+| `What`                    | item                      | Item-specific detail inline — DTO shapes, mockups, business rules, no external chasing. Never restates `Context`.                                                                                                                                             |
+| `Why`                     | item                      | L/XL items only — the constraint that ruled out the obvious approach. See "Scale Economy by Weight" in `SKILL.md`. Feature-shape only.                                                                                                                        |
+| `Provenance`              | item                      | Data, not evidence — exempt from the evidence cut. Required only on a codebase claim the executor would otherwise take on faith; never on a decision. See "Data is not evidence" in `SKILL.md`. Feature-shape only.                                           |
+| `Runner`                  | item                      | `guardian` or `human`; omit for the executor (the default). Such an item is not dispatched to an executor agent: the guardian does it after the phase, or the run stops for the person. See "Standard fields" in `SKILL.md`.                                  |
+| `Files`                   | item                      | Files to create/modify. Omit for no-file items, or when sub-bullets already name them.                                                                                                                                                                        |
+| `Skill`                   | item                      | Skill to invoke. Omit if no skill covers it.                                                                                                                                                                                                                  |
+| `Sub-bullets`             | item                      | Required when an item batches multiple files — see partial-completion convention in `SKILL.md`.                                                                                                                                                               |
+| `Manual Test Checkpoints` | plan-level                | Mandatory section, every plan. Default text when no phase changes observable behavior.                                                                                                                                                                        |
+| `Open Questions`          | plan-level                | Question + `Default:` + `Affects:`; deleted once answered, the answer written into the affected item.                                                                                                                                                         |
+| `Notes`                   | plan-level                | Only what spans 2+ phases; every bullet starts `Applies to: all` or `Applies to: <phases>`. Phase-local traps live in their phase file. In a workspace it points at the workspace's decision.                                                                 |
+| `Suggested commit:`       | phase / commit-checkpoint | Literal, ready-to-use commit message, written at plan-authoring time. `none — <reason>` for a phase that changes nothing in the repo: nothing is staged or committed, the gates still run.                                                                    |
