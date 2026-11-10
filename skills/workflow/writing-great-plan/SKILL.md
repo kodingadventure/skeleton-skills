@@ -163,7 +163,7 @@ This table is authoritative and is **read by you, not copied into the plan**:
 | L      | reasoning, design decisions     | `phase-l`      |
 | XL     | cross-cutting, architecture     | `phase-xl`     |
 
-> Which model and effort level each tier actually runs at is bound in `.claude/agents/phase-<letter>.md`, and that is the only place it is written down. Never restate a model or effort level
+> Which model and effort level each tier actually runs at is bound in the `phase-<letter>` agent definition (`.claude/agents/phase-<letter>.md`, or the `phase-agents` plugin's `agents/` folder), and that is the only place it is written down. Never restate a model or effort level
 > here or in a plan — the letter is the whole interface, and `execute-plan` resolves it at dispatch.
 
 Size each unit by the capability it genuinely needs, not by how important it feels. The letter picks the executor: an over-weighted item burns a reasoning-tier agent on a find-and-replace,

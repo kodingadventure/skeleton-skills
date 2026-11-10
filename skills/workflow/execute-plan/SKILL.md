@@ -112,7 +112,7 @@ is not permission, because file-write conflicts don't show up in that field.
 With sub-agents, when the next unchecked phase carries a batch letter:
 
 1. Dispatch **one agent per phase**, concurrently, routing each by its own Weight letter to the matching agent: `S` → `phase-s` · `M` → `phase-m` · `L` → `phase-l` · `XL` → `phase-xl`. Those
-   definitions live in `.claude/agents/` and carry the model and effort for the tier — don't override the model per invocation. Weight already encodes the capability the phase needs; that is
+   definitions live in `.claude/agents/` or in the `phase-agents` plugin (where they are named `phase-agents:phase-s` and so on) and carry the model and effort for the tier — don't override the model per invocation. Weight already encodes the capability the phase needs; that is
    what the letter is for. Mixed letters in one batch are normal: route per phase, not per batch. Never split one phase across agents.
    - On a harness without those agents, fall back to one general-purpose agent per phase and give it the rules the definitions carry (below). If it has no sub-agents at all, run sequentially.
 2. **Hand each agent its phase file path and nothing else.** Phase files are self-contained by design, and the agent definitions already forbid opening sibling phase files, the plan's entry

@@ -1,0 +1,66 @@
+{
+  "name": "skeleton-skills",
+  "description": "Agent skills for plan-driven work: feature workspaces, phased plans with guarded subagent execution, and GitHub helpers.",
+  "owner": {
+    "name": "kodingadventure"
+  },
+  "plugins": [
+    {
+      "name": "workspace",
+      "source": "./",
+      "description": "Feature workspaces: discuss, kickoff, pause and resume work across sessions.",
+      "skills": [
+        "./skills/workspace/discuss",
+        "./skills/workspace/kickoff",
+        "./skills/workspace/msg",
+        "./skills/workspace/pause-here",
+        "./skills/workspace/resume-here",
+        "./skills/workspace/so-far",
+        "./skills/workspace/spin-off",
+        "./skills/workspace/tracker",
+        "./skills/workspace/wrap-up"
+      ]
+    },
+    {
+      "name": "workflow",
+      "source": "./",
+      "description": "Plan-driven delivery: write, execute, guard and verify phased plans.",
+      "skills": [
+        "./skills/workflow/execute-plan",
+        "./skills/workflow/guard-plan",
+        "./skills/workflow/refine-docs",
+        "./skills/workflow/review-phase",
+        "./skills/workflow/to-plan",
+        "./skills/workflow/verify",
+        "./skills/workflow/whatnext",
+        "./skills/workflow/writing-great-plan"
+      ]
+    },
+    {
+      "name": "agent",
+      "source": "./",
+      "description": "Agent helpers: review pages, skill capture and change explainers.",
+      "skills": [
+        "./skills/agent/review-page",
+        "./skills/agent/skill-from-context",
+        "./skills/agent/what-you-did"
+      ]
+    },
+    {
+      "name": "github",
+      "source": "./",
+      "description": "GitHub issue and update helpers.",
+      "skills": [
+        "./skills/github/github-new-issue",
+        "./skills/github/github-send-update",
+        "./skills/github/github-spin-off"
+      ]
+    },
+    {
+      "name": "phase-agents",
+      "source": "./",
+      "description": "Executor subagents phase-s, phase-m, phase-l and phase-xl used by guard-plan and execute-plan.",
+      "skills": []
+    }
+  ]
+}
