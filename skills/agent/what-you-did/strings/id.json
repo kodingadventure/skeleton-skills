@@ -1,6 +1,6 @@
 {
   "lang": "id",
-  "guide": "Tiap kelompok adalah satu tujuan. Label di depan tujuan menyebut sumbernya; label kuning berarti ditebak dari kode. Jelaskan Ini menyalin prompt: tempel ke Claude untuk halaman yang lebih dalam tentang bagian itu.",
+  "guide": "Tiap kelompok adalah satu tujuan. Label di depan tujuan menyebut sumbernya; label kuning berarti ditebak dari kode. Jelaskan Ini menyalin prompt: tempel ke agenmu untuk halaman yang lebih dalam tentang bagian itu.",
   "nav": "Kelompok",
   "view": "Tampilan kode:",
   "view_uni": "Satu kolom",
@@ -51,7 +51,7 @@
     "question_label": "Pertanyaanmu (opsional)",
     "question_placeholder": "misal: kenapa di sini, bukan di service?",
     "copy_prompt": "Salin prompt",
-    "paste_hint": "Tempel ke Claude, di sesi ini atau sesi baru.",
+    "paste_hint": "Tempel ke agenmu, di sesi ini atau sesi baru.",
     "collapse_all": "Lipat semua",
     "expand_all": "Buka semua",
     "nav_menu": "Kelompok",

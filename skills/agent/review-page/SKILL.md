@@ -1,9 +1,11 @@
 ---
 name: review-page
-description: Writes a short, diagram-led HTML page to the temp directory and opens it for the user to review or decide on. Use when you ask the user to read, review, or choose, including a decision round handed over by another skill, or when a message starts with `/review-page explain` (pasted from a page's Explain button). Not for documents written for agents.
+description: Writes a short, diagram-led HTML page to the temp directory and opens it for the user to review or decide on. Use when there are two or more decisions, or one that needs a diagram or background, including a decision round handed over by another skill, or when a message starts with `/review-page explain` (pasted from a page's Explain button). Ask a short question directly in the conversation (or with your agent's question tool). Not for documents written for agents.
 ---
 
 # Review page
+
+Use a review page when there are two or more decisions, or one that needs a diagram or background. Ask a short question directly in the conversation (or with your agent's question tool).
 
 The user reads plain sentences and diagrams. IDs, codes, file paths, and dense tables are for agents. A **review page** is the human version of material the agent already holds: one self-contained HTML file per **round**, written in the repo's language, opened in the user's browser, readable in a few minutes, and answered by pasting one block of text. The page lives in the OS temp directory, so nothing lands in the repo; the decisions it collects are recorded in the repo's own documents.
 
@@ -14,7 +16,9 @@ Two kinds share every rule below:
 
 Users tend to accept recommendations as given. Every recommendation must hold up unread, and the **risk flag** (yellow) is where you invite scrutiny.
 
-`scripts/page.py` in this skill's directory does the mechanical work: `new` builds the page, `check` turns the rules below into errors and warnings, `decide` records answers, `refresh` moves an older page onto the current template. A round runs like this:
+`scripts/page.py` in this skill's directory does the mechanical work: `new` builds the page, `check` turns the rules below into errors and warnings, `decide` records answers, `refresh` moves an older page onto the current template. `<skill-dir>` below is the folder holding this `SKILL.md`. A round runs like this:
+
+Needs Python 3 (standard library only) and git; if `python3` is missing, use `python` or `py`.
 
 ```bash
 python3 <skill-dir>/scripts/page.py new decisions-round-2 --lang id --title "Keputusan Putaran 2" --main <draft>/main.html
@@ -41,16 +45,16 @@ python3 <skill-dir>/scripts/page.py decide /tmp/review-page/decisions-round-2-20
    - Colour a risky or open node with `classDef q` (yellow) and a new or chosen node with `classDef n` (green), as in the template.
    - Show a before/after as two diagrams inside `<div class="pair">`, which stacks on a phone.
 
-5. **Build.** Write the page's `<main>…</main>` block to a draft file in the temp directory, starting from the `<main>` block of [`template.html`](template.html) and keeping its `[[key]]` markers as they are, then run `page.py new <topic> --lang <code> --title "<page name>" --main <draft>`. `<topic>` is a short slug, and `<code>` the repo's language: `strings/` holds `en` and `id`; add another by copying `strings/en.json` and translating it. The script wraps the draft in the template's styling and scripts, fills every `[[key]]` with the fixed string in that language, and prints the page's path. The draft holds:
+5. **Build.** Write the page's `<main>…</main>` block to a draft file in the temp directory, starting from the `<main>` block of [`template.html`](template.html) and keeping its `[[key]]` markers as they are, then run `page.py new <topic> --lang <code> --title "<page name>" --main <draft>`. `<topic>` is a short slug, and `<code>` the page's language: the one the repo states, and when it states none, the language the user writes in during the conversation. `strings/` holds `en` and `id`; add another by copying `strings/en.json` and translating it. A language with no file in `strings/` falls back to `en` with one warning line, so the page's fixed text is English until you add the file. The script wraps the draft in the template's styling and scripts, fills every `[[key]]` with the fixed string in that language, and prints the page's path. The draft holds:
    - **Header**: a back link when this page continues another, the title, a lead saying what the page is, why now, and how many items, the reading guide paragraph as the template has it, and the item list linking to each section, with the yellow chip on flagged ones.
    - **One section per item**: numbered heading, problem, diagram, details, options with the recommended one first, and a risk box under flagged items saying why it is risky and what to check. Give each `.opts` a short `data-name` for the answer box and its own radio `name`.
    - **Noted** for items with nothing to choose, **next round** when something is deferred, then the **answer box**, whose `data-title` becomes the first line of the answer.
 
    Copy a section block for each further item. The template's HTML comments are instructions: leave them out of the draft, together with every block the page does not use. Make every cross-reference a link: an in-page anchor for a section, the bare file name for another review page (they share one directory). The script marks every item with options with a question mark until it is answered. It also adds, under every decision, an **Another answer** option with a text field and a **comment box**, and puts a **notes box** in the answer box; all of them reach the copied answer. It also gives every section an **Explain** button (see [Explain](#explain)). Never write any of these into the draft yourself.
 
-6. **Check and open.** Run `page.py check <file>`, fix every ERROR, and run it again until no ERROR remains; fix a WARN unless you can say why it does not apply. Open the page for the user (`open <path>` on macOS, `xdg-open <path>` on Linux, `start <path>` on Windows). In chat, give the absolute path and one sentence on what to decide and how to answer; the page carries the content. Write the path wherever the work tracks its state, so a later session can find the page while it still exists. _Done when_ the check prints `ok` or only warnings you can justify, and the page is open.
+6. **Check and open.** Run `page.py check <file>`, fix every ERROR, and run it again until no ERROR remains; fix a WARN unless you can say why it does not apply. Open the page for the user (`open <path>` on macOS, `xdg-open <path>` on Linux, `start <path>` on Windows). If the open command fails or there is no desktop session, do not retry it and never say the page is "opened": give the file path, say the file must be copied to the user's own machine, or serve it with `python3 -m http.server --directory <folder>` when a port can be opened. In chat, give the absolute path and one sentence on what to decide and how to answer; the page carries the content. Write the path wherever the work tracks its state, so a later session can find the page while it still exists. No such place: give the path in the conversation, and ask once where the user wants decisions recorded. _Done when_ the check prints `ok` or only warnings you can justify, and the page is open or its path and way to reach it are given.
 
-7. **Record the answer.** When the user answers, write the decisions into their source of truth first. Then turn the page into a **record** of what was decided, so nothing on it asks for an answer that was already given:
+7. **Record the answer.** When the user answers, write the decisions into their source of truth first. No such place: give the path in the conversation, and ask once where the user wants decisions recorded. Then turn the page into a **record** of what was decided, so nothing on it asks for an answer that was already given:
    - An answer of "agree to all" (the page writes it when nothing was changed) picks every recommended option. Read every comment and the notes in the answer first: a question gets its answer in chat (and on the page, as a follow-up when it reopens the item), and a comment that changes the item is recorded with it. A comment never counts as a choice; the letter or the user's own answer does.
    - Run `page.py decide <file> <radio-name>=<letter> …` for every answered decision, or `<radio-name>=other:<the user's own answer>` for an answer outside the options (the page shows that text in the locked option). The page's script then locks the chosen option, fades the others while keeping the recommendation tag visible on one the user passed over, greys the item's risk box, drops its yellow chips, and swaps its question mark for a check, in the heading and the item list. It then folds the item to its heading and a one-line summary of the answer, so the open items keep the reader's focus; a click on the heading or a link to the item opens it again. Once every decision is answered, it hides the answer box and the reading guide.
    - Add the **decided banner** from the template's comment at the top of the header: the date, then each item's outcome, naming every answer that differs from the recommendation.
@@ -71,7 +75,7 @@ About: <one option's name>     (only when the reader picked one)
 Question: <the reader's question, or the default one>
 ```
 
-It asks for an explanation, not a decision: nothing in it counts as an answer. The reader is mid-choice on the page, so leave the page file untouched: a reload would reset the choices they have not copied yet.
+The first line is only a marker; if your agent has no slash commands, treat it as a request for this skill. It asks for an explanation, not a decision: nothing in it counts as an answer. The reader is mid-choice on the page, so leave the page file untouched: a reload would reset the choices they have not copied yet.
 
 1. **Find the item.** Read the section at the page path, then the source material behind it. When the page is gone, work from the Item and About lines and the source material.
 2. **Answer in chat.** Answer the question first, in a few plain sentences under the rules of step 3. When About names an option, say what choosing it changes compared with the recommendation.

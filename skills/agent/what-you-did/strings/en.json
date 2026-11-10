@@ -1,6 +1,6 @@
 {
   "lang": "en",
-  "guide": "Each group is one purpose. The tag before a purpose says where it comes from; a yellow tag means it was guessed from the code. Explain this copies a prompt: paste it to Claude for a deeper page on that part.",
+  "guide": "Each group is one purpose. The tag before a purpose says where it comes from; a yellow tag means it was guessed from the code. Explain this copies a prompt: paste it to your agent for a deeper page on that part.",
   "nav": "Groups",
   "view": "Code view:",
   "view_uni": "One column",
@@ -51,7 +51,7 @@
     "question_label": "Your question (optional)",
     "question_placeholder": "e.g. why here and not in the service?",
     "copy_prompt": "Copy prompt",
-    "paste_hint": "Paste it to Claude, in this session or a new one.",
+    "paste_hint": "Paste it to your agent, in this session or a new one.",
     "collapse_all": "Collapse all",
     "expand_all": "Expand all",
     "nav_menu": "Groups",

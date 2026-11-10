@@ -6,11 +6,11 @@ argument-hint: "[commit | A..B | workspace range like 'phase 4' or 'since the la
 
 # What you did
 
-The user wants to see the code that was just written, the way a reviewer reads a diff, but told as a story. The output is a **change page**: one HTML file in the OS temp directory, opened in the browser, where the changes sit in **groups**, one purpose each, every group showing its **hunks** (one block of changed lines in one file, as in `git diff`) before and after. Each hunk and each group carries an **Explain this** button that copies a prompt; pasted back to Claude, the prompt runs this skill in **focus** mode and produces a **focus page** on that one part, with its own buttons, so the user can dig as deep as they like.
+The user wants to see the code that was just written, the way a reviewer reads a diff, but told as a story. The output is a **change page**: one HTML file in the OS temp directory, opened in the browser, where the changes sit in **groups**, one purpose each, every group showing its **hunks** (one block of changed lines in one file, as in `git diff`) before and after. Each hunk and each group carries an **Explain this** button that copies a prompt; pasted back to your agent, the prompt runs this skill in **focus** mode and produces a **focus page** on that one part, with its own buttons, so the user can dig as deep as they like.
 
-`scripts/wyd.py` does the mechanical work and holds the one hard rule: **the code on a page always comes from git, through the script, never typed by you.** `collect` takes a **snapshot** of the changes (the patch, its hunks, where it came from); `new` validates your grouping against that snapshot and renders the page. `generated.txt` lists the files written by tools (generated API clients, Swagger output, lockfiles); their hunks are folded into one "generated" list on their own, so they never enter a group. A project adds its own generator outputs to `.claude/what-you-did-generated.txt` (same format), which survives skill updates.
+`scripts/wyd.py` does the mechanical work and holds the one hard rule: **the code on a page always comes from git, through the script, never typed by you.** `collect` takes a **snapshot** of the changes (the patch, its hunks, where it came from); `new` validates your grouping against that snapshot and renders the page. `generated.txt` lists the files written by tools (generated API clients, Swagger output, lockfiles); their hunks are folded into one "generated" list on their own, so they never enter a group. A project adds its own generator outputs to `.claude/what-you-did-generated.txt` or `what-you-did-generated.txt` at the repo root (same format; the script reads both), which survive skill updates.
 
-The page reads like the `review-page` skill's pages: same look, the user's language, plain sentences. Its Mermaid rules (step 4 of `.claude/skills/review-page/SKILL.md`) hold here too, and `new` checks them. Write raw `<br/>` in a diagram label: the script escapes it.
+The page reads like the `review-page` skill's pages: same look, the user's language, plain sentences. Its Mermaid rules (the `review-page` skill's Mermaid rules; `new` checks them itself when that skill is not installed) hold here too. Write raw `<br/>` in a diagram label: the script escapes it.
 
 ## Mode
 
@@ -26,7 +26,7 @@ Pick the changes, in this order:
 1. **An argument**: a commit (that commit alone) or a range `A..B` goes to `collect` as it is. "Since X" is `X..HEAD`; "the last 3 commits" is `HEAD~3..HEAD`.
 2. **No argument**: `collect` takes every uncommitted change (staged, unstaged and untracked, each labelled on the page), or the last commit when nothing is uncommitted.
 
-Then decide whether the changes belong to a **workspace** (a feature folder under `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root, listed in `INDEX.md` at that root): the argument names it or uses its words, the conversation is already working in it, or the changed paths fall under the Areas of exactly one Active row of `INDEX.md`. Never pick between two workspaces: with two candidates, go without one and say so. Name the one you use in one line: `Workspace: <slug>`.
+Then decide whether the changes belong to a **workspace** (a feature folder under `.scratch/workspaces/<slug>/` unless the `Workspace root:` line in `CLAUDE.md` or `AGENTS.md` names another root, listed in `INDEX.md` at that root; no such line and no `INDEX.md` means no workspace, so continue to step 2): the argument names it or uses its words, the conversation is already working in it, or the changed paths fall under the Areas of exactly one Active row of `INDEX.md`. Never pick between two workspaces: with two candidates, go without one and say so. Name the one you use in one line: `Workspace: <slug>`.
 
 A workspace phrase in the argument becomes a git range: "phase 4" or "plan 01", "since the last report", "since checkpoint 3". Find its dates and commits in the workspace's tracker (Action Log, Report History), `WHATNEXT.md` and the plan's phase files, then confirm with `git log --format='%h %ad %s' --date=short` over that window. Say the resolved range in chat in one line. A range that also holds another workspace's commits keeps them: their hunks become an outside-plan group naming that workspace.
 
@@ -34,9 +34,13 @@ _Done when_ you hold one source (a range, or the uncommitted work) and know whet
 
 ### 2. Collect and read
 
+Needs Python 3 (standard library only) and git; if `python3` is missing, use `python` or `py`. `<skill-dir>` below is the folder holding this `SKILL.md`.
+
 ```bash
-python3 .claude/skills/what-you-did/scripts/wyd.py collect [REVS] --slug <short-topic>
+python3 <skill-dir>/scripts/wyd.py collect [REVS] --slug <short-topic>
 ```
+
+`collect` handles three git situations with one clear sentence instead of a raw git error: outside a git repository it stops with "not a git repository: this skill reads changes through git"; in a repository with no commits it compares against the empty tree, so new files still show; with a single commit and no changes it shows that commit against the empty tree. When `collect` refuses, tell the user its sentence in plain words and what to do next (run it inside a repository, make a first change, or name a commit); do not fall back to reading files by hand.
 
 It prints the snapshot directory, each commit of the range with its full message, and one index line per hunk (`h7  path:line  +6 -1  [label, status by 2a8f11619]  first changed line`). `by` names the commits that wrote the hunk: blame places each added line; removed lines cannot be blamed, so a hunk with removals also names every commit of the range that changed the file.
 
@@ -86,7 +90,7 @@ Write the grouping as a JSON file in the scratchpad or temp directory:
 
 - **One purpose per group**, ordered as the story reads best: the main change first, then what it needed. Every hunk outside the generated list sits in exactly one group. `h12:30-37` puts only those lines of a hunk in a group (new-file numbering, old for a deleted file): split one big hunk, such as a whole new file, across groups this way. A group needs at least one hunk or excerpt.
 - **Excerpts** show unchanged code from `rev` (a commit, or `worktree` for the file on disk) when a group needs context, such as the caller of a changed function.
-- **Words**: the page's language is the conversation's (a workspace's language rules win). Write purposes and titles in plain sentences, as step 3 of the review-page skill asks: name things the way the user does, and keep IDs, decision numbers and phase codes in the files. Paths belong in the code headers, which the script writes.
+- **Words**: the page's language is the one the repo states (a workspace's language rules win), and when it states none, the language the user writes in during the conversation. Write purposes and titles in plain sentences, as step 3 of the review-page skill asks: name things the way the user does, and keep IDs, decision numbers and phase codes in the files. Paths belong in the code headers, which the script writes.
 - **Diagram** a group when its point is a flow, a before/after, or who calls whom.
 - **More than 7 change groups**: the page renders as an overview with the code folded; prefer merging small groups first.
 
@@ -102,20 +106,20 @@ _Done when_ the JSON holds every hunk, each group's purpose has its true source,
 ### 4. Build and open
 
 ```bash
-python3 .claude/skills/what-you-did/scripts/wyd.py new <snapshot> --groups <file.json> --lang <en|id>
+python3 <skill-dir>/scripts/wyd.py new <snapshot> --groups <file.json> --lang <en|id>
 ```
 
-Open the printed page (`open <path>` on macOS, `xdg-open <path>` on Linux, `start <path>` on Windows).
+Open the printed page (`open <path>` on macOS, `xdg-open <path>` on Linux, `start <path>` on Windows). If the open command fails or there is no desktop session, do not retry it and never say the page is "opened": give the file path, say the file must be copied to the user's own machine, or serve it with `python3 -m http.server --directory <folder>` when a port can be opened.
 
-`new` refuses with ERROR lines and writes nothing until the grouping is valid; fix every ERROR. Fix each WARN unless you can say why it does not apply. `strings/` holds `en` and `id`; add a language by copying `strings/en.json` and translating it.
+`new` refuses with ERROR lines and writes nothing until the grouping is valid; fix every ERROR. Fix each WARN unless you can say why it does not apply. `strings/` holds `en` and `id`; add a language by copying `strings/en.json` and translating it. A language with no file there falls back to `en` with one warning line.
 
 In chat: the workspace line when one applies, the resolved source in one line, the absolute page path, and one sentence on how to use the page: read by group, **Explain this** copies a prompt to paste back, **Copy path** gives `path:line` for VS Code's Ctrl+P. The page carries the content; leave it out of chat.
 
-_Done when_ `new` printed a path with no ERROR and the page is open.
+_Done when_ `new` printed a path with no ERROR and the page is open, or its path and way to reach it are given.
 
 ## Focus
 
-A pasted Explain-this prompt looks like this:
+A pasted Explain-this prompt looks like this. The first line is only a marker; if your agent has no slash commands, treat it as a request for this skill.
 
 ```
 /what-you-did focus <snapshot dir>

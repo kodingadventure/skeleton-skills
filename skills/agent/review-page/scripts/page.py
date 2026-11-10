@@ -41,7 +41,9 @@ def render(lang, main=None, title=None):
     """The template with `main` and `title` swapped in, then every [[key]] filled from strings/<lang>.json."""
     path = STRINGS / f"{lang}.json"
     if not path.exists():
-        sys.exit(f"No strings for '{lang}'. Add {path} by copying en.json and translating it.")
+        print(f"WARN  No strings for '{lang}'; using 'en'. To add '{lang}', copy {STRINGS / 'en.json'} to {path} and translate it.", file=sys.stderr)
+        lang = "en"
+        path = STRINGS / "en.json"
     strings = json.loads(path.read_text(encoding="utf-8"))
     out = TEMPLATE.read_text(encoding="utf-8")
     if main:

@@ -7,6 +7,8 @@
         (that commit alone). Without REVS: every uncommitted change (staged, unstaged and
         untracked, each labelled), or the last commit when nothing is uncommitted.
         Prints the snapshot path and a hunk index for the agent to group.
+        A repository without commits is compared against the empty tree, so new files still show;
+        a repository whose only commit has no parent shows that commit against the empty tree.
   wyd.py new <snapshot> --groups FILE [--lang LANG]
         Validate FILE (the agent's grouping, see SKILL.md) against the snapshot and render the
         page next to the snapshot; the code on the page comes from the snapshot, never from FILE.
@@ -14,7 +16,8 @@
 
 Fixed strings live in strings/<lang>.json; add a language by copying en.json and translating it.
 Generated-file patterns live in generated.txt in this skill's folder (portable defaults), plus
-.claude/what-you-did-generated.txt in the repo when it exists (the project's own; skill updates leave it alone).
+.claude/what-you-did-generated.txt and what-you-did-generated.txt at the repo root when they exist
+(the project's own; skill updates leave them alone).
 """
 import argparse
 import fnmatch
@@ -32,7 +35,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE = ROOT / "template.html"
 STRINGS = ROOT / "strings"
 GENERATED = ROOT / "generated.txt"
-PROJECT_GENERATED = Path(".claude") / "what-you-did-generated.txt"
+PROJECT_GENERATED = (Path(".claude") / "what-you-did-generated.txt", Path("what-you-did-generated.txt"))
 SOURCES = {"conversation", "commit", "plan", "inferred"}
 KINDS = {"change", "supporting", "outside-plan"}
 MAX_GROUPS = 7
@@ -44,19 +47,42 @@ HUNK_HEAD = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@ ?(.*)$")
 
 # ---------- git and diff parsing ----------
 
+def run_git(*args, input=None):
+    try:
+        return subprocess.run(["git", *args], capture_output=True, text=True, encoding="utf-8", errors="replace", input=input)
+    except FileNotFoundError:
+        sys.exit("git is not installed or not on PATH: this skill reads changes through git")
+
+
 def git(*args, ok=(0,)):
-    p = subprocess.run(["git", *args], capture_output=True, text=True, errors="replace")
+    p = run_git(*args)
     if p.returncode not in ok:
         sys.exit(f"git {' '.join(args)} failed: {p.stderr.strip()}")
     return p.stdout
 
 
+def git_try(*args):
+    """The output of a git command, or None when it fails."""
+    p = run_git(*args)
+    return p.stdout if p.returncode == 0 else None
+
+
+def empty_tree():
+    """The id of git's empty tree: the base for a repository with no earlier commit."""
+    return run_git("hash-object", "-t", "tree", "--stdin", input="").stdout.strip()
+
+
+def rev_range(base, head):
+    """`base..head`, or everything up to `head` when `base` is the empty tree (a root commit has no parent)."""
+    return head if base == empty_tree() else f"{base}..{head}"
+
+
 def generated_patterns(top):
     """The skill's portable patterns, then the repo's own list, which `skills update` never overwrites."""
     out = []
-    for f in (GENERATED, Path(top) / PROJECT_GENERATED):
+    for f in (GENERATED, *(Path(top) / p for p in PROJECT_GENERATED)):
         if f.exists():
-            out += [l.strip() for l in f.read_text().splitlines() if l.strip() and not l.startswith("#")]
+            out += [l.strip() for l in f.read_text(encoding="utf-8").splitlines() if l.strip() and not l.startswith("#")]
     return out
 
 
@@ -158,11 +184,13 @@ def attribute(source, hunks):
     range that changed the file, the fallback for removed lines, which blame cannot place.
     """
     base, head = source["base"], source["head"]
+    span_rev = rev_range(base, head)
+    root = ["--root"] if span_rev == head else []
     file_log = {}
     for h in hunks:
         path = h["file"]
         if path not in file_log:
-            file_log[path] = [l[:9] for l in git("log", "--format=%H", "--follow", f"{base}..{head}", "--", path).split()]
+            file_log[path] = [l[:9] for l in git("log", "--format=%H", "--follow", span_rev, "--", path).split()]
         h["touched"] = file_log[path]
         h["blame"] = {}
         added = [l[2] for l in h["lines"] if l[0] == "+"]
@@ -174,7 +202,7 @@ def attribute(source, hunks):
                 spans += ["-L", f"{start},{prev}"]
                 start = n
             prev = n
-        out = git("blame", "-l", "-s", *spans, f"{base}..{head}", "--", path, ok=(0, 128))
+        out = git("blame", "-l", "-s", *root, *spans, span_rev, "--", path, ok=(0, 128))
         for line in out.splitlines():
             m = re.match(r"(\^?)([0-9a-f]{40})\s+(?:\S+\s+)?(\d+)\)", line)
             if m and not m.group(1):
@@ -182,7 +210,7 @@ def attribute(source, hunks):
 
 
 def commit_log(base, head):
-    out = git("log", "--reverse", "--format=%H%x1f%s%x1f%b%x1e", f"{base}..{head}")
+    out = git("log", "--reverse", "--format=%H%x1f%s%x1f%b%x1e", rev_range(base, head))
     commits = []
     for rec in out.split("\x1e"):
         rec = rec.strip("\n")
@@ -208,19 +236,30 @@ def hunk_commits(h, rng=None):
 
 
 def cmd_collect(args):
-    top = git("rev-parse", "--show-toplevel").strip()
+    p = run_git("rev-parse", "--show-toplevel")
+    if p.returncode != 0:
+        if "not a git repository" in p.stderr:
+            sys.exit("not a git repository: this skill reads changes through git")
+        sys.exit(f"git rev-parse --show-toplevel failed: {p.stderr.strip()}")
+    top = p.stdout.strip()
     os.chdir(top)
     patterns = generated_patterns(top)
-    head = git("rev-parse", "HEAD").strip()
+    # No commit yet: compare against the empty tree, so new files still show.
+    head_out = git_try("rev-parse", "--verify", "-q", "HEAD")
+    has_commits = head_out is not None
+    head = head_out.strip() if has_commits else empty_tree()
     hunks, patch, commits = [], [], []
     flags = ["--no-color", "--no-ext-diff", "-M", "-U3"]
     if args.revs:
+        if not has_commits:
+            sys.exit("This repository has no commits yet, so there is no commit or range to show. Run collect without a range to see the uncommitted files.")
         if ".." in args.revs:
             a, b = args.revs.split("..", 1)
             a, b = git("rev-parse", a or "HEAD").strip(), git("rev-parse", b or "HEAD").strip()
         else:
             b = git("rev-parse", args.revs).strip()
-            a = git("rev-parse", f"{b}^").strip()
+            parent = git_try("rev-parse", "--verify", "-q", f"{b}^")
+            a = parent.strip() if parent else empty_tree()
         source = {"kind": "range", "base": a, "head": b, "range": f"{a[:9]}..{b[:9]}"}
         d = git("diff", *flags, a, b)
         patch.append(d)
@@ -239,7 +278,10 @@ def cmd_collect(args):
                 patch.append(d)
                 parse_diff(d, "untracked", patterns, hunks)
         else:
-            a = git("rev-parse", "HEAD^").strip()
+            if not has_commits:
+                sys.exit("No changes found: this repository has no commits yet and no files to show.")
+            parent = git_try("rev-parse", "--verify", "-q", "HEAD^")
+            a = parent.strip() if parent else empty_tree()
             source = {"kind": "range", "base": a, "head": head, "range": f"{a[:9]}..{head[:9]}"}
             d = git("diff", *flags, a, head)
             patch.append(d)
@@ -261,9 +303,9 @@ def cmd_collect(args):
         snap = stem.with_name(f"{stem.name}-{n}")
     snap.mkdir(parents=True)
     source["snapshot"] = str(snap)
-    (snap / "source.json").write_text(json.dumps(source, indent=2))
-    (snap / "hunks.json").write_text(json.dumps(hunks))
-    (snap / "changes.patch").write_text("".join(patch))
+    (snap / "source.json").write_text(json.dumps(source, indent=2), encoding="utf-8")
+    (snap / "hunks.json").write_text(json.dumps(hunks), encoding="utf-8")
+    (snap / "changes.patch").write_text("".join(patch), encoding="utf-8")
     print(snap)
     what = source["range"] or f"uncommitted changes on {head[:9]}"
     print(f"source: {what}" + (f" ({len(commits)} commits)" if commits else ""))
@@ -409,11 +451,11 @@ def read_excerpt(source, x):
         p = Path(source["repo"]) / x["file"]
         if not p.exists():
             return None
-        text = p.read_text(errors="replace")
+        text = p.read_text(encoding="utf-8", errors="replace")
     else:
         try:
             text = subprocess.run(["git", "-C", source["repo"], "show", f"{rev}:{x['file']}"],
-                                  capture_output=True, text=True, check=True, errors="replace").stdout
+                                  capture_output=True, text=True, check=True, encoding="utf-8", errors="replace").stdout
         except subprocess.CalledProcessError:
             return None
     lines = text.split("\n")
@@ -627,13 +669,14 @@ def render_bar(spec, s):
 
 def cmd_new(args):
     snap = Path(args.snapshot)
-    source = json.loads((snap / "source.json").read_text())
-    hunks = json.loads((snap / "hunks.json").read_text())
-    spec = json.loads(Path(args.groups).read_text())
+    source = json.loads((snap / "source.json").read_text(encoding="utf-8"))
+    hunks = json.loads((snap / "hunks.json").read_text(encoding="utf-8"))
+    spec = json.loads(Path(args.groups).read_text(encoding="utf-8"))
     path = STRINGS / f"{args.lang}.json"
     if not path.exists():
-        sys.exit(f"No strings for '{args.lang}'. Add {path} by copying en.json and translating it.")
-    s = json.loads(path.read_text())
+        print(f"WARN  No strings for '{args.lang}'; using 'en'. To add '{args.lang}', copy {STRINGS / 'en.json'} to {path} and translate it.", file=sys.stderr)
+        path = STRINGS / "en.json"
+    s = json.loads(path.read_text(encoding="utf-8"))
     errors, warnings = [], []
     validate(spec, hunks, errors.append, warnings.append)
     for g in spec.get("groups", []):
