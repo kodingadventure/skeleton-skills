@@ -14,6 +14,8 @@ phase where a vertical slice becomes reachable, plus the final phase; not every 
 
 At least one checkpoint must exercise the changed behavior **in its enabled state**, end to end — a checkpoint set that only covers the paths where a new feature stays switched off passes trivially on a feature that never works.
 
+A checkpoint that installs, removes or changes settings outside the project names where (scratch folder, project scope) and how to undo it.
+
 ```markdown
 ## Manual Test Checkpoints
 
@@ -24,9 +26,10 @@ At least one checkpoint must exercise the changed behavior **in its enabled stat
 ## Workflow
 
 - [ ] **1. Locate source material** — spec, issue, or conversation
-- [ ] **2. Explore the codebase** — read `docs/agents/domain.md` (if present), follow its Consumer Rules, identify files to touch, classify phases, assign weights
-- [ ] **3. Write the plan** — location per `writing-great-plan`'s `plan-location.md`
-- [ ] **4. Present and iterate** — show the user, refine, hand off to execute-plan
+- [ ] **2. Explore the codebase** — collect every target repo, then per repo read its domain doc, gate and failure modes; identify files to touch, classify phases, assign weights
+- [ ] **3. Write the plan** — location per the `writing-great-plan` skill's `references/plan-location.md`
+- [ ] **4. Read it as the runner** — run the `writing-great-plan` skill's `references/runner-check.md` against the written plan
+- [ ] **5. Present and iterate** — show the user, refine, hand off to execute-plan
 
 ### 1. Locate the source material
 
@@ -40,11 +43,19 @@ If no source is passed, synthesise from the current conversation context. **Capt
 
 ### 2. Explore the codebase
 
-Read `docs/agents/domain.md` and follow its **Consumer Rules** — determine context, read the matching glossary, check ADRs. If that file does not exist, carry on with the root `GLOSSARY.md` and `docs/adr/` where they exist, and suggest once that the user run `/setup-matt-pocock-skills` (from `mattpocock/skills`) to create it; do not stop, and do not create the file yourself. Then identify the files that will be touched. **Read the actual files** — don't guess their contents.
+First collect every repo or target the executor will touch, each with its absolute path, including targets outside the current repo. This becomes the plan's `**Repo:**` line (a `## Environment` table only when the plan touches 2+ repos).
+
+Then, for each repo:
+
+- Read `docs/agents/domain.md` and follow its **Consumer Rules**: determine context, read the matching glossary, check ADRs. If that file does not exist, carry on with the root `GLOSSARY.md` and `docs/adr/` where they exist, and suggest once that the user run `/setup-matt-pocock-skills` (from `mattpocock/skills`) to create it; do not stop, and do not create the file yourself.
+- Note `docs/agents/verify.md`. When the repo has none, note its verify command: that becomes the `**Verify:**` line.
+- Read `docs/agents/failure-modes.md` if it exists and note which entries match each phase; these become that phase's `Prone to:` line. If the file is absent, pass nothing rather than inventing failure modes.
+
+If the source lives in a feature workspace, also read the decisions in its `CONTEXT.md` and the guardrails in its `WHATNEXT.md`. A conflict between those and a repo's `CLAUDE.md` / `AGENTS.md` becomes an Open Question (step 9 of `runner-check.md`).
+
+Then identify the files that will be touched. **Read the actual files** — don't guess their contents.
 
 As you establish facts about the codebase — a file's location, whether something exists, what a command does — note the command or read that established each one. A claim needs this only when the executor would otherwise act on it without rechecking, not every sentence; carry it into the plan as that item's `Provenance:` field, or the literal marker `unverified — check first` when you couldn't verify it. Most items need no `Provenance:` line: a file the item edits is one the executor opens anyway, and a path the item creates or a command it prints is pinned down by the item's own text. "Read during planning" is not provenance — it names no command and tells the executor nothing; when that is all you could write, omit the line.
-
-Collect the absolute path of every repo or target the executor will touch, including targets outside the current repo — this becomes the plan's `**Repo:**` line (a `## Environment` table only when the plan touches 2+ repos). Note the repo's verify command only when it has no `docs/agents/verify.md`: that becomes the `**Verify:**` line. If the repo has a `docs/agents/failure-modes.md`, read it and note which entries match each phase; these become that phase's `Prone to:` line. If the file is absent, pass nothing rather than inventing failure modes.
 
 Assign each phase a Weight (`S`/`M`/`L`/`XL`). This tells `execute-plan` which agent to dispatch.
 
@@ -57,7 +68,15 @@ grain (see its "Repeating (per-unit) phases").
 
 ### 3. Write the plan
 
-**Where it goes** is set by `.claude/skills/writing-great-plan/references/plan-location.md`: a feature workspace's `plans/<NN>-<plan-name>/` (override below), otherwise `<plan root>/<YYYY-MM-DD>-<slug>/IMPLEMENTATION_PLAN.md`, the plan root being the repo's `Plan root:` line. On the repo's first plan outside a workspace, ask the user once and write the line, exactly as that file says. A repo that still has the `Plan output` key in `docs/agents/domain.md` and no `Plan root:` line keeps using that key's folder, without asking. **Workspace override:** when the source lives in a feature workspace (a folder with a `CONTEXT.md` set up by `/kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root), write to `<workspace>/plans/<NN>-<plan-name>/IMPLEMENTATION_PLAN.md` instead (`NN` = the next free number), in the workspace language from `CONTEXT.md` `## Workspace rules` (code, file names and UI strings stay literal); list the plan under `CONTEXT.md` `## Plans`, refresh this workspace's row in the root `INDEX.md` (the areas the plan touches, today's date), and give the Phase Index a `Tracker` column naming each phase's work item ID(s) from `TRACKER.md` (an item spread over several phases is listed on each; it becomes `done` after its last one). `execute-plan` Step C and `review-phase` read that column to update `TRACKER.md` and `WHATNEXT.md` after each phase, so the plan's Notes need only point at the workspace. Decide the plan's type:
+- **Outside a workspace:** see the `writing-great-plan` skill's `references/plan-location.md`.
+- **Inside a workspace** (the source lives in a folder with a `CONTEXT.md` set up by `/kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root):
+  - Write to `<workspace>/plans/<NN>-<plan-name>/IMPLEMENTATION_PLAN.md` (`NN` = the next free number).
+  - Write in the workspace language from `CONTEXT.md` `## Workspace rules`; code, file names and UI strings stay literal.
+  - List the plan under `CONTEXT.md` `## Plans`.
+  - Refresh this workspace's row in the root `INDEX.md` (the areas the plan touches, today's date).
+  - Give the Phase Index a `Tracker` column naming each phase's work item ID(s) from `TRACKER.md` (an item spread over several phases is listed on each; it becomes `done` after its last one). `execute-plan` and `review-phase` read that column to update `TRACKER.md` and `WHATNEXT.md` after each phase.
+
+Decide the plan's type:
 
 | Condition                                                             | PlanType         |
 | --------------------------------------------------------------------- | ---------------- |
@@ -112,7 +131,11 @@ Invoke `writing-great-plan` to format and write the plan, passing it `PlanType` 
 See the **Rules** section below for the hard requirements (Weight, Manual Test
 Checkpoints, sub-bullets, Suggested commit) — apply them while writing each item, not just as a final checklist.
 
-### 4. Present the plan to the user
+### 4. Read it as the runner
+
+Run the `writing-great-plan` skill's `references/runner-check.md` against the written plan, fix what it finds, and tell the user in one line what changed (or "nothing to change").
+
+### 5. Present the plan to the user
 
 Show the plan and ask:
 
@@ -133,9 +156,10 @@ Iterate until approved. Do **not** start implementation — that is `execute-pla
 - **Inline raw context.** An executor with fresh context and no spec must understand every item from the plan alone — no back-and-forth.
 - **Mark Manual Test Checkpoints** for any phase with human-observable behavior; never omit the section — write `None — ...` when it doesn't apply, except a plan that adds a feature: that always needs at least one checkpoint exercising it in its enabled state, end to end.
 - **Batch items get sub-bullets** for their bundled files (`writing-great-plan`'s partial-completion convention) so a stopped run can resume mid-item.
-- **Every phase gets a `Suggested commit:` line** at authoring time (`writing-great-plan`'s convention) — `execute-plan` surfaces it as the starting point for the commit message (to the optional `caveman-commit` skill from `JuliusBrussee/caveman` if installed; otherwise the commit follows the repo's own rules) instead of generating one from scratch.
-- **Do NOT write verify steps as checklist items.** `execute-plan` runs `verify` after each phase — it reads `docs/agents/verify.md` and maps touched paths to gates.
+- **Every phase gets a `Suggested commit:` line** at authoring time (`writing-great-plan`'s convention; `none — <reason>` when the phase changes no repo file) — `execute-plan` surfaces it as the starting point for the commit message (to the optional `caveman-commit` skill from `JuliusBrussee/caveman` if installed; otherwise the commit follows the repo's own rules) instead of generating one from scratch.
+- **Do NOT write verify steps as checklist items.** The executing skill runs the gates after each phase (the `verify` skill when installed).
 - **Every factual claim about the codebase carries `Provenance:` or the literal marker `unverified — check first`.** Required only when the executor would act on the claim without rechecking — a file's location, whether something exists, what a command does — not every sentence, and never `Provenance: read during planning` (omit the line instead). File paths must be real; explore the codebase first, read actual files, don't guess.
 - **A phase that repeats its checklist across a list of units (modules, files, endpoints) declares its execution grain.** Don't leave "run once per X" as the only signal once the list is more than a handful of items — see `writing-great-plan`'s "Repeating (per-unit) phases".
-- **Skill names must match exactly.** From `.claude/skills/<name>/SKILL.md`.
+- **Skill names must match exactly** the names your agent lists.
+- **Read the plan as its runner** before presenting it: run the `writing-great-plan` skill's `references/runner-check.md`, fix what it finds, and tell the user in one line what changed.
 - **No implementation.** This skill only creates the plan.
