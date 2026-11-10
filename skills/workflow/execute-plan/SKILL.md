@@ -83,7 +83,7 @@ Do these in order. The plan file is edited **before** anything is staged — a p
 
    Done when: the work item's status, one new Action Log row and `WHATNEXT.md` all reflect this phase, no `ADR: candidate` this phase settled is left without its ADR, and `grep -c '^\[x\]' TRACKER.md` prints the same number as before you edited it.
 
-3. If the phase is in Commit Checkpoints: **stage the plan file together with the code** (a plan inside a git-ignored workspace is edited, not staged), then run `/caveman-commit` with the phase's `Suggested commit:` line if present.
+3. If the phase is in Commit Checkpoints: **stage the plan file together with the code** (a plan inside a git-ignored workspace is edited, not staged), then commit using the phase's `Suggested commit:` line if present — via the optional `/caveman-commit` skill (from `JuliusBrussee/caveman`) when installed, otherwise per the repo's own commit rules.
 4. **Commit under the repo's own rules.** Who runs a commit, and when, is set by the repo's `CLAUDE.md` / `AGENTS.md`, never by this skill. Where they let the agent commit, commit. Where they ask for confirmation, ask, then commit. Where they reserve it for the user, or say nothing, print the `git commit -m "..."` as a fenced one-liner for the user to run, and stop there. `Suggested commit:` in a phase file is the _message text_, not advance permission — the plan pre-approves the wording, never the act.
 5. **Always stop and confirm.** Never auto-proceed.
    - **Recompute `Next` from disk, not memory.** Before reporting what's next, re-read the plan's Phase Index from disk right now — don't rely on what this session remembers ticking or dispatching. A phase another agent, an earlier checkpoint, or a parallel batch already finished (or one still open that this session assumed was done) only shows up reliably in the file on disk.
@@ -93,7 +93,7 @@ Do these in order. The plan file is edited **before** anything is staged — a p
 
 **Guardian handoff mode** (plan header carries the `**Review:** guardian` line) — replaces steps 3-5 above (step 2, the workspace, still runs):
 
-1. Stage the code and the plan file together (skip the separate `/caveman-commit` step).
+1. Stage the code and the plan file together (skip the separate commit step).
 2. Write a short phase report into the plan file itself, under its own `## Executor report` heading — not the chat, and not the `## Review` heading the reviewer owns — the reviewer reads it from there via `/review-phase`. Keep it to 6 lines at most: what landed (one line), **Verify:**, **Staged:**, then one line per plan correction, `Assumed:` and open risk. No file list (the diff has it), no restating the items. On the **Staged:** line, paste the one-line output of `git diff --cached --shortstat` run just now (e.g. `4 files changed, 120 insertions(+), 3 deletions(-)`): the claim that the code is staged travels with the evidence that it actually is, same contract as the Verify line. Not the `git status` block: it grows one line per file and lists files left unstaged on purpose. Keep it separate from **Verify:** — that one stays the gate output for the paths this phase touched (`docs/agents/verify.md`). Two claims, two labels; a report that shows staging where the gate belongs has quietly dropped the gate.
 3. Stop. Do **not** print a `git commit` command — the commit comes after the review, under the repo's own commit rules (see `/review-phase`).
 4. Report `Next: awaiting /review-phase` in place of naming the next phase.
@@ -197,7 +197,7 @@ Rules:
 **Verify:** `<command run>`
 <pasted output — or the literal "not run" plus the reason>
 
-**Docs:** <"refine-docs + audit-docs run" | "N/A — no doc phase">
+**Docs:** <"refine-docs run" | "N/A — no doc phase">
 
 **Suggested commit / PR:** <commit message, or "skip — maintenance plan">
 ```
@@ -234,6 +234,6 @@ When all items are checked:
 
 1. Update `Status` to `done`
 2. Run a final verify — gates whichever stacks the diff touched (per `docs/agents/domain.md`), with each slow suite at full scope once, unless a reviewer already ran it full after the last phase
-3. If docs were a phase, confirm `refine-docs` and `audit-docs` were run
+3. If docs were a phase, confirm `refine-docs` was run
 4. For a plan with no `PlanType:` line (a feature plan): suggest commit and PR. For a plan with a maintenance `PlanType:`: skip commit/PR suggestions
 5. Report using the Completion report template above

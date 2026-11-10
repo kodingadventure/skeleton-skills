@@ -2,7 +2,7 @@
 
 Two shapes — pick by plan homogeneity, per `SKILL.md`:
 
-- **Feature-shape** — heterogeneous phases (database → backend → frontend), per-item checkboxes. Used by `to-plan`, `orchestrate-feature`.
+- **Feature-shape** — heterogeneous phases (database → backend → frontend), per-item checkboxes. Used by `to-plan`.
 - **Maintenance-shape** — homogeneous, mechanical phases (lint/complexity/fallow fixes), one `[ ] Done` checkbox per phase. Used by the triage skills.
 
 Each shape has a **single-file** and a **multi-file** variant — pick the file variant by the splitting triggers in `SKILL.md` ("Splitting large plans").
@@ -55,14 +55,14 @@ Use when the plan stays under every splitting trigger.
   - What: <Full context inline: DTO shapes, field lists, business rules, mockups. An executor with
     fresh context should be able to copy-paste and go — no back-and-forth. Data, not evidence.>
   - Files: `path/to/file.go`
-  - Skill: `api-model`
+  - Skill: `<skill>`
 
 - [ ] **<Item title>** (M)
   - [ ] `path/to/file-a.go`
   - [ ] `path/to/file-b.go`
   - What: <Batched item touching both files above in one invocation — see sub-bullet
     convention in `SKILL.md` for how to resume mid-item. Sub-bullets replace the `Files:` line.>
-  - Skill: `api-module-service`
+  - Skill: `<skill>`
 
 Suggested commit: feat(phase-01): add <entity> model and migration
 
@@ -175,7 +175,7 @@ has none. Shared data only: business rules, DTO shapes, mockups, lookup tables.>
 - [ ] **<Item title>** (S)
   - What: <Everything specific to this item. Do not restate Context.>
   - Files: `path/to/file.go`
-  - Skill: `api-model`
+  - Skill: `<skill>`
 
 - [ ] **<Item title>** (L)
   - What: <as today>
@@ -190,7 +190,7 @@ Suggested commit: feat(phase-01): add <entity> model and migration
 
 ## Maintenance-shape — single-file
 
-Use for triage/audit plans (`lint-dispatch`). One `[ ] Done` checkbox per phase — a phase may
+Use for triage/audit plans. One `[ ] Done` checkbox per phase — a phase may
 bundle many files behind one skill invocation.
 
 <!-- `Verify` and `Repo` follow the same rules as in the feature-shape header. -->
@@ -227,7 +227,7 @@ Suggested commit: refactor(phase-01): fix <linter> issues in <package>
 - [ ] Done
 
 /<other-skill-name>
-apps/<app>/src/path/to/file.ts :23 ComponentName 95 lines
+<app>/src/path/to/file.ts :23 ComponentName 95 lines
 
 Suggested commit: refactor(phase-02): split <ComponentName> below complexity threshold
 

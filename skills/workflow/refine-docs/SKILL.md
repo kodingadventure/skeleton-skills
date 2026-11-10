@@ -6,14 +6,13 @@ description: >
   Docs Layout config. Language- and framework-agnostic — reads the repo's layout from
   docs/agents/domain.md. Use when the user asks to update documentation, fix doc gaps, add
   architectural patterns, record design decisions, sync glossary vocabulary, or create ADRs
-  after audit-docs has identified gaps. Do not use for read-only audits (use audit-docs) or
-  editing generated code files.
+  after a gap list exists. Do not use for read-only audits or editing generated code files.
 ---
 
 # Refine Docs Skill
 
 > **Role**: File editor. This skill modifies documentation — it writes, restructures, and creates files.
-> Run **audit-docs** first to identify gaps, then run this skill to fix them.
+> Start from a gap list — from the user, from a review, or from a docs-audit skill if the repo has one — then run this skill to fix the gaps.
 
 Maintain documentation as architecture evolves. Keeps **reference docs** as the source of truth
 and **glossaries** (`GLOSSARY.md`) as vocabulary-only layers.
@@ -79,7 +78,7 @@ then reduce to glossary and ADR upkeep.
 
 ### Workflow 0: Write or refresh the Docs Layout block
 
-Run when `docs/agents/domain.md` has no `## Docs Layout` block, or when `audit-docs` reported
+Run when `docs/agents/domain.md` has no `## Docs Layout` block, or when a docs audit reported
 layout drift (a block path that doesn't exist on disk).
 
 1. **Explore** — infer glossaries, reference docs, code units, and ADR location per `references/docs-layout.md`
@@ -155,8 +154,7 @@ Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And ne
 
 ### Workflow 5: Audit & validate
 
-Read-only auditing belongs to **audit-docs**. After editing here, re-run it to confirm the
-reported gaps are closed.
+Read-only auditing is out of scope here. After editing, re-check the original gap list (or re-run the repo's docs audit, if any) to confirm the gaps are closed.
 
 ## Key principles
 
@@ -210,7 +208,7 @@ Paths below are from one repo's block — illustrative only.
    Middleware that tracks and limits request rates per API key. Configured via `internal/config/`.
    ```
 
-2. **Backend glossary** (`apps/api/docs/GLOSSARY.md`) → add the term:
+2. **Backend glossary** (`docs/GLOSSARY.md`) → add the term:
 
    ```
    **Rate Limiting Middleware** = tracks and limits request rates per key
@@ -262,5 +260,4 @@ A Rust workspace whose block lists a root `GLOSSARY.md` and `docs/adr/`, no refe
 
 ## Related Skills
 
-- **audit-docs** — Run first to find gaps; this skill fixes what it reports
 - **domain-modeling** — Owns glossary and ADR _content_ conventions; this skill maintains the doc _structure_ around them

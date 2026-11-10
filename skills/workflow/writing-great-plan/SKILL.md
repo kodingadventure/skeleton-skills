@@ -38,16 +38,16 @@ existence. Cut the proof.
 ```markdown
 <!-- Bad: 24 lines proving a doc qualifies as a reference doc. The executor cannot act on any of it. -->
 
-**`docs/KEYBOARD_FIRST.md` is missing from that table** but is unambiguously a reference doc:
+**`docs/FORM_PATTERNS.md` is missing from that table** but is unambiguously a reference doc:
 
 - 15.6K of pattern documentation (the repo's largest doc outside the three ARCHITECTURE files)
-- `docs/ARCHITECTURE-FRONTEND.md:638` explicitly delegates the entire keyboard-first platform to it: "..."
-- Two skills build on it: `ts-keyboard-adopt-form`, `ts-keyboard-focus-input`
-  Because the block omits it, `audit-docs` doesn't know it's a reference doc and would keep re-flagging...
+- `docs/ARCHITECTURE-FRONTEND.md:638` explicitly delegates the entire form-pattern platform to it: "..."
+- Two skills build on it: `form-adopt`, `form-focus-input`
+  Because the block omits it, the docs audit doesn't know it's a reference doc and would keep re-flagging...
 
 <!-- Good -->
 
-- [ ] **Add `docs/KEYBOARD_FIRST.md` to `### Reference docs`** (S)
+- [ ] **Add `docs/FORM_PATTERNS.md` to `### Reference docs`** (S)
   - What: Scope `Frontend`. Follow the table's format spec at `.claude/skills/refine-docs/references/docs-layout.md`. Change nothing else in the block.
   - Files: `docs/agents/domain.md`
   - Skill: `refine-docs`
@@ -256,7 +256,7 @@ Multi-file plans mark phases that an executor with sub-agent capability may run 
 executor would have to re-derive it from a cold start on every checkpoint.
 
 **`Depends on:` must count shared-file writes, not just logical order.** Two phases that write the same file are dependent even when neither needs the other's result. This is the single trap:
-in a real 10-phase docs plan, seven phases declared `Depends on: nothing` while four of them wrote `apps/api/docs/GLOSSARY.md` — a naive fan-out on that field would have clobbered it.
+in a real 10-phase docs plan, seven phases declared `Depends on: nothing` while four of them wrote `docs/GLOSSARY.md` — a naive fan-out on that field would have clobbered it.
 
 **Detect this mechanically, don't eyeball it while writing each phase.** Once every phase's `Files:` (or sub-bullet) list is drafted, build one flat list of every file across every phase and
 sort it — any file appearing under 2+ phases is shared, full stop, regardless of whether the phases look independent. Do this as one discrete pass over the finished draft, not from memory
@@ -310,7 +310,7 @@ spec/conversation context a fresh executor won't; write the literal, ready-to-us
 Suggested commit: refactor(phase-02): extract validation helpers in internal/modules/patient
 ```
 
-`execute-plan` surfaces this line as the starting point for `caveman-commit` instead of generating a message from nothing.
+`execute-plan` surfaces this line as the starting point for the commit message (the optional `caveman-commit` skill from `JuliusBrussee/caveman`, or the repo's own commit rules) instead of generating a message from nothing.
 
 ## Where the plan goes
 

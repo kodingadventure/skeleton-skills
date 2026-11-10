@@ -12,7 +12,7 @@ Read, don't assume. Look for the real command names, not the conventional ones:
   `scripts` block of `package.json`, `Cargo.toml`
 - `README.md` / `CONTRIBUTING.md` — the build and run instructions
 - CI workflow files — what the project already trusts as a gate
-- The directory layout — one stack or several? `apps/*` and `packages/*` with
+- The directory layout — one stack or several? `<group>/*` directories with
   their own configs mean per-path gates; a single `src/` means one row
 
 Run each candidate gate command once to confirm it exists and passes on a clean tree. A command you wrote from a guess is worse than no row.

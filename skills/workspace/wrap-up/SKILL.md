@@ -45,7 +45,7 @@ Done when: no `ADR: candidate` is left in `CONTEXT.md`.
 ### 3. Move the vocabulary and the behaviour
 
 - **Terms** the workspace coined or sharpened (the ones in `CONTEXT.md` that a new reader of the code would not guess) → the repo's glossary, via `domain-modeling`.
-- **What shipped** — a module's rules, a status transition, a route, a screen, a flow → the repo's documentation, via the repo's own docs skill (`update-wiki` where it is installed; else the doc that owns the subject). Skip what is already documented; a feature documented as it shipped needs only a check.
+- **What shipped** — a module's rules, a status transition, a route, a screen, a flow → the repo's documentation, via the repo's own docs skill (`refine-docs` where it is installed; else the doc that owns the subject). Skip what is already documented; a feature documented as it shipped needs only a check.
 
 Done when: a reader of the repo alone can find what this feature does and what its words mean.
 

@@ -70,4 +70,4 @@ These workflow skills are workspace-aware and do nothing different when no works
 - `writing-great-plan` puts split phase files in `phases/`.
 - `whatnext` reads `INDEX.md` first and routes to `/resume-here`, `/kickoff`, `/discuss` or `/wrap-up`.
 
-They also rely on `grill-me` / `grilling`, `domain-modeling` (ADRs and the glossary) and a docs skill such as `update-wiki`. Without those, `wrap-up` still triages findings and sends the final report — record in `CONTEXT.md` `### Conventions` where knowledge goes instead.
+They also rely on `grill-me` / `grilling`, `domain-modeling` (ADRs and the glossary) and the repo's own docs skill (for example `refine-docs`). Without those, `wrap-up` still triages findings and sends the final report — record in `CONTEXT.md` `### Conventions` where knowledge goes instead.

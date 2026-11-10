@@ -1,6 +1,6 @@
 # The `## Docs Layout` Contract
 
-`audit-docs` and `refine-docs` hold no paths of their own. Everything repo-specific —
+`refine-docs` and any docs-audit skill hold no paths of their own. Everything repo-specific —
 where code lives, which file documents it, which glossary holds its vocabulary — comes from a
 `## Docs Layout` block in `docs/agents/domain.md`.
 
@@ -52,7 +52,7 @@ Emit only the tables the repo actually has. Every path relative to the repo root
 ```markdown
 ## Docs Layout
 
-> Read by `audit-docs` and `refine-docs`. Those skills carry no hardcoded paths — this
+> Read by `refine-docs` and any docs-audit skill. Those skills carry no hardcoded paths — this
 > block is the only place this repo's layout lives. Drop a table and the matching audit
 > step is skipped. Format spec: `.claude/skills/refine-docs/references/docs-layout.md`.
 
@@ -127,7 +127,7 @@ repo keeps none; audit glossaries and ADRs only.
 **Topic guides** — single-subject docs, each owning its topic end-to-end (auth, i18n, testing,
 a tool, a feature walkthrough). This table is the content router: a subject listed here is
 documented in its guide, never duplicated into a reference doc. `refine-docs` extends the
-owning guide and cross-links; `audit-docs` treats guide-covered subjects as documented. Absent
+owning guide and cross-links; a docs audit treats guide-covered subjects as documented. Absent
 table means the repo folds everything into its reference docs — then don't invent guides.
 
 **Code units** — the generic abstraction that replaces per-language hardcoding. A unit is any
@@ -158,6 +158,6 @@ layer, and outside that layer the same word is often correct (`endpoint` is wron
 handler but is RTK Query's own API). Absent table means no terminology policy; skip the check.
 
 **Plan runner** — `Plan writer` is the skill that owns plan format (Weight, atomicity,
-template); `audit-docs` hands it the grouping instead of re-deriving those rules. `Executor`
+template); a docs audit hands it the grouping instead of re-deriving those rules. `Executor`
 runs the finished plan. Absent means neither is installed: report findings and offer direct
 edits, or fall back to a plain checklist.
