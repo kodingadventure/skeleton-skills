@@ -15,7 +15,7 @@ Run the steps in order. Fix the plan as you go.
 9. **Plans from a feature workspace.** Read the decisions in `CONTEXT.md` and the guardrails in `WHATNEXT.md`, and compare them with the target repo's `CLAUDE.md` or `AGENTS.md`. A conflict becomes an Open Question whose `Default:` follows this order of authority: the user's latest instruction, the repo's rules, the workspace's decisions, then the skill's defaults.
 10. **Standalone phase files.** Each phase file has a `Repo:` line and absolute paths, and uses no placeholder that is defined only in the entry point. The executor is told not to open the entry point.
 
-When done, report one line to the user: what this check changed in the plan (or "nothing to change").
+When done, report one line to the user: what this check changed in the plan (or "nothing to change"). One sentence, not a list: the evidence is already in the plan.
 
 For an L or XL plan, a fresh-eyes subagent may repeat the check on the finished plan when the harness has subagents. It is optional.
 

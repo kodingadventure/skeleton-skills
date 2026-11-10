@@ -133,7 +133,7 @@ Checkpoints, sub-bullets, Suggested commit) — apply them while writing each it
 
 ### 4. Read it as the runner
 
-Run the `writing-great-plan` skill's `references/runner-check.md` against the written plan, fix what it finds, and tell the user in one line what changed (or "nothing to change").
+Run the `writing-great-plan` skill's `references/runner-check.md` against the written plan, fix what it finds, and tell the user in one line what changed (or "nothing to change"): one sentence, not a list; the details are in the plan.
 
 ### 5. Present the plan to the user
 
@@ -161,5 +161,5 @@ Iterate until approved. Do **not** start implementation — that is `execute-pla
 - **Every factual claim about the codebase carries `Provenance:` or the literal marker `unverified — check first`.** Required only when the executor would act on the claim without rechecking — a file's location, whether something exists, what a command does — not every sentence, and never `Provenance: read during planning` (omit the line instead). File paths must be real; explore the codebase first, read actual files, don't guess.
 - **A phase that repeats its checklist across a list of units (modules, files, endpoints) declares its execution grain.** Don't leave "run once per X" as the only signal once the list is more than a handful of items — see `writing-great-plan`'s "Repeating (per-unit) phases".
 - **Skill names must match exactly** the names your agent lists.
-- **Read the plan as its runner** before presenting it: run the `writing-great-plan` skill's `references/runner-check.md`, fix what it finds, and tell the user in one line what changed.
+- **Read the plan as its runner** before presenting it: run the `writing-great-plan` skill's `references/runner-check.md`, fix what it finds, and tell the user in one sentence what changed.
 - **No implementation.** This skill only creates the plan.

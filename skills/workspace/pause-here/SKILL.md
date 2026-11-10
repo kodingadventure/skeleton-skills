@@ -18,7 +18,7 @@ Two cases, same steps:
 
 ### 1. Locate and read
 
-Resolve the workspace in the same order as every workspace skill: the slug or path in the argument (in any position); else the workspace this conversation has already been working in; else `INDEX.md` at the workspace root, the only row under `## Active` (no `INDEX.md` → the only `*/WHATNEXT.md` under the root); else ask, listing the `## Active` rows. If there is no workspace root, no `INDEX.md`, or neither a `## Active` row nor any `*/WHATNEXT.md`, reply in one sentence ("No workspace here; `kickoff` starts one.") and stop without writing any file. Never pick between two live workspaces, and name the one you resolved in one line (`Workspace: <slug>`) before writing anything.
+Resolve the workspace in the same order as every workspace skill: the slug or path in the argument (in any position); else the workspace this conversation has already been working in; else `INDEX.md` at the workspace root, the only row under `## Active` (no `INDEX.md` → the only `*/WHATNEXT.md` under the root); else ask, listing the `## Active` rows. If there is no workspace root, no `INDEX.md`, or neither a `## Active` row nor any `*/WHATNEXT.md`, reply in one sentence in the user's language (for example "No workspace here; `kickoff` starts one.") and stop without writing any file. Never pick between two live workspaces, and name the one you resolved in one line (`Workspace: <slug>`) before writing anything.
 
 Read `CONTEXT.md` (`## Workspace rules` names the languages and the layout), `TRACKER.md` and `WHATNEXT.md`.
 

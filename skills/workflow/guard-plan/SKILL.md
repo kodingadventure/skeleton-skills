@@ -25,7 +25,7 @@ This skill needs a harness that can start a sub-agent with its own context and s
 4. **Baseline.** Run the gates on a clean worktree of `HEAD` (`git worktree add <scratch>/base HEAD`) and record every pre-existing failure in the plan entry point under `## Baseline`. From here on only a failure absent from the baseline counts against a phase.
 5. **Run mode.** Ask the user once, then record the answers in the entry point under `## Baseline`:
    - **Commit:** the guardian commits each phase, or it stages the phase, prints the commit command, and stops. When the repo's rules say nothing, the default is to print the command and stop, the same as `execute-plan` and `review-phase`.
-   - **Push:** the default is never. Push only when the user asks for it in this answer, or when the repo's `CLAUDE.md`/`AGENTS.md` explicitly requires it.
+   - **Push:** never, and not offered as a choice: the question says the run does not push. Push only when the user asks for it on their own, or when the repo's `CLAUDE.md`/`AGENTS.md` explicitly requires it.
    - **Continue:** go on to the next phase automatically, or stop after each phase.
 
    The repo's `CLAUDE.md`/`AGENTS.md` rules win over the answer: where they ask for confirmation before a commit or a push, or forbid one, the run mode cannot loosen them.
