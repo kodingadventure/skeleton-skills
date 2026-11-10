@@ -30,11 +30,11 @@ Generic routing for any repo. Skills marked _(if installed)_ come from outside t
 
 ## After Planning
 
-| Completed                                      | Next → Skill                                          |
-| ---------------------------------------------- | ----------------------------------------------------- |
-| Plan created                                   | Execute inline → `/execute-plan`                      |
-| Plan created, many phases or a guardian wanted | Execute by subagents under a guardian → `/guard-plan` |
-| Phase staged under a `Review: guardian` plan   | Check it before commit → `/review-phase`              |
+| Completed                                      | Next → Skill                                                                                                      |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Plan created                                   | Execute inline → `/execute-plan`                                                                                  |
+| Plan created, many phases or a guardian wanted | Execute by subagents under a guardian → `/guard-plan` (needs an agent with sub-agents; otherwise `/execute-plan`) |
+| Phase staged under a `Review: guardian` plan   | Check it before commit → `/review-phase`                                                                          |
 
 ## Workspace sessions
 
@@ -77,13 +77,13 @@ Feature workspaces (`.scratch/workspaces/<slug>/`, set up by `/kickoff`) — onl
 
 Commit under the repo's own commit rules (`CONTRIBUTING.md`, `CLAUDE.md` / `AGENTS.md`, recent `git log` style). The optional `caveman-commit` skill from `JuliusBrussee/caveman` can draft the message if installed.
 
-| Completed                          | Next → Skill                                                          |
-| ---------------------------------- | --------------------------------------------------------------------- |
-| Plan phase committed, items remain | Next phase → `/execute-plan` (or `/guard-plan` for a multi-file plan) |
-| Plan finished                      | Read the whole change back → `/what-you-did`                          |
-| Workspace work item finished       | Update the tracker and handoff → `/pause-here`                        |
-| Feature committed, no plan left    | Start the next thing → `/whatnext` again, or `/to-plan` for a new one |
-| Quick fix committed                | (done)                                                                |
+| Completed                          | Next → Skill                                                                                                                     |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Plan phase committed, items remain | Next phase → `/execute-plan` (or `/guard-plan` for a multi-file plan; needs an agent with sub-agents, otherwise `/execute-plan`) |
+| Plan finished                      | Read the whole change back → `/what-you-did`                                                                                     |
+| Workspace work item finished       | Update the tracker and handoff → `/pause-here`                                                                                   |
+| Feature committed, no plan left    | Start the next thing → `/whatnext` again, or `/to-plan` for a new one                                                            |
+| Quick fix committed                | (done)                                                                                                                           |
 
 ## When Stuck
 

@@ -1,29 +1,35 @@
 ---
 name: refine-docs
 description: >
-  WRITE mode — update architecture and context documentation as patterns evolve. Edits the
+  Update architecture reference docs, glossaries and ADRs as patterns evolve. Edits the
   repo's reference docs, keeps glossaries vocabulary-only, adds ADRs, and maintains the repo's
   Docs Layout config. Language- and framework-agnostic — reads the repo's layout from
   docs/agents/domain.md. Use when the user asks to update documentation, fix doc gaps, add
-  architectural patterns, record design decisions, sync glossary vocabulary, or create ADRs
-  after a gap list exists. Do not use for read-only audits or editing generated code files.
+  architectural patterns, record design decisions, sync glossary vocabulary, or create ADRs.
+  Not for READMEs, tutorials or API reference, read-only audits, or editing generated code files.
 ---
 
 # Refine Docs Skill
 
 > **Role**: File editor. This skill modifies documentation — it writes, restructures, and creates files.
-> Start from a gap list — from the user, from a review, or from a docs-audit skill if the repo has one — then run this skill to fix the gaps.
+> Start from a gap list — from the user, from a docs audit you ran, or from an audit skill if the repo has one — then run this skill to fix the gaps.
+> No gap list? Take the light path: read the latest change (`git diff`) or the topic the user named, list the 3-5 gaps you can see, get the user's approval, then run the matching workflow.
 
 Maintain documentation as architecture evolves. Keeps **reference docs** as the source of truth
 and **glossaries** (`GLOSSARY.md`) as vocabulary-only layers.
 
 **This skill hardcodes no paths.** Every path comes from the repo's `## Docs Layout` block.
-That's what lets it maintain a Go monorepo's docs and a Rust workspace's docs with the same
+That's what lets it maintain a monorepo's docs and a single-package library's docs with the same
 workflows. Never write to a path you remember from another repo.
 
 ## Step 0: Load the layout
 
-Read `docs/agents/domain.md` and find its `## Docs Layout` block. This skill writes that block, so it needs the file: if it does not exist, stop and tell the user to run `/setup-matt-pocock-skills` (from `mattpocock/skills`) first, which creates it, then run this skill again. Do not create the file yourself. The block names this repo's
+Read `docs/agents/domain.md` and find its `## Docs Layout` block. Two cases, kept apart:
+
+- **File missing** → stop before changing anything, with one message: `docs/agents/domain.md` is created by the `setup-matt-pocock-skills` skill from `mattpocock/skills`, which is not installed or not set up here; see this repo's README for the pinned install command. Do not create the file yourself.
+- **File present, `## Docs Layout` block missing** → infer the layout and offer to write the block (Workflow 0).
+
+The block names this repo's
 glossaries, reference docs, topic guides, code units, deep-context tier, ADR location, and
 preferred terms. Full spec: `references/docs-layout.md`.
 
@@ -35,7 +41,7 @@ tool config, feature inventories) never belongs in a reference doc, even when no
 yet; propose a new topic guide instead.
 
 - **Block present** → it's the truth. Write only to files it names.
-- **Block absent** → infer the layout (see `references/docs-layout.md`), and **offer to write the block** (Workflow 0) before doing anything else. An inferred layout re-derived every run is where drift comes from.
+- **Block absent** (file present) → infer the layout (see `references/docs-layout.md`), and **offer to write the block** (Workflow 0) before doing anything else. An inferred layout re-derived every run is where drift comes from.
 - **Table absent** → that concern doesn't exist here. Don't invent it; a repo with no reference docs shouldn't get its first `ARCHITECTURE.md` as a side effect of a vocabulary fix.
 
 ## Plan-driven usage (via execute-plan)
@@ -78,7 +84,7 @@ then reduce to glossary and ADR upkeep.
 
 ### Workflow 0: Write or refresh the Docs Layout block
 
-Run when `docs/agents/domain.md` has no `## Docs Layout` block, or when a docs audit reported
+Run when `docs/agents/domain.md` exists but has no `## Docs Layout` block, or when a docs audit reported
 layout drift (a block path that doesn't exist on disk).
 
 1. **Explore** — infer glossaries, reference docs, code units, and ADR location per `references/docs-layout.md`
@@ -127,9 +133,9 @@ Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And ne
 
 ### Workflow 4: Document a design decision (ADR)
 
-1. **Check the ADR bar first** — `domain-modeling` sets it: hard to reverse, surprising without context, and the result of a real trade-off. If any of the three is missing, skip the ADR.
+1. **Check the ADR bar first** — the `domain-modeling` skill sets it (if it is not installed, stop with the same missing-skill message as Step 0, naming `domain-modeling`, and write no ADR of your own): hard to reverse, surprising without context, and the result of a real trade-off. If any of the three is missing, skip the ADR.
 2. **Create the file** at the layout's ADR **Location**, using the next sequence number
-3. **Use the layout's ADR Format** — if it names one (e.g. `domain-modeling/ADR-FORMAT.md`), that file wins over any shape below. Otherwise:
+3. **Use the layout's ADR Format** — if it names one (e.g. the `domain-modeling` skill's `ADR-FORMAT.md`), that file wins over any shape below. Otherwise:
 
    ```
    # ADR NNNN: Decision Title
@@ -154,7 +160,7 @@ Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And ne
 
 ### Workflow 5: Audit & validate
 
-Read-only auditing is out of scope here. After editing, re-check the original gap list (or re-run the repo's docs audit, if any) to confirm the gaps are closed.
+Read-only auditing is out of scope here. After editing, re-check the original gap list (or re-run the docs audit) to confirm the gaps are closed.
 
 ## Key principles
 
@@ -196,19 +202,19 @@ Read-only auditing is out of scope here. After editing, re-check the original ga
 
 ## Examples
 
-Paths below are from one repo's block — illustrative only.
+Paths below are from an invented repo's block — illustrative only.
 
-### Example 1: Add a new backend pattern (rate-limiting middleware)
+### Example 1: Add a new pattern (rate-limiting middleware)
 
-1. **Reference doc** (`docs/ARCHITECTURE-BACKEND.md`) → add to "Key Patterns":
+1. **Reference doc** (`docs/ARCHITECTURE.md`) → add to "Key Patterns":
 
    ```
    ### Rate Limiting Middleware
 
-   Middleware that tracks and limits request rates per API key. Configured via `internal/config/`.
+   Middleware that tracks and limits request rates per API key. Configured via the service's settings module.
    ```
 
-2. **Backend glossary** (`docs/GLOSSARY.md`) → add the term:
+2. **Glossary** (`GLOSSARY.md`) → add the term:
 
    ```
    **Rate Limiting Middleware** = tracks and limits request rates per key
@@ -218,17 +224,17 @@ Paths below are from one repo's block — illustrative only.
 
 ### Example 2: Refactor code generation
 
-Change how RTK code generation works:
+Change how client code generation works:
 
 1. **Reference doc** → update the "Code Generation Pipeline" section with the new diagram + steps
-2. **Glossary** → term unchanged (`**Code Generation** = Swagger tags → DTOs → RTK hooks; never edit generated files`)
+2. **Glossary** → term unchanged (`**Code Generation** = API spec → typed client; never edit generated files`)
 
 No glossary change needed, because the vocabulary didn't shift. Only edit a glossary when the
 _language_ changes, not when the mechanism does.
 
 ### Example 3: Single-context repo, no reference docs
 
-A Rust workspace whose block lists a root `GLOSSARY.md` and `docs/adr/`, no reference docs:
+A single-package library whose block lists a root `GLOSSARY.md` and `docs/adr/`, no reference docs:
 
 1. New pattern → **no reference doc exists to update**. Don't create one as a side effect
 2. Add the term to `GLOSSARY.md` with a pointer to the code that implements it

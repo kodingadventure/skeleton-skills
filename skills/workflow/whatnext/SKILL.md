@@ -8,10 +8,12 @@ argument-hint: "What was just completed?"
 
 Suggests the single next development step and skill to invoke by analyzing conversation context or scanning project artifacts. Works in any repo: it assumes no stack, directory layout, or task runner.
 
+Every `Invoke` line names a skill your agent lists; otherwise write the step in plain words.
+
 ## Safety
 
-- Everything this skill runs is read-only: `git status`, `git log --oneline -5`, and listing or reading files. Safe to run unattended.
-- A project check command (test, lint, build) is run only when the project's own config names it, and only when a recommendation depends on its result. Never run a command that deploys, migrates, publishes, or writes outside the working tree.
+- Read-only except the project's own check command: `git status`, `git log --oneline -5`, and listing or reading files are safe to run unattended.
+- Step 4 only reads the list of project commands; it does not run them. A dirty working tree → recommend `/verify`. If a command must still be run: only `test`, `lint`, `typecheck` or `build`, one run with no watch mode, with a timeout, and name the command before running it. Never run a command that deploys, migrates, publishes, or writes outside the working tree.
 - Never invent a path or a command. If the project does not name one, say so and ask, rather than guessing a conventional name.
 
 ## Anti-patterns
@@ -31,15 +33,16 @@ If this is a fresh session with no prior conversation, scan project artifacts fo
 
 2. **Scan `.scratch/` and the plan root** for active features:
    - Specs (`.scratch/*/spec.md`) — features planned but not started
-   - Issues (`.scratch/*/issues/*.md`) — tickets waiting for implementation
+   - Issues (`.scratch/*/issues/*.md`) — tickets waiting for implementation. If `docs/agents/issue-tracker.md` exists, read the tracker location from it instead of assuming `.scratch/`.
    - Implementation plans — `<plan root>/*/IMPLEMENTATION_PLAN.md` (the repo's `Plan root:` line, `.plans/` by default; also the folder of a legacy `Plan output` key), `.scratch/*/IMPLEMENTATION_PLAN.md` and `.scratch/workspaces/*/plans/*/IMPLEMENTATION_PLAN.md` — plans whose `**Status:**` is `pending` or `in-progress`, or that still have unchecked `[ ]` items → resume with `/execute-plan`. Skip `done` and `abandoned`.
 
-3. **Check git for dirty state:**
+3. **Check git for dirty state** (not a git repo → skip this step and say so in the rationale):
    - Uncommitted changes → suggest verifying them (`/verify`), then committing under the repo's own commit rules, or continuing what is in progress
    - Recent commits (`git log --oneline -5`) — understand the active branch context
+   - Clean tree, but commits ahead of the base branch → recommend a review (`/code-review` if installed) or "open a PR"
 
 4. **Check project health with the project's own commands** — find them, never assume them. Read, in this order, whichever exist: the `scripts` block of `package.json`, `Makefile`, `justfile`, `Taskfile.yml`, `moon.yml`, `Cargo.toml`, `pyproject.toml`, then `README.md` / `CONTRIBUTING.md` and CI workflow files (the `verify` skill's `bootstrap.md` lists the same sources). Then:
-   - A test, lint, or build command exists and the working tree has changes → run it once. Failing → recommend `/diagnosing-bugs` (if installed) or fix it directly; passing → carry on to the next check.
+   - A test, lint, or build command exists and the working tree has changes → recommend `/verify`, which runs the gates. Do not run the command yourself unless the Safety rules above allow it; if you do and it fails → recommend `/diagnosing-bugs` (if installed) or fix it directly; if it passes, carry on to the next check.
    - Source files changed but no test file changed alongside them → recommend writing the missing tests (`/tdd` if installed).
    - No such command can be found → say so in the rationale, and recommend `/verify`, which bootstraps a config for the repo.
 
@@ -60,13 +63,13 @@ If the conversation has prior messages, scan for indicators of the completed pha
 See `references/decision-tree.md` for the full lookup table.
 
 If the decision tree has no clear match (unusual phase, edge case, or a newly added skill), the
-authoritative list of skills is **the installed skills themselves** — their descriptions are
-already loaded in your context, and `.claude/skills/` is the registry on disk. Match the current
+authoritative list of skills is **the skills your agent has loaded** — their descriptions are
+already loaded in your context. Match the current
 state against those descriptions. Never treat any prose doc as the skill catalogue: a
 hand-written list drifts, and it drifts worst for exactly the case that sent you here — a skill
 too new to be in it.
 
-Skills from outside this repo (from `mattpocock/skills`: the grilling, spec, ticket, tdd, diagnosing, code-review and prototype family) are recommended only when they are installed. Not installed → pick the nearest installed skill, or describe the step in plain words with no `Invoke` skill.
+Skills from outside this repo (from `mattpocock/skills`: the grilling, to-spec, to-tickets, tdd, diagnosing, code-review and prototype family) are recommended only when they are installed. Not installed → pick the nearest installed skill, or describe the step in plain words with no `Invoke` skill.
 
 ### Step 3: Output next action + rationale + skill invocation
 
@@ -75,10 +78,17 @@ Skills from outside this repo (from `mattpocock/skills`: the grilling, spec, tic
 ```
 → Next step: [action]
 → Why: [rationale based on what was just completed]
-→ Invoke: /<skill-name> [args]
+→ Invoke: <skill-name> [args]
 ```
 
+Write `/name` when your agent uses slash commands. No fitting skill is loaded → drop the `Invoke` line and say the step in plain words.
+
 ## Examples
+
+```
+→ Next step: Write down what the checkout page should do before coding it
+→ Why: The conversation settled the design but no spec or plan exists, and no spec or planning skill is loaded
+```
 
 ```
 → Next step: Resume the checkout-redesign workspace

@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Verify a code change — run the project's build/lint/typecheck gates for the paths it touches, then drive the change at its runtime surface, and report a verdict. Reads every project-specific command from docs/agents/verify.md. Use after writing or modifying code, before committing, or when another skill needs a correctness check on what it just produced. Diffs touching only docs or only tests have nothing to gate or drive — report SKIP.
+description: Verify a code change — run the project's build/lint/typecheck gates for the paths it touches, then drive the change at its runtime surface, and report a verdict. Reads every project-specific command from docs/agents/verify.md. Use after writing or modifying code, before committing, or when another skill needs a correctness check on what it just produced. Diffs touching only docs, or only tests that CI runs, have nothing to gate or drive — report SKIP.
 ---
 
 # Verify
@@ -33,10 +33,13 @@ Config missing → [bootstrap it](bootstrap.md), then continue.
 they disagree, that disagreement is a finding.
 
 ```bash
-git diff HEAD --stat            # uncommitted work
+git status --porcelain          # uncommitted work, including new untracked files
+git diff HEAD --stat            # uncommitted changes to tracked files
 git diff @{u}.. --stat          # committed, upstream set
 git diff origin/HEAD... --stat  # committed, no upstream
 ```
+
+`git diff` does not list untracked files; `git status --porcelain` does, so read both. If the repo has no commit, no upstream, or no `origin`, ask the user what to compare against. Do not guess a base.
 
 Establish the full range — a branch may be many commits, and `HEAD~1` hides the rest. State the commit count. Output truncating → redirect to a file and
 Read it. In a repo with no diff from any of these → say so and stop.
@@ -47,8 +50,7 @@ Read it. In a repo with no diff from any of these → say so and stop.
 
 - **Docs, config with no behavioral output, or type-only declarations** →
   `SKIP — no runtime surface: (reason)`. One line. The gates have nothing to prove here.
-- **Tests only** → `SKIP`. Tests are the author's evidence; CI runs them.
-  Re-running them is a CI rerun wearing a verification hat.
+- **Tests only** → `SKIP` only if the repo has CI that runs those tests (the bootstrap reads the CI files). Tests are the author's evidence, and re-running what CI runs is a CI rerun wearing a verification hat. No CI → run the changed tests once.
 - **Source plus tests** → gate and drive the source; the test files ride along.
   Reading a test to learn what the change should do is fine — it is a spec.
   Then go drive the app.
@@ -83,6 +85,8 @@ That is where you observe it.
 | Background job | its trigger    | fire the trigger, read the effect              |
 | Prompt / agent | the agent      | run it, capture its behavior                   |
 
+No tool to drive this surface → verdict `HANDOFF` with the exact steps, never `PASS`.
+
 **An internal function is not a surface.** Something in the repo calls it, and that caller ends at a row above. Follow it there and drive that.
 
 Take the smallest path that makes the changed code execute. Changed a flag — run with it. Changed error handling — trigger the error. Changed a handler —
@@ -96,7 +100,7 @@ verification; guessing on their behalf is not.
 
 ## 6. Verdict
 
-State one: `PASS` · `FAIL` · `SKIP` · `BLOCKED` · `HANDOFF` (driven by the human, awaiting their report).
+State one: `PASS` · `FAIL` · `SKIP` · `BLOCKED` · `HANDOFF` (driven by the human, awaiting their report) · `BLOCKED — config draft` (bootstrap ran with no human to ask).
 
 **The verdict is table stakes; the observations are the signal.** You are the only reviewer who ran the thing. Anything that made you pause, work around, or
 go "huh" is information the author does not have. Filter for "would I mention this if they were sitting next to me," not for "is this a bug."
@@ -107,5 +111,7 @@ Report the gate results as a list and the surface observation as prose — what 
 
 Edit `docs/agents/verify.md` when it steered you wrong: a command that failed or turned out stale, a path with no gate row, a surface it doesn't cover. That
 is maintenance, and it compounds — the next session reads what you fixed.
+
+Name any edit to `docs/agents/verify.md` in the report as a file you changed.
 
 Routine confirmations warrant no edit. Leave the wording and arrangement of what is already correct alone.

@@ -1,11 +1,11 @@
 # The `## Docs Layout` Contract
 
-`refine-docs` and any docs-audit skill hold no paths of their own. Everything repo-specific —
+`refine-docs` and any docs audit hold no paths of their own. Everything repo-specific —
 where code lives, which file documents it, which glossary holds its vocabulary — comes from a
 `## Docs Layout` block in `docs/agents/domain.md`.
 
-That indirection is the whole portability story. The same two skills run against a Go+React
-monorepo, a Rust workspace, or a single-package Python library; only the block changes.
+That indirection is the whole portability story. The same skill runs against a multi-package
+monorepo, a workspace of crates, or a single-package library; only the block changes.
 
 ## Why `docs/agents/domain.md` and not `GLOSSARY.md`
 
@@ -52,9 +52,9 @@ Emit only the tables the repo actually has. Every path relative to the repo root
 ```markdown
 ## Docs Layout
 
-> Read by `refine-docs` and any docs-audit skill. Those skills carry no hardcoded paths — this
+> Read by `refine-docs` and any docs audit. They carry no hardcoded paths — this
 > block is the only place this repo's layout lives. Drop a table and the matching audit
-> step is skipped. Format spec: `.claude/skills/refine-docs/references/docs-layout.md`.
+> step is skipped. Format spec: the `refine-docs` skill's `references/docs-layout.md`.
 
 **Layout:** single-context | multi-context
 
@@ -96,24 +96,23 @@ Emit only the tables the repo actually has. Every path relative to the repo root
 
 ### ADRs
 
-| Key      | Value                                          |
-| -------- | ---------------------------------------------- |
-| Location | `docs/adr/NNNN-title.md`                       |
-| Format   | `.claude/skills/domain-modeling/ADR-FORMAT.md` |
+| Key      | Value                                         |
+| -------- | --------------------------------------------- |
+| Location | `docs/adr/NNNN-title.md`                      |
+| Format   | the `domain-modeling` skill's `ADR-FORMAT.md` |
 
 ### Preferred terms
 
-| Use       | Not             | Scope                          |
-| --------- | --------------- | ------------------------------ |
-| `Handler` | endpoint, route | `docs/ARCHITECTURE-BACKEND.md` |
+| Use       | Not             | Scope                  |
+| --------- | --------------- | ---------------------- |
+| `Handler` | endpoint, route | `docs/ARCHITECTURE.md` |
 
 ### Plan runner
 
-| Key         | Value                                                           |
-| ----------- | --------------------------------------------------------------- |
-| Plan writer | `writing-great-plan`                                            |
-| Executor    | `execute-plan`                                                  |
-| Plan output | `.scratch/triage/docs-audit-<timestamp>/IMPLEMENTATION_PLAN.md` |
+| Key         | Value                |
+| ----------- | -------------------- |
+| Plan writer | `writing-great-plan` |
+| Executor    | `execute-plan`       |
 ```
 
 ## Table semantics
@@ -154,8 +153,8 @@ only existing Context Map lives. The wrong file gets created, and the next audit
 reports no gap.
 
 **Preferred terms** — drives the consistency check. `Scope` is required: a term policy names a
-layer, and outside that layer the same word is often correct (`endpoint` is wrong for a Go
-handler but is RTK Query's own API). Absent table means no terminology policy; skip the check.
+layer, and outside that layer the same word is often correct (`endpoint` can be wrong for a
+server handler but is a client library's own term). Absent table means no terminology policy; skip the check.
 
 **Plan runner** — `Plan writer` is the skill that owns plan format (Weight, atomicity,
 template); a docs audit hands it the grouping instead of re-deriving those rules. `Executor`

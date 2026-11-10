@@ -2,14 +2,14 @@
 
 Reached when [`verify`](SKILL.md) finds no config. Produce one, then continue the run that sent you here.
 
-This is the cold start. Timebox it to ~15 minutes of digging. Stuck on mechanics unrelated to the change → report `BLOCKED` naming exactly where.
+This is the cold start. Read at most five files and run each candidate command once. Stuck on mechanics unrelated to the change → report `BLOCKED` naming exactly where.
 
 ## Find the facts
 
 Read, don't assume. Look for the real command names, not the conventional ones:
 
-- Task runner config — `moon.yml`, `Makefile`, `Taskfile.yml`, `justfile`, the
-  `scripts` block of `package.json`, `Cargo.toml`
+- Task runner config — the `scripts` block of `package.json`, `Makefile`,
+  `Taskfile.yml`, `justfile`, `Cargo.toml`, then `moon.yml`
 - `README.md` / `CONTRIBUTING.md` — the build and run instructions
 - CI workflow files — what the project already trusts as a gate
 - The directory layout — one stack or several? `<group>/*` directories with
@@ -74,3 +74,5 @@ Surfaces the agent may drive itself:
 ## Confirm
 
 Show the human the draft before writing it. They know which commands they actually trust.
+
+No human to ask (you run as a sub-agent)? Do not write `docs/agents/verify.md`. Return the draft in your report with the verdict `BLOCKED — config draft`.
