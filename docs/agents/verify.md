@@ -1,7 +1,7 @@
 # Verify Config — skeleton-skills
 
 Read by the `verify` skill. This repo ships documents, not an application: authored
-skills under `skills/`, subagent definitions under `agents/`, agent docs under
+skills under `skills/`, subagent definitions under `plugins/phase-agents/agents/`, agent docs under
 `docs/agents/`, and the plugin manifest. Most diffs here are markdown and gate on
 formatting alone.
 
@@ -9,13 +9,13 @@ formatting alone.
 
 | Touched path                      | Gate                                                                                          |
 | --------------------------------- | --------------------------------------------------------------------------------------------- |
-| `skills/**`, `agents/**`          | `npm run format:check`                                                                        |
+| `skills/**`, `plugins/**`         | `npm run format:check`                                                                        |
 | `**/*.mjs`                        | `node --check <file>` per changed file                                                        |
 | `**/*.py`                         | `python3 -m py_compile <file>` per changed file                                               |
-| `.claude-plugin/*.json`           | `node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json','utf8'))"`  |
+| `**/.claude-plugin/*.json`        | `node -e "JSON.parse(require('fs').readFileSync('<file>','utf8'))"` per changed file          |
 | `docs/**`, `.scratch/**`, `README.md` | none — `.prettierignore` excludes them                                                    |
 
-`npm run format:check` is `prettier --check skills/ agents/`. It covers both trees at
+`npm run format:check` is `prettier --check skills/ plugins/`. It covers both trees at
 once, so run it once per phase rather than per file. Fix with `npm run format`.
 
 ## Sequencing
@@ -24,6 +24,9 @@ Adding or removing a skill touches three places: the directory, its entry in
 `.claude-plugin/marketplace.json`, and its bullet in the group's
 `skills/<group>/README.md`. Gate the JSON after editing the manifest — a malformed
 manifest makes every skill in the repo uninstallable, and nothing else catches it.
+
+The four `plugins/phase-agents/agents/phase-*.md` bodies are copies of
+`skills/workflow/execute-plan/references/executor-rules.md`; edit both.
 
 ## Routing
 

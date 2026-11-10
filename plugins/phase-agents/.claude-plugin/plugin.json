@@ -1,0 +1,8 @@
+{
+  "name": "phase-agents",
+  "description": "Executor subagents for guard-plan; install this plugin once, the skill groups do not carry them.",
+  "version": "0.1.0",
+  "author": {
+    "name": "kodingadventure"
+  }
+}

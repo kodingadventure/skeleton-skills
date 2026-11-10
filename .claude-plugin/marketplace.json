@@ -49,7 +49,7 @@
     {
       "name": "github",
       "source": "./",
-      "description": "GitHub issue and update helpers.",
+      "description": "GitHub issue and update helpers. Needs the workspace group.",
       "skills": [
         "./skills/github/github-new-issue",
         "./skills/github/github-send-update",
@@ -58,9 +58,8 @@
     },
     {
       "name": "phase-agents",
-      "source": "./",
-      "description": "Executor subagents phase-s, phase-m, phase-l and phase-xl used by guard-plan and execute-plan.",
-      "skills": []
+      "source": "./plugins/phase-agents",
+      "description": "Executor subagents for guard-plan; install this plugin once, the skill groups do not carry them."
     }
   ]
 }

@@ -2,8 +2,8 @@
   "name": "skeleton-skills",
   "private": true,
   "scripts": {
-    "format": "prettier --write skills/ agents/",
-    "format:check": "prettier --check skills/ agents/"
+    "format": "prettier --write skills/ plugins/",
+    "format:check": "prettier --check skills/ plugins/"
   },
   "devDependencies": {
     "prettier": "^3.5.0"
