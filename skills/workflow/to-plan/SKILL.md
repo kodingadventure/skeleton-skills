@@ -78,10 +78,10 @@ grain (see its "Repeating (per-unit) phases").
 
 Decide the plan's type:
 
-| Condition                                                             | PlanType         |
-| --------------------------------------------------------------------- | ---------------- |
-| User-facing feature, CRUD, domain capability                          | `feature`        |
-| Cross-cutting: integration tests, lint, fallow, skill fix, docs audit | maintenance type |
+| Condition                                                                        | PlanType         |
+| -------------------------------------------------------------------------------- | ---------------- |
+| User-facing feature, CRUD, domain capability                                     | `feature`        |
+| Cross-cutting: integration tests, lint, dead-code cleanup, skill fix, docs audit | maintenance type |
 
 A `feature` plan has no `PlanType:` line; a maintenance plan carries `PlanType: <type>`.
 
