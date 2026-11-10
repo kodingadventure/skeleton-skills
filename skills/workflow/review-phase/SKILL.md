@@ -25,8 +25,10 @@ and verification it runs itself.
 3. **Re-run the phase's own verification yourself.** Never accept the executor's report as given —
    running the check again is usually cheaper than reading the code that implements it, and it's
    strictly more conclusive: a report can be wrong about what it ran, a fresh run can't.
-   Run a slow test suite at the scope the repo's verify config (`docs/agents/verify.md`) names
-   for a review — usually the focused part the diff reaches, not the whole suite. The full suite
+   The gates come from one source, in the same order as `execute-plan`: the `verify` skill when
+   it is installed; otherwise `docs/agents/verify.md`; otherwise the plan header's `Verify:` line;
+   with none of these, report `no gate`. Run a slow test suite at the scope the repo's verify
+   config (`docs/agents/verify.md`) names for a review — usually the focused part the diff reaches, not the whole suite. The full suite
    runs only where that config says (e.g. the plan's last phase of that stack, or a diff into
    shared infrastructure); then report any failure outside the focused part with its cause line.
    With no such config, run the phase's own verification as written.
@@ -34,11 +36,11 @@ and verification it runs itself.
    looks wrong. A mode that's already bitten this repo is the first place to look, not the last.
    The names resolve against the repo's `docs/agents/failure-modes.md`; `references/failure-modes.md`
    here is its format, plus four generic modes worth probing when the repo has no file of its own.
+   No file yet? Copy the Starter set from this skill's `references/failure-modes.md` into
+   `docs/agents/failure-modes.md` when the first defect gets through review.
 5. **Check each factual claim in the executor's report against the repo itself** — especially a
    claim that something is absent, unavailable, or already correct. Those are exactly the claims
-   nobody double-checks. From this workflow's own first run: a report that said "staged, run the
-   command above" when nothing was staged, a `file:line` citation a sibling phase had already
-   shifted, and a "not runnable until it's registered" that a one-line symlink disproved.
+   nobody double-checks. For example, a report that says "staged" when nothing is staged.
 6. **Fix what's wrong.** Prefer fixing the source over patching a generated copy — a fix that lands
    in generated output disappears the next time the generator runs.
 7. **Prove any new guard discriminates.** Break the thing it's supposed to catch, confirm the guard
@@ -46,7 +48,7 @@ and verification it runs itself.
    it's been observed, which is a different claim. Run each break against the focused test scope
    only — one probe per break, restoring the file each time — so a handful of probes costs less
    than one full-suite run.
-8. **Prepare the commit.** Split fix from test, one commit per repo. Who runs it, and when, is set
+8. **Prepare the commit.** Split commits when the repo asks for it (for example fix and test separately); one commit per repo. Who runs it, and when, is set
    by the repo's `CLAUDE.md` / `AGENTS.md`, never by this skill. Where they let the agent commit,
    commit. Where they ask for confirmation, ask, then commit. Where they reserve it for the user,
    or say nothing, print the commands for the user to run.
@@ -56,26 +58,26 @@ and verification it runs itself.
     `Workspace: n/a`). Under guardian the review is the moment a phase actually finishes, and the
     executor stopped at `in-progress` / "waiting for review" on purpose, so this bookkeeping is
     the reviewer's. A commit still pending changes nothing here: the workspace is git-ignored and
-    never waits on one. Reading and editing these three files is part of the rhythm, not
-    exploration.
-    - Read `TRACKER.md` `## How this tracker works`; where it differs from this list, it wins.
+    never waits on one. Reading and editing these files is part of the rhythm, not exploration.
+
+    If an ADR is due (below) and the `domain-modeling` skill is not installed, stop before
+    changing anything: say that `domain-modeling` (from `mattpocock/skills`) is missing, and "see
+    this repo's README for the pinned install command". Do not write an ADR format yourself.
+
+    Update the workspace as its `TRACKER.md` `## How this tracker works` says, plus `WHATNEXT.md`
+    and the workspace's `INDEX.md` row. What differs from the executor's pass (the `execute-plan` skill):
     - **Status.** The phase's work item (the plan's Phase Index `Tracker` column, else its Notes)
       → `done` when the review passed and this phase was the item's last one. It stays
       `in-progress` while a defect is unfixed or another phase of the item is still open.
     - **Action Log.** The executor's row for this phase: still unticked → rewrite it in place
       with the outcome (reviewed and finished, plus what the review fixed, in plain words for the
       report's audience); already ticked → add a new row instead.
-    - **Reported? column stays exactly as it is** — only `/tracker sent` changes it.
     - **`WHATNEXT.md`.** Rewrite State now (phase reviewed, the commit made or its commands handed to the user)
       and Next steps: the review step leaves, and what follows the phase becomes step 1.
-    - **ADR candidates.** `grep -n "ADR: candidate" CONTEXT.md`. A decision tagged that way whose
-      reasoning this phase's code now embodies gets its ADR written now — with the
-      `domain-modeling` skill (from `mattpocock/skills`), where the repo keeps them — and its tag replaced by the ADR id;
-      terms the phase coined go into the repo's glossary in the same pass. Under guardian this is
-      the reviewer's, like the `done` status. An ADR is a repo file: stage it with the phase. Not
-      left to the wrap-up, when the alternatives that lost are gone from everyone's memory.
-    - **`INDEX.md`** at the root above the workspace: refresh this workspace's row (progress,
-      today's date, who is being waited on). Leave every other row alone.
+    - **ADR candidates.** A decision tagged `ADR: candidate` in `CONTEXT.md` whose reasoning this
+      phase's code now embodies becomes an ADR now, written with the `domain-modeling` skill, with
+      its tag replaced by the ADR id and the terms the phase coined added to the glossary; under guardian this is the reviewer's, like the `done`
+      status, and the ADR is a repo file to stage with the phase.
 
     Done when: the item's status, the Action Log row and `WHATNEXT.md` all reflect the review, no
     `ADR: candidate` this phase settled is left without its ADR, and `grep -c '^\[x\]' TRACKER.md`
@@ -85,7 +87,7 @@ Steps 3–5 and 7 are where defects actually surface — running things and chec
 reading prose. Steps 1–2 alone catch none of them: a review that only reads the diff reproduces
 the executor's own blind spots, because the diff is exactly what the executor already looked at.
 
-## Three rules
+## Four rules
 
 - **Never re-derive.** No codebase exploration beyond what the rhythm above already calls for. If a
   diff is unreadable without context the report should have carried, that's not a gap to go fill —
@@ -97,10 +99,8 @@ the executor's own blind spots, because the diff is exactly what the executor al
   compiles, nothing more. Step 3's re-run has to exercise the behavior itself, not just the gates
   around it.
 - **A finding is a claim too.** Check it against the repo before writing it down, the same way
-  step 5 checks the executor's claims — this run recorded and later withdrew a finding that a skill
-  bypassed `writing-great-plan`, and one that called a cross-reference stale when the referenced
-  section is exactly where the docs layout puts it. The reviewer isn't exempt from the rule it
-  enforces.
+  step 5 checks the executor's claims — for example, a "stale cross-reference" that turns out to
+  point at exactly the section it names. The reviewer isn't exempt from the rule it enforces.
 
 ## What this is not
 

@@ -3,28 +3,34 @@ name: execute-plan
 description: >
   Runs IMPLEMENTATION_PLAN.md by executing unchecked items one at a time.
   Use when the user says "execute the plan" or "work through the plan".
-  Ends each checkpoint in a commit under the repo's own commit rules, and offers to continue after each item.
+  Stages and hands off for review, or commits, per the plan's `Review:` line and the repo's rules,
+  and offers to continue after each item.
   Do not use for creating plans (use to-plan instead), one-shot implementation
   without a plan, or non-implementation tasks.
 ---
 
 # Execute Plan
 
-Work through `IMPLEMENTATION_PLAN.md` one checklist item at a time. Each checkpoint ends in a commit, under the repo's own commit rules. Offer to continue — never auto-proceed.
+Work through `IMPLEMENTATION_PLAN.md` one checklist item at a time. Each checkpoint is staged and handed off for review, or committed, per the plan's `Review:` line and the repo's own rules. Offer to continue — never auto-proceed.
 
 ## Before starting
 
 ### 1. Get the plan
 
-Use the path the user gives. Without one, resolve it per `.claude/skills/writing-great-plan/references/plan-location.md` → "Which plan runs": exactly one open plan → use it and name it in one line; several → ask which; none → ask for the path.
+Use the path the user gives. Without one, resolve it per the `writing-great-plan` skill's `references/plan-location.md` → "Which plan runs" (if that skill is not installed, ask for the path): exactly one open plan → use it and name it in one line; several → ask which; none → ask for the path.
 
 ### 2. Find first unchecked item
 
-```bash
-grep -n "- \[ \]" IMPLEMENTATION_PLAN.md | head -1
-```
+- **Multi-file plan** (the entry point holds a Phase Index and no checkboxes): read the Phase Index, then open the first file under `phases/` that still has a `- [ ]`, in index order. Grepping the entry point for a checkbox finds none and would report "all checked" on a plan that has not started.
+- **Single-file plan:**
 
-Read the plan from that line forward — don't re-read completed phases. If all checked, report done and stop.
+  ```bash
+  grep -n "- \[ \]" IMPLEMENTATION_PLAN.md | head -1
+  ```
+
+  Read the plan from that line forward — don't re-read completed phases.
+
+Every box checked: report done and stop.
 
 Before the first item, read the plan's `## Overview`, `## Open Questions` and `## Notes` once. An Open Questions bullet applies as written: use its `Default:`. A question the plan does not list that blocks an item: take the safest reading, keep going, and say so in the report as `Assumed: <what>`.
 
@@ -38,13 +44,22 @@ For each unchecked item:
 
 ### Step A — Read
 
-Before writing any code, read every file listed under the item's `Files:`, `Docs:`, and `Skill:` fields. Don't re-read what's already in context.
+Before writing any code, read every file listed under the item's `Files:` and `Skill:` fields. Don't re-read what's already in context.
+
+**Item markers** (the plan's standard form):
+
+- `Runner: human` — stop and wait for the user's answer; do not do the item.
+- `Runner: guardian` — in a single session, do it yourself after the phase.
+- `Execution unit:` with one sub-checkbox per unit — run one unit per round, tick its sub-checkbox, and checkpoint after each unit.
+- `Suggested commit: none — <reason>` — nothing is staged or committed, but the gates still run.
 
 Skip Steps A and B when you're dispatching a marked batch — each agent reads and implements its own phase. Go to Parallel batches, then resume at Step C.
 
 ### Step B — Implement
 
-Execute the item. Read `docs/agents/domain.md` (if present) to determine which context you're working in and where that context's verify gates live, then read that guide for build/lint/typecheck before implementing anything that crosses into a different context. If the file does not exist, carry on with the root `GLOSSARY.md` and `docs/adr/` where they exist, take the verify gates from `docs/agents/verify.md` or the repo's own build/lint/test commands, and suggest once that the user run `/setup-matt-pocock-skills` (from `mattpocock/skills`) to create it; do not stop, and do not create the file yourself. The same applies to every later mention of `docs/agents/domain.md` in this skill.
+Execute the item. Read `docs/agents/domain.md` (if present) to determine which context you're working in, and use it for context and glossary only; it does not name gates. If the file does not exist, carry on with the root `GLOSSARY.md` and `docs/adr/` where they exist, and suggest once that the user run `/setup-matt-pocock-skills` (from `mattpocock/skills`) to create it; do not stop, and do not create the file yourself.
+
+**The gates.** One source, in this order: the `verify` skill when it is installed; otherwise the gates in `docs/agents/verify.md`; otherwise the plan header's `Verify:` line; with none of these, report `no gate`. Every later "the gates" or "verify" in this skill means this order.
 
 **Slow test suites run at the scope the verify config names.** When that config defines a focused run (e.g. an `## Integration test scope` section in `docs/agents/verify.md`), run only the focused part the phase reaches while building and at its checkpoint — even when the phase file asks for the whole suite — and leave the full suite to the point that config names (usually the plan's last phase of that stack, or a diff into shared infrastructure). Report the focused command and its output as the phase's verification; a full suite you didn't run is `not run` plus that reason. With no such config, run the suite the phase file names.
 
@@ -71,32 +86,35 @@ Do these in order. The plan file is edited **before** anything is staged — a p
 
    For a **batched** phase the agents already ticked their own files. Don't re-read the phase files to redo it — take items-left-unchecked from the batch report, and run the `Note` sweep yourself, since the agents never saw the plan-level notes.
 
-2. **Update the workspace** — when the plan lives in a feature workspace: its folder is `plans/NN-<name>/` with `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` two levels up (set up by `/kickoff`). No workspace → skip this step; the report's **Workspace:** line reads `n/a`. The step lives here and not only in the plan's Notes because a phase file is self-contained: the agent running one phase never reads the Notes.
-   - Read `TRACKER.md` `## How this tracker works` and `CONTEXT.md` `## Workspace rules` (the tracker's language). Where they differ from this list, they win.
-   - **Status.** This phase's work item is in the Phase Index `Tracker` column (else the plan's Notes). Set it `done` when this phase was the item's last one and is verified, else `in-progress`. Under `Review: guardian` it goes to `in-progress` at most: `/review-phase` sets `done` once the phase passes review.
-   - **Action Log.** One row, today's date, in the tracker's language and plain words for the report's audience: what this phase built, plus "waiting for review" under guardian.
-   - **Reported? column stays exactly as it is.** It records what a sent report covered, and only `/tracker sent` changes it. The `- [x]` you set in step 1 lives in the plan file; the tracker's boxes are a different column with a different owner.
+2. **Update the workspace** — when the plan lives in a feature workspace (its folder is `plans/NN-<name>/`, with `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` two levels up, set up by the `kickoff` skill; else skip, and the report's **Workspace:** line reads `n/a`). The step lives here and not only in the plan's Notes because a phase file is self-contained: the agent running one phase never reads the Notes.
+
+   If an ADR is due (below) and the `domain-modeling` skill is not installed, stop before changing anything: say that `domain-modeling` (from `mattpocock/skills`) is missing, and "see this repo's README for the pinned install command". Do not write an ADR format yourself.
+
+   Update the workspace as its `TRACKER.md` `## How this tracker works` says, plus `WHATNEXT.md` and the workspace's `INDEX.md` row (this workspace's row only; leave every other row alone). Where `CONTEXT.md` `## Workspace rules` (the tracker's language) differs, it wins. What this skill adds:
+   - **Status.** This phase's work item is in the Phase Index `Tracker` column (else the plan's Notes). Set it `done` when this phase was the item's last one and is verified, else `in-progress`. Under `Review: guardian` the executor stops at `in-progress`: `/review-phase` sets `done` once the phase passes review.
+   - **Action Log.** One row, today's date, plain words for the report's audience: what this phase built, plus "waiting for review" under guardian.
    - **`WHATNEXT.md`.** Rewrite State now (last commit, what is staged) and Next steps: the finished step leaves, a partly done one keeps only what remains, and under guardian the next step is the review of this phase.
-   - **ADR candidates.** `grep -n "ADR: candidate" CONTEXT.md`. A decision tagged that way whose reasoning this phase's code now embodies gets its ADR written now — with the `domain-modeling` skill (from `mattpocock/skills`), where the repo keeps them — and its tag replaced by the ADR id; terms this phase coined go into the repo's glossary in the same pass. An ADR is a repo file, so it is staged and committed with the phase, unlike the workspace files. Under `Review: guardian` leave this to `/review-phase`, along with the `done` status. Not left to the wrap-up: by then the alternatives that lost are gone from everyone's memory, and the workspace that held them is about to be deleted.
-   - **`INDEX.md`** at the root above the workspace: refresh this workspace's row (progress, today's date, who is being waited on). Leave every other row alone.
-   - Apart from the ADR and the docs above, these files are git-ignored: edit them, never stage them.
+   - **ADR candidates.** A decision tagged `ADR: candidate` in `CONTEXT.md` (`grep -n "ADR: candidate" CONTEXT.md`) whose reasoning this phase's code now embodies becomes an ADR now, written with the `domain-modeling` skill, with its tag replaced by the ADR id and the terms the phase coined added to the glossary; the ADR is a repo file, so stage it with the phase. Under `Review: guardian` leave this to `/review-phase`, along with the `done` status.
+   - Apart from the ADR, these files are git-ignored: edit them, never stage them.
 
-   Done when: the work item's status, one new Action Log row and `WHATNEXT.md` all reflect this phase, no `ADR: candidate` this phase settled is left without its ADR, and `grep -c '^\[x\]' TRACKER.md` prints the same number as before you edited it.
+   Done when: the work item's status, one new Action Log row and `WHATNEXT.md` all reflect this phase, and `grep -c '^\[x\]' TRACKER.md` prints the same number as before you edited it.
 
-3. If the phase is in Commit Checkpoints: **stage the plan file together with the code** (a plan inside a git-ignored workspace is edited, not staged), then commit using the phase's `Suggested commit:` line if present — via the optional `/caveman-commit` skill (from `JuliusBrussee/caveman`) when installed, otherwise per the repo's own commit rules.
+3. If the phase has a `Suggested commit:` line that is not `none`: **stage the plan file together with the code** (a plan inside a git-ignored workspace is edited, not staged), then commit using the phase's `Suggested commit:` line if present — via the optional `/caveman-commit` skill (from `JuliusBrussee/caveman`) when installed, otherwise per the repo's own commit rules.
 4. **Commit under the repo's own rules.** Who runs a commit, and when, is set by the repo's `CLAUDE.md` / `AGENTS.md`, never by this skill. Where they let the agent commit, commit. Where they ask for confirmation, ask, then commit. Where they reserve it for the user, or say nothing, print the `git commit -m "..."` as a fenced one-liner for the user to run, and stop there. `Suggested commit:` in a phase file is the _message text_, not advance permission — the plan pre-approves the wording, never the act.
 5. **Always stop and confirm.** Never auto-proceed.
    - **Recompute `Next` from disk, not memory.** Before reporting what's next, re-read the plan's Phase Index from disk right now — don't rely on what this session remembers ticking or dispatching. A phase another agent, an earlier checkpoint, or a parallel batch already finished (or one still open that this session assumed was done) only shows up reliably in the file on disk.
-   - **Check whether fresh session is a live option — don't skip this check, but don't dangle it as a choice unless it's real.** Read the next unchecked item's `Files:`/`Docs:`/`Skill:` fields and diff them against what's already in context this session. Fresh is only worth raising when at least one holds: the next item starts a **new phase**, its file list **doesn't overlap** what's already in context, or it carries a **`Batch`** letter with sub-agents available (see Parallel batches). If none of those hold — same phase, same files, no batch — staying is the only sensible move; don't present fresh as an alternative.
+   - **Check whether fresh session is a live option — don't skip this check, but don't dangle it as a choice unless it's real.** Read the next unchecked item's `Files:`/`Skill:` fields and diff them against what's already in context this session. Fresh is only worth raising when at least one holds: the next item starts a **new phase**, its file list **doesn't overlap** what's already in context, or it carries a **`Batch`** letter with sub-agents available (see Parallel batches). If none of those hold — same phase, same files, no batch — staying is the only sensible move; don't present fresh as an alternative.
    - **Report using the matching template below.** Use the **full form** (with `Recommendation:` and the stay-or-fresh question) only when fresh is a live option per the check above. Otherwise use the **compact form** — no `Recommendation` line, just a plain "Continue?".
    - If the user says continue, loop back to Step A. If fresh session, stop and tell the user the plan path to hand to the new session.
 
 **Guardian handoff mode** (plan header carries the `**Review:** guardian` line) — replaces steps 3-5 above (step 2, the workspace, still runs):
 
-1. Stage the code and the plan file together (skip the separate commit step).
+1. Stage the code and the plan file together (skip the separate commit step). With `Suggested commit: none — …` nothing is staged.
 2. Write a short phase report into the plan file itself, under its own `## Executor report` heading — not the chat, and not the `## Review` heading the reviewer owns — the reviewer reads it from there via `/review-phase`. Keep it to 6 lines at most: what landed (one line), **Verify:**, **Staged:**, then one line per plan correction, `Assumed:` and open risk. No file list (the diff has it), no restating the items. On the **Staged:** line, paste the one-line output of `git diff --cached --shortstat` run just now (e.g. `4 files changed, 120 insertions(+), 3 deletions(-)`): the claim that the code is staged travels with the evidence that it actually is, same contract as the Verify line. Not the `git status` block: it grows one line per file and lists files left unstaged on purpose. Keep it separate from **Verify:** — that one stays the gate output for the paths this phase touched (`docs/agents/verify.md`). Two claims, two labels; a report that shows staging where the gate belongs has quietly dropped the gate.
 3. Stop. Do **not** print a `git commit` command — the commit comes after the review, under the repo's own commit rules (see `/review-phase`).
 4. Report `Next: awaiting /review-phase` in place of naming the next phase.
+
+If `review-phase` is not available in this session, say so and follow its steps yourself: re-run the gates, check the diff against the items, then commit per the repo's rules.
 
 Without the `Review: guardian` header, none of this applies — steps 1-5 above are the whole of Step C.
 
@@ -111,14 +129,29 @@ is not permission, because file-write conflicts don't show up in that field.
 
 With sub-agents, when the next unchecked phase carries a batch letter:
 
-1. Dispatch **one agent per phase**, concurrently, routing each by its own Weight letter to the matching agent: `S` → `phase-s` · `M` → `phase-m` · `L` → `phase-l` · `XL` → `phase-xl`. Those
-   definitions live in `.claude/agents/` or in the `phase-agents` plugin (where they are named `phase-agents:phase-s` and so on) and carry the model and effort for the tier — don't override the model per invocation. Weight already encodes the capability the phase needs; that is
+1. Dispatch **one agent per phase**, concurrently, routing each by its own Weight letter to the executor of that weight (names below). The agent definitions carry the model and effort for the tier — don't override the model per invocation. Weight already encodes the capability the phase needs; that is
    what the letter is for. Mixed letters in one batch are normal: route per phase, not per batch. Never split one phase across agents.
-   - On a harness without those agents, fall back to one general-purpose agent per phase and give it the rules the definitions carry (below). If it has no sub-agents at all, run sequentially.
-2. **Hand each agent its phase file path and nothing else.** Phase files are self-contained by design, and the agent definitions already forbid opening sibling phase files, the plan's entry
-   point, committing, or starting a second phase — a 10-phase plan must cost each agent one phase file, not ten. Pass those rules yourself only on the fallback path. If a plan-level `Note`
+
+   **Executor names.** Ask the harness which agent types it offers (in Claude Code, ask Claude to
+   list the agent types it can dispatch). You need one executor per weight. Use the names exactly
+   as listed:
+
+   - Installed as files in `.claude/agents/`: `phase-s`, `phase-m`, `phase-l`, `phase-xl`.
+   - Installed from the `phase-agents` plugin: `phase-agents:phase-s` and so on. A bare `phase-s`
+     is rejected there ("Agent type 'phase-s' not found").
+
+   Record the four names once at preflight and use them verbatim as the dispatch agent type
+   (S → the `-s` name, M → `-m`, L → `-l`, XL → `-xl`). None found: stop and say how to install
+   them (the `phase-agents` plugin, or copy the agent files into `.claude/agents/`); do not
+   substitute a general-purpose agent. If the harness has no sub-agents at all, run the plan in
+   this session with `execute-plan` under `Review: guardian`, then `review-phase`.
+
+   Without sub-agents, ignore the `Batch` column (above) and run each phase in this session under this skill's `references/executor-rules.md`.
+
+2. **Hand each agent its phase file path and nothing else.** Phase files are self-contained by design, and the agent definitions (the same text as `references/executor-rules.md`) already forbid opening sibling phase files, the plan's entry
+   point, committing, or starting a second phase — a 10-phase plan must cost each agent one phase file, not ten. When you run a phase in this session instead, follow `references/executor-rules.md` yourself. If a plan-level `Note`
    applies to a phase, paste that line into its prompt rather than pointing at the file it lives in.
-3. **The batch is one checkpoint.** Wait for all agents, then run verify once over the combined diff (gates per `docs/agents/domain.md`; a slow suite at the focused scope of the combined diff, per the verify config). Never let batch agents run a database-backed suite at the same time if the verify config says runs share one test database — have them stop at build/lint and run the tests once here.
+3. **The batch is one checkpoint.** Wait for all agents, then run the gates once over the combined diff (a slow suite at the focused scope of the combined diff, per the verify config). Never let batch agents run a database-backed suite at the same time if the verify config says runs share one test database — have them stop at build/lint and run the tests once here.
 4. Report it as a single Step C. `Next:` names the batch, not one phase; commit with the batch's `Suggested commit:` lines — one commit per phase, unless the user wants them squashed. Under `Review: guardian`, stop after staging instead: each phase's commit follows its review.
 5. If an agent fails, report which phases landed and which didn't. Fix or re-dispatch only the failed phase — never re-run the whole batch over work that already landed.
 
@@ -220,10 +253,10 @@ If the item bundles multiple sub-files and you must stop before finishing all of
 
 When the user reports behaviour that doesn't match expectations on a completed (`[x]`) phase:
 
-1. **Locate via git** — `git log --oneline --grep="phase-NN"`, `git show <hash> -- <file>`
+1. **Locate via git** — find the phase's commit by its `Suggested commit:` text, or by `git log -- <a file from its Files:>`, then `git show <hash> -- <file>`
 2. **Classify** — regression (item does wrong thing) vs scope gap (plan missed a case)
 3. **Patch the plan** — regression: uncheck item, add `> Reopened — manual test: expected <X>, got <Y>`, fix, re-check. Scope gap: add new item tagged `Found-in: manual test`.
-4. **Re-verify** — run the verify gates that apply to the phase's touched context (per `docs/agents/domain.md`)
+4. **Re-verify** — run the gates that apply to the phase's touched context
 5. **Commit** — `fix(phase-NN): <description>`
 
 ---
@@ -233,7 +266,7 @@ When the user reports behaviour that doesn't match expectations on a completed (
 When all items are checked:
 
 1. Update `Status` to `done`
-2. Run a final verify — gates whichever stacks the diff touched (per `docs/agents/domain.md`), with each slow suite at full scope once, unless a reviewer already ran it full after the last phase
+2. Run a final verify — the gates for whichever stacks the diff touched, with each slow suite at full scope once, unless a reviewer already ran it full after the last phase
 3. If docs were a phase, confirm `refine-docs` was run
 4. For a plan with no `PlanType:` line (a feature plan): suggest commit and PR. For a plan with a maintenance `PlanType:`: skip commit/PR suggestions
 5. Report using the Completion report template above
