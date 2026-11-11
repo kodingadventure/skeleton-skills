@@ -1,7 +1,10 @@
 {
   "lang": "en",
-  "guide": "A question mark marks an item awaiting your answer, a check one already decided. Every decision carries my recommendation in a green frame. The riskiest items are flagged yellow, so read those first when time is short. The answer box at the end holds text you can copy and paste into the conversation. Explain on any item copies a question about it, to paste into the conversation when something is unclear.",
+  "guide": "How to read: a question mark awaits your answer, a check is decided, the green frame is my recommendation, yellow is the riskiest (read it first). Copy the answer box at the end into the conversation; Explain asks about one item.",
   "nav_label": "Decisions",
+  "recap_question": "Question:",
+  "recap_answer": "Your answer:",
+  "recap_notes": "Your notes:",
   "so_far": "Decided in earlier rounds",
   "risky_chip": "risky",
   "decided": "Decided",

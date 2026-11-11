@@ -1,7 +1,10 @@
 {
   "lang": "id",
-  "guide": "Tanda tanya menandai butir yang menunggu jawaban Anda, centang menandai yang sudah diputuskan. Setiap keputusan punya usulan saya, ditandai bingkai hijau. Yang paling berisiko diberi tanda kuning, jadi periksa dulu yang bertanda kuning bila waktu Anda terbatas. Di akhir halaman ada kotak jawaban yang bisa Anda salin dan tempel ke percakapan. Tombol Jelaskan di tiap butir menyalin pertanyaan tentang butir itu, untuk ditempel ke percakapan bila ada yang kurang jelas.",
+  "guide": "Cara membaca: tanda tanya menunggu jawaban Anda, centang sudah diputuskan, bingkai hijau usulan saya, kuning paling berisiko (baca dulu). Salin kotak jawaban di akhir ke percakapan; tombol Jelaskan untuk bertanya soal satu butir.",
   "nav_label": "Daftar keputusan",
+  "recap_question": "Pertanyaan:",
+  "recap_answer": "Jawabanmu:",
+  "recap_notes": "Catatanmu:",
   "so_far": "Sudah diputuskan di putaran sebelumnya",
   "risky_chip": "berisiko",
   "decided": "Diputuskan",
