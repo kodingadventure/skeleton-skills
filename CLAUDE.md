@@ -6,7 +6,11 @@
 
 ### Issue tracker
 
-Issues and specs live as markdown files under `.scratch/<feature-slug>/` (gitignored).
+Issues live in GitHub Issues `kodingadventure/skeleton-skills`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five default triage roles, label string equal to the role name. See `docs/agents/triage-labels.md`.
 
 ### Adding or changing a skill
 
