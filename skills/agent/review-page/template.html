@@ -1022,8 +1022,8 @@ flowchart TD
           var own = sec.querySelectorAll(".opts");
           if (!own.length) return;
           var done = Array.prototype.every.call(own, function (g) {
-              return g.dataset.chosen;
-            });
+            return g.dataset.chosen;
+          });
           var h = sec.querySelector("h2");
           if (h) h.prepend(mark(done));
           var link = sec.id && document.querySelector('nav a[href="#' + sec.id + '"]');
