@@ -1,6 +1,6 @@
 # Publishing a new skill
 
-How to add a brand-new skill to this catalog (`skills add kodingadventure/skeleton-skills`).
+How to add a brand-new skill to this catalog (`npx skills add kodingadventure/skeleton-skills`).
 
 ## Where it goes
 
@@ -44,6 +44,6 @@ Test routing with real sessions rather than by reading the skill: `claude -p` in
 
 - `npm run format:check` (covers `skills/` and `plugins/`; group READMEs are included, the root `README.md` and `docs/` are not).
 - A `description` is YAML: a colon followed by a space inside an unquoted value makes the skill disappear from the install list. Use a quoted string or a `>` block.
-- Run `skills add <this repo> --list` from a scratch folder, never from a real project, and confirm the new skill is listed.
+- Run `npx skills add <this repo> --list` from a scratch folder, never from a real project, and confirm the new skill is listed.
 - Hook tests: `node --test "skills/workspace/hooks/*.test.mjs"` (a folder argument fails on Node 24).
 - Further gates and sequencing: `docs/agents/verify.md`. Known failure modes: `docs/agents/failure-modes.md`.

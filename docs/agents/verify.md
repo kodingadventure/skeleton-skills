@@ -46,7 +46,7 @@ on their own.
 
 | Change reaches                    | Surface                                                                        |
 | --------------------------------- | ------------------------------------------------------------------------------ |
-| A skill's `SKILL.md` frontmatter  | `skills add <repo path> --list` from a scratch dir — the listing must show it  |
+| A skill's `SKILL.md` frontmatter  | `npx skills add <repo path> --list` from a scratch dir — the listing must show it  |
 | `.claude-plugin/marketplace.json` | same listing — every entry must resolve to a directory that exists             |
 | A skill's body or references      | invoke the skill in a session and confirm it reaches the material it points at |
 
