@@ -101,6 +101,10 @@ Plan root: `.plans/`
 
 `Workspace root:` is where feature workspaces live; `Plan root:` is where plans written outside a workspace live. Both defaults are shown above, and both folders must be git-ignored.
 
+## Versions
+
+The whole repo has one version, tracked in `CHANGELOG.md`, which records what changed. Pin to a tag if you want a fixed version: `npx skills add 'kodingadventure/skeleton-skills#v0.1.0' ...`.
+
 ## Credits
 
 - [Matt Pocock](https://github.com/mattpocock/skills) (MIT) — the suite above is a dependency, not copied.

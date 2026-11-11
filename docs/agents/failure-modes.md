@@ -37,3 +37,10 @@ result, confirm the same command finds a term known to be present.
 **Shows up as:** a `file:line` reference written by one phase is confidently wrong by the time
 anyone reads it, because a sibling phase in the same batch inserted lines above it.
 **Probe:** re-resolve every `file:line` in the diff, or cite files only.
+
+## changeset-missing
+
+**Shows up as:** a change under `skills/` or `plugins/` lands without a changeset, so the next
+version PR and `CHANGELOG.md` leave it out.
+**Probe:** `git diff --cached --name-only` lists a path under `skills/` or `plugins/` but no new
+file in `.changeset/`.

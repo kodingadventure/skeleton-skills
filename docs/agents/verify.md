@@ -10,6 +10,7 @@ formatting alone.
 | Touched path                          | Gate                                                                                 |
 | ------------------------------------- | ------------------------------------------------------------------------------------ |
 | `skills/**`, `plugins/**`             | `npm run format:check`                                                               |
+| `package.json`, `plugins/**`          | `npm run check-plugin-version`                                                       |
 | `**/*.mjs`                            | `node --check <file>` per changed file                                               |
 | `skills/workspace/hooks/**`           | `node --test "skills/workspace/hooks/*.test.mjs"`                                    |
 | `**/*.py`                             | `python3 -m py_compile <file>` per changed file                                      |
@@ -25,6 +26,8 @@ Adding or removing a skill touches three places: the directory, its entry in
 `.claude-plugin/marketplace.json`, and its bullet in the group's
 `skills/<group>/README.md`. Gate the JSON after editing the manifest — a malformed
 manifest makes every skill in the repo uninstallable, and nothing else catches it.
+
+A commit that touches `skills/` or `plugins/` without a new file in `.changeset/` is a failure.
 
 The four `plugins/phase-agents/agents/phase-*.md` bodies are copies of
 `skills/workflow/execute-plan/references/executor-rules.md`; edit both.

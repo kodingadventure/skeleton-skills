@@ -1,11 +1,17 @@
 {
   "name": "skeleton-skills",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "format": "prettier --write skills/ plugins/",
-    "format:check": "prettier --check skills/ plugins/"
+    "format:check": "prettier --check skills/ plugins/",
+    "changeset": "changeset",
+    "version": "changeset version && node scripts/sync-plugin-version.mjs",
+    "check-plugin-version": "node scripts/sync-plugin-version.mjs --check"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3",
     "prettier": "^3.5.0"
   }
 }

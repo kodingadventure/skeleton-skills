@@ -40,6 +40,10 @@ Every group has `skills/<group>/README.md`: add one bullet for the new skill (na
 
 Test routing with real sessions rather than by reading the skill: `claude -p` in a disposable clone, one prompt per fork from a session that has not yet run the skill, several samples.
 
+## Add a changeset
+
+Run `npx changeset`, pick `minor` for a new skill, and write one line for the user: the skill name and what it does. Commit the file in `.changeset/` with the skill. Do not edit the version by hand.
+
 ## Before opening a change
 
 - `npm run format:check` (covers `skills/` and `plugins/`; group READMEs are included, the root `README.md` and `docs/` are not).
