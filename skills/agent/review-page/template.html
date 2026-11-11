@@ -242,8 +242,33 @@
         margin: 6px 0 0;
       }
       /* Each recap line opens to the earlier question, the answer given, and its notes */
+      /* The triangle is the only marker: it shows open or closed and toggles the line; wrapped text hangs under the words */
+      .recap ul {
+        list-style: none;
+        padding-left: 0;
+      }
       .recap summary {
         cursor: pointer;
+        list-style: none;
+        position: relative;
+        padding-left: 1.3em;
+      }
+      .recap summary::-webkit-details-marker {
+        display: none;
+      }
+      .recap summary::before {
+        content: "\25B6";
+        position: absolute;
+        left: 0;
+        top: 0.35em;
+        font-size: 0.7em;
+        color: var(--accent);
+      }
+      .recap details[open] > summary::before {
+        content: "\25BC";
+      }
+      .recap details > div {
+        margin-left: 1.3em;
       }
       .recap summary:focus-visible {
         outline: 2px solid var(--accent);
