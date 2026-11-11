@@ -222,6 +222,20 @@
       .decided strong {
         font-family: var(--display);
       }
+      /* Later rounds open with what earlier rounds decided, so the rest of the page holds only open questions */
+      .recap {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 16px;
+        max-width: none;
+      }
+      .recap strong {
+        font-family: var(--display);
+      }
+      .recap ul {
+        margin: 6px 0 0;
+      }
       .chip {
         display: inline-block;
         font-family: var(--body);
@@ -646,10 +660,16 @@
         <a class="back" href="{{previous page file name}}">← {{Previous page name}}</a>
         <h1>{{Title}}</h1>
         <p class="lead">{{What this page is, why now, how many items. Introduce here every term and number used below.}}</p>
+        <!-- On a later round: what the earlier rounds decided, one line each, so the page below holds only open questions. -->
+        <div class="recap">
+          <strong>[[so_far]]</strong>
+          <ul class="plain">
+            <li>{{One decision from an earlier round, in a few words}}</li>
+          </ul>
+        </div>
         <p class="guide">[[guide]]</p>
         <nav aria-label="[[nav_label]]">
           <ol>
-            <!-- With a follow-up: <li><a href="#follow-up">[[follow_up]]</a></li> -->
             <li><a href="#item-1">{{Item 1}}</a></li>
             <li><a href="#item-2">{{Item 2}}</a> <span class="chip">[[risky_chip]]</span></li>
           </ol>
@@ -658,21 +678,6 @@
   <p class="decided"><strong>[[decided]] {{date}}:</strong> {{each item's outcome, naming every answer that differs from the recommendation}}. <a href="{{next round file name, once that page exists}}">[[next_round]]</a>.</p>
   -->
       </header>
-
-      <!-- Follow-up (only after an answer opens a new question), right under the header.
-     It is a decision like any other: options with the recommended one first, answered through the answer box.
-     data-num is the number of the item it continues, so the answer line reads "7. ...".
-     Record the item it came from with page.py decide <its radio-name>=follow-up: its options lock and point here.
-     data-ask on both sections shows a question mark until the follow-up is answered; remove both then.
-<section id="follow-up" data-ask>
-  <h2>[[follow_up]]: {{Item number}}. {{the new question}}</h2>
-  <p>{{Why the question came up, quoting the answer that opened it}}</p>
-  <div class="opts" role="radiogroup" aria-label="[[follow_up]] {{Item number}}" data-name="{{Short name}}" data-num="{{Item number}}">
-    <label class="opt rec"><input type="radio" name="follow-up-{{Item number}}" value="A" checked /><div><span class="tag">[[recommended]]</span><b>A. {{Option}}</b><span>{{Reason}}</span></div></label>
-    <label class="opt"><input type="radio" name="follow-up-{{Item number}}" value="B" /><div><b>B. {{Option}}</b><span>{{Cost}}</span></div></label>
-  </div>
-</section>
--->
 
       <section id="item-1">
         <h2>1. {{Item title}}</h2>
@@ -761,7 +766,7 @@ flowchart TD
         toggle();
       })();
       // Groups with data-chosen are locked on the user's answer. Each section with options gets a check
-      // (all decided) or a question mark (awaiting an answer, or data-ask), in its heading and the item list.
+      // (all decided) or a question mark (awaiting an answer), in its heading and the item list.
       // The answer text holds only undecided groups; the answer box hides when none is left.
       (function () {
         var CHECK =
@@ -920,7 +925,8 @@ flowchart TD
           var chosen = g.dataset.chosen;
           if (!chosen) return;
           g.classList.add("locked");
-          // The question moved to the follow-up: nothing is chosen here, a link points there.
+          // The question continues on the next round's page: this item is settled here, and a link
+          // (the decided banner's link to another page) points there.
           if (chosen === "follow-up") {
             g.querySelectorAll(".opt").forEach(function (o) {
               var inp = o.querySelector("input");
@@ -930,8 +936,9 @@ flowchart TD
             });
             var moved = document.createElement("p");
             moved.className = "note";
-            var to = document.createElement("a");
-            to.href = "#follow-up";
+            var next = document.querySelector('.decided a[href]:not([href^="#"])');
+            var to = document.createElement(next ? "a" : "span");
+            if (next) to.href = next.getAttribute("href");
             to.textContent = T.continued;
             moved.append(to);
             g.after(moved);
@@ -959,10 +966,8 @@ flowchart TD
         });
         document.querySelectorAll("main > section").forEach(function (sec) {
           var own = sec.querySelectorAll(".opts");
-          if (!own.length && !sec.hasAttribute("data-ask")) return;
-          var done =
-            !sec.hasAttribute("data-ask") &&
-            Array.prototype.every.call(own, function (g) {
+          if (!own.length) return;
+          var done = Array.prototype.every.call(own, function (g) {
               return g.dataset.chosen;
             });
           var h = sec.querySelector("h2");
@@ -1047,7 +1052,6 @@ flowchart TD
           var own = sec.querySelectorAll(".opts");
           var decided =
             own.length > 0 &&
-            !sec.hasAttribute("data-ask") &&
             Array.prototype.every.call(own, function (g) {
               return g.dataset.chosen;
             });
@@ -1105,14 +1109,13 @@ flowchart TD
           var lines = [title];
           var num = 0;
           groups.forEach(function (g) {
-            // Items count in page order; a follow-up carries the number of the item it continues.
-            var follow = g.closest("#follow-up");
-            if (!follow) num++;
+            // Items count in page order; data-num overrides the count when a page numbers items its own way.
+            num++;
             if (g.dataset.chosen) return;
             var el = g.querySelector("input:checked");
             var value = el ? el.value : "-";
             if (value === "other") value = T.other_option + ": " + (g._other.value.trim().replace(/\s*\n\s*/g, " ") || "-");
-            var line = (g.dataset.num || (follow ? T.follow_up : num)) + ". " + (g.dataset.name || "") + ": " + value;
+            var line = (g.dataset.num || num) + ". " + (g.dataset.name || "") + ": " + value;
             var comment = g._comment && g._comment.value.trim();
             if (comment) line += " (" + T.comment_word + ": " + comment.replace(/\s*\n\s*/g, " ") + ")";
             lines.push(line);

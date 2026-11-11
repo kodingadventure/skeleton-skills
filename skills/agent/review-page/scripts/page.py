@@ -7,7 +7,7 @@
   page.py check <file>
         report rule violations; exit 1 when any ERROR is found
   page.py decide <file> <radio-name>=<letter> ...   (or <radio-name>=other:<the user's own answer>,
-        or <radio-name>=follow-up when the item continues in the follow-up section)
+        or <radio-name>=follow-up when the item continues on the next round's page)
         record answers: set data-chosen on each named decision
   page.py refresh <file> [--lang LANG]
         rebuild a page on the current template, keeping its <title> and <main>
@@ -155,7 +155,7 @@ class Structure(HTMLParser):
         if tag == "a" and "nav" in self._stack and (a.get("href") or "").startswith("#"):
             self.nav_links.append(a["href"][1:])
         if tag == "section" and self._stack[-1:] == ["main"]:
-            self.sections.append({"id": a.get("id"), "ask": "data-ask" in a, "groups": 0, "chip": False, "risk": False})
+            self.sections.append({"id": a.get("id"), "groups": 0, "chip": False, "risk": False})
         sec = self.sections[-1] if self.sections and "section" in self._stack + [tag] else None
         if sec and "chip" in cls:
             sec["chip"] = True
@@ -167,7 +167,6 @@ class Structure(HTMLParser):
                 "chosen": a.get("data-chosen"),
                 "other": a.get("data-other"),
                 "num": a.get("data-num"),
-                "follow": bool(sec and sec["id"] == "follow-up"),
                 "options": [],
             }
             self._group_depth = 0
@@ -286,6 +285,8 @@ def cmd_check(args):
 
     s = Structure()
     s.feed(page)
+    banner = re.search(r'<p class="decided"[\s\S]*?</p>', page)
+    next_page = bool(banner and re.search(r'href="(?!#)[^"]+"', banner.group(0)))
     if len(s.groups) > MAX_ITEMS:
         err(f"{len(s.groups)} decisions on one page; keep {MAX_ITEMS} at most and move the rest to the next round")
     radio_names = {}
@@ -310,10 +311,8 @@ def cmd_check(args):
         values = [o.get("value") for o in g["options"]]
         if g["chosen"] is not None and g["chosen"] not in values + ["other", "follow-up"]:
             err(f"{label}: data-chosen=\"{g['chosen']}\" matches no option ({', '.join(map(str, values + ['other', 'follow-up']))})")
-        if g["chosen"] == "follow-up" and "follow-up" not in s.ids:
-            err(f"{label}: data-chosen=\"follow-up\" but the page has no #follow-up section")
-        if g["follow"] and not g["num"]:
-            warn(f"{label}: a follow-up decision needs data-num, the number of the item it continues")
+        if g["chosen"] == "follow-up" and not next_page:
+            err(f"{label}: data-chosen=\"follow-up\" but the decided banner links no next-round page; build that page and link it")
         if "other" in values:
             err(f"{label}: an option uses the value 'other'; the script adds Another answer itself, so leave it out of the draft")
         if g["chosen"] == "other" and not (g["other"] or "").strip():
@@ -331,6 +330,8 @@ def cmd_check(args):
             warn(f"section #{sec['id']} is flagged but has no risk box saying why")
     if any(g["chosen"] for g in s.groups) and not s.has_decided:
         err("answers are recorded (data-chosen) but the page has no decided banner")
+    if any(g["chosen"] for g in s.groups) and any(g["chosen"] is None for g in s.groups):
+        warn("this page mixes answered and open decisions; a question raised by an answer goes on the next round's page, not here")
     if s.has_answer:
         for needed in ("answer-text", "copy", "copy-status"):
             if needed not in s.ids:
