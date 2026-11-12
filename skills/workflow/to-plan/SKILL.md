@@ -26,7 +26,7 @@ A checkpoint that installs, removes or changes settings outside the project name
 ## Workflow
 
 - [ ] **1. Locate source material** — spec, issue, or conversation
-- [ ] **2. Explore the codebase** — collect every target repo, then per repo read its domain doc, gate and failure modes; identify files to touch, classify phases, assign weights
+- [ ] **2. Explore the codebase** — collect every target repo, then per repo read its domain doc, gate and failure modes; find the doc pages the plan will touch, identify files to touch, classify phases, assign weights
 - [ ] **3. Write the plan** — location per the `writing-great-plan` skill's `references/plan-location.md`
 - [ ] **4. Read it as the runner** — run the `writing-great-plan` skill's `references/runner-check.md` against the written plan
 - [ ] **5. Present and iterate** — show the user, refine, hand off to execute-plan
@@ -50,6 +50,7 @@ Then, for each repo:
 - Read `docs/agents/domain.md` and follow its **Consumer Rules**: determine context, read the matching glossary, check ADRs. If that file does not exist, carry on with the root `GLOSSARY.md` and `docs/adr/` where they exist, and suggest once that the user run `/setup-matt-pocock-skills` (from `mattpocock/skills`) to create it; do not stop, and do not create the file yourself.
 - Note `docs/agents/verify.md`. When the repo has none, note its verify command: that becomes the `**Verify:**` line.
 - Read `docs/agents/failure-modes.md` if it exists and note which entries match each phase; these become that phase's `Prone to:` line. If the file is absent, pass nothing rather than inventing failure modes.
+- Find the doc pages the plan will touch. Take the doc files from the Docs Layout in `docs/agents/domain.md` (the `### Wiki` table, glossaries, reference docs; without one, `docs/` and the README), and `grep -rln` each route, status, term and code name the plan changes. A sentence that one phase makes wrong becomes a doc item in that phase, quoted with its replacement; every other hit is a page for the docs phase (the `writing-great-plan` skill's "Docs phase"). Note which documentation skills your agent lists: only those become items.
 
 If the source lives in a feature workspace, also read the decisions in its `CONTEXT.md` and the guardrails in its `WHATNEXT.md`. A conflict between those and a repo's `CLAUDE.md` / `AGENTS.md` becomes an Open Question (step 9 of `runner-check.md`).
 
@@ -85,7 +86,7 @@ Decide the plan's type:
 
 A `feature` plan has no `PlanType:` line; a maintenance plan carries `PlanType: <type>`.
 
-Invoke `writing-great-plan` to format and write the plan, passing it `PlanType` (maintenance plans only), the phase list with Weight, the `Repo` (and `Verify` when step 2 found no `docs/agents/verify.md`), the per-phase `Prone to:` entries and the Open Questions with their defaults gathered in steps 1–2, and the raw context (mockups, DTO shapes, business rules) gathered above. It picks the **feature-shape** template (single-file or multi-file, per its splitting rule), assigns capability/thinking-effort recommendations, and adds the Manual Test Checkpoints and Suggested commit lines.
+Invoke `writing-great-plan` to format and write the plan, passing it `PlanType` (maintenance plans only), the phase list with Weight, the `Repo` (and `Verify` when step 2 found no `docs/agents/verify.md`), the per-phase `Prone to:` entries and the Open Questions with their defaults gathered in steps 1–2, the raw context (mockups, DTO shapes, business rules) gathered above, and the doc pages found in step 2 and the documentation skills your agent lists. It picks the **feature-shape** template (single-file or multi-file, per its splitting rule), assigns capability/thinking-effort recommendations, and adds the Manual Test Checkpoints and Suggested commit lines. For a feature plan that changes behaviour, it adds the docs phase as the last phase.
 
 **Critical rules when writing items:**
 
@@ -151,6 +152,7 @@ Iterate until approved. Do **not** start implementation — that is `execute-pla
 
 ## Rules
 
+- **A feature plan that changes behaviour ends with a docs phase** — the `writing-great-plan` skill's "Docs phase" sets when, and its shape. Never name a documentation skill your agent does not list.
 - **Order phases by dependency.**
 - **Every phase declares Weight.** Every item declares Weight (`S`/`M`/`L`/`XL`, no exceptions — default `M` if unsure). Weight alone drives capability/agent routing (`phase-s/m/l/xl` per `writing-great-plan`'s Capability recommendation table) — there is no separate `Agent:` field.
 - **Inline raw context.** An executor with fresh context and no spec must understand every item from the plan alone — no back-and-forth.
