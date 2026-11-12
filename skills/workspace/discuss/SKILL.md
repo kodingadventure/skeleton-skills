@@ -20,11 +20,15 @@ The same order in every workspace skill:
 
 Never pick between two live workspaces. Before writing anything, name the one you resolved in one line: `Workspace: <slug>`.
 
+## Language
+
+Every message to the user is in the workspace language from `CONTEXT.md` `## Workspace rules`: each reply, each question (through a question tool too), each progress line. Before `CONTEXT.md` is read, use the language of the user's message. A repo rule that code, docs or commits be in English covers what gets committed, not the conversation.
+
 ## Steps
 
 ### 1. Load, narrowly
 
-1. `CONTEXT.md` — the whole file. `## Workspace rules` sets the language for the discussion.
+1. `CONTEXT.md` — the whole file. `## Workspace rules` sets the language (see [Language](#language)).
 2. `WHATNEXT.md` — the whole file, so the discussion knows where the work stands.
 3. **Only what the topic touches.** Grep the topic's words across `## Decisions` and `## Findings` in `CONTEXT.md`, `findings/`, `questions/` and the plans' Phase Index, and open the few files that hit. A plan phase, `TRACKER.md` or a handoff is opened only when the topic is about that phase, the progress numbers, or an interrupted session.
 
