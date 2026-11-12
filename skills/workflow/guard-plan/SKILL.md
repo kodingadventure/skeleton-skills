@@ -11,7 +11,7 @@ This skill needs a harness that can start a sub-agent with its own context and s
 
 ## 1. Preflight — once per session
 
-1. Get the plan path from the user, or resolve it per the `writing-great-plan` skill's `references/plan-location.md` → "Which plan runs" (entry point `IMPLEMENTATION_PLAN.md` with a Phase Index; if the `writing-great-plan` skill is not installed, ask the user for the plan path). Read the entry point: Phase Index, Open Questions, Manual Test Checkpoints, Notes. Those four are all the guardian keeps in context.
+1. Get the plan path from the user, or resolve it per the `writing-great-plan` skill's `references/plan-location.md` → "Which plan runs" (entry point `IMPLEMENTATION_PLAN.md` with a Phase Index; if the `writing-great-plan` skill is not installed, ask the user for the plan path). Read the entry point: Phase Index, Open Questions, Manual Test Checkpoints, Notes. Those four are all the guardian keeps in context. When the plan lives in a feature workspace (`CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` two levels above the plan folder) and `CONTEXT.md` holds an `ADR: candidate`, check that the `domain-modeling` skill is installed; when it is not, stop before dispatching anything: say that `domain-modeling` (from `mattpocock/skills`) is missing, and "see this repo's README for the pinned install command".
 2. **Executor names.** Ask the harness which agent types it offers (in Claude Code, ask Claude to list the agent types it can dispatch). You need one executor per weight. Use the names exactly as listed:
 
    - Installed as files in `.claude/agents/`: `phase-s`, `phase-m`, `phase-l`, `phase-xl`.
@@ -62,7 +62,17 @@ Defects:
 
 **Record.** Append `## Review` to the phase file in `review-phase`'s template: gates re-run, defects found and fixed, plan corrections, anything not run and why. Keep it to the verdict, one line per defect, and one line for what was ruled out.
 
-**Commit.** Follow the run mode recorded at preflight. Stage this phase's paths plus its phase file only (sibling phases in a batch may still be in flight; leave the phase file out when the plan lives in a gitignored folder).
+**Close the phase in the workspace.** Do this when the plan lives in a feature workspace (`CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` two levels above the plan folder); else skip it, and the report says `workspace n/a`. The executors never touch the workspace, so this is the guardian's, once per guarded phase. Update it as its `TRACKER.md` `## How this tracker works` says:
+
+- **Status.** The phase's work item (the Phase Index `Tracker` column, else the plan's Notes) → `done` when the phase passed the guard and was the item's last one; else `in-progress`.
+- **Action Log.** One new row, today's date, in plain words for the report's audience: what the phase built and what the guard fixed.
+- **`WHATNEXT.md`.** Rewrite State now (phase guarded, the commit made or its command printed) and Next steps (the next phase, or the checkpoint that follows).
+- **`INDEX.md`.** This workspace's row only: progress and today's date.
+- **ADR candidates.** A decision tagged `ADR: candidate` in `CONTEXT.md` whose reasoning this phase's code now embodies becomes an ADR now, written with the `domain-modeling` skill, its tag replaced by the ADR id, and the terms the phase coined added to the glossary.
+
+The ADR and glossary are repo files: they go into this phase's commit. The other workspace files are git-ignored: edit them, never stage them. Done when the item's status, the Action Log row and `WHATNEXT.md` reflect the phase, and `grep -c '^\[x\]' TRACKER.md` prints the same number as before.
+
+**Commit.** Follow the run mode recorded at preflight. Stage only this phase's paths, its phase file, and the ADR and glossary files the close step wrote (sibling phases in a batch may still be in flight; leave the phase file out when the plan lives in a gitignored folder).
 
 - Run mode "commit": commit with the phase's `Suggested commit:` line. A phase is committed only on a green gate: if a gate could not run, the phase stays staged-but-uncommitted and the loop stops with the reason.
 - Run mode "print the command": leave the phase staged, print the commit command with the `Suggested commit:` line, and stop until the user has committed.
@@ -79,4 +89,4 @@ The repo's `CLAUDE.md`/`AGENTS.md` commit and push rules win over this step. Whe
 
 ## 3. Report
 
-Per guarded phase, one line: `✅ Phase N — <what changed> · gates: <commands> green (or "no gate") · defects fixed: <n> · <commit sha, or "staged, commit command printed">`. At a stop, add what the user must do next. Paste gate output only when it is red.
+Per guarded phase, one line: `✅ Phase N — <what changed> · gates: <commands> green (or "no gate") · defects fixed: <n> · workspace: <ID> → <status> (or "n/a") · <commit sha, or "staged, commit command printed">`. At a stop, add what the user must do next. Paste gate output only when it is red.
