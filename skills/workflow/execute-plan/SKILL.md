@@ -97,7 +97,7 @@ Do these in order. The plan file is edited **before** anything is staged — a p
    - **ADR candidates.** A decision tagged `ADR: candidate` in `CONTEXT.md` (`grep -n "ADR: candidate" CONTEXT.md`) whose reasoning this phase's code now embodies becomes an ADR now, written with the `domain-modeling` skill, with its tag replaced by the ADR id and the terms the phase coined added to the glossary; the ADR is a repo file, so stage it with the phase. Under `Review: guardian` leave this to `/review-phase`, along with the `done` status.
    - Apart from the ADR, these files are git-ignored: edit them, never stage them.
 
-   Done when: the work item's status, one new Action Log row and `WHATNEXT.md` all reflect this phase, and `grep -c '^\[x\]' TRACKER.md` prints the same number as before you edited it.
+   Done when: the work item's status, one new Action Log row and `WHATNEXT.md` all reflect this phase, and `grep -c '^| \[x\]' TRACKER.md` prints the same number as before you edited it.
 
 3. If the phase has a `Suggested commit:` line that is not `none`: **stage the plan file together with the code** (a plan inside a git-ignored workspace is edited, not staged), then commit using the phase's `Suggested commit:` line if present — via the optional `/caveman-commit` skill (from `JuliusBrussee/caveman`) when installed, otherwise per the repo's own commit rules.
 4. **Commit under the repo's own rules.** Who runs a commit, and when, is set by the repo's `CLAUDE.md` / `AGENTS.md`, never by this skill. Where they let the agent commit, commit. Where they ask for confirmation, ask, then commit. Where they reserve it for the user, or say nothing, print the `git commit -m "..."` as a fenced one-liner for the user to run, and stop there. `Suggested commit:` in a phase file is the _message text_, not advance permission — the plan pre-approves the wording, never the act.
@@ -230,7 +230,7 @@ Rules:
 **Verify:** `<command run>`
 <pasted output — or the literal "not run" plus the reason>
 
-**Docs:** <"refine-docs run" | "N/A — no doc phase">
+**Docs:** <"Phase <N> — <the documentation skills its items ran>" | "no docs phase — <the reason in the plan's Notes>" | "no docs phase — maintenance plan">
 
 **Suggested commit / PR:** <commit message, or "skip — maintenance plan">
 ```
@@ -267,6 +267,6 @@ When all items are checked:
 
 1. Update `Status` to `done`
 2. Run a final verify — the gates for whichever stacks the diff touched, with each slow suite at full scope once, unless a reviewer already ran it full after the last phase
-3. If docs were a phase, confirm `refine-docs` was run
+3. If the plan has a docs phase (its items name a documentation skill on `Skill:`, or only edit docs), confirm every box in it is ticked, and name the skills it ran on the report's `Docs:` line. A feature plan without one: give the reason from its `## Notes`, and name the docs step only with a documentation skill your agent lists.
 4. For a plan with no `PlanType:` line (a feature plan): suggest commit and PR. For a plan with a maintenance `PlanType:`: skip commit/PR suggestions
 5. Report using the Completion report template above

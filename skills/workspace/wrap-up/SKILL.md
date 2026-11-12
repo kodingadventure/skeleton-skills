@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 The last stage of a **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root). The folder is deleted after this, so anything still only in it is about to be lost: this skill is the sweep that moves what must survive into the committed repo.
 
-It is a sweep, not the main transfer. Decisions become ADRs as the code that embodies them lands (`execute-plan` Step C / `review-phase`), and shipped behaviour is documented as it ships. What reaches this skill is the remainder.
+It is a sweep, not the main transfer. Decisions become ADRs as the code that embodies them lands (`execute-plan` Step C / `review-phase`), and a feature plan's docs phase documents shipped behaviour as it ships. What reaches this skill is the remainder.
 
 ## Resolving the workspace
 
@@ -47,7 +47,7 @@ Done when: no `ADR: candidate` is left in `CONTEXT.md`.
 ### 3. Move the vocabulary and the behaviour
 
 - **Terms** the workspace coined or sharpened (the ones in `CONTEXT.md` that a new reader of the code would not guess) → the repo's glossary, via `domain-modeling`.
-- **What shipped** — a module's rules, a status transition, a route, a screen, a flow → the repo's documentation, via the repo's own docs skill (`refine-docs` where it is installed; else the doc that owns the subject). Skip what is already documented; a feature documented as it shipped needs only a check.
+- **What shipped** — a module's rules, a status transition, a route, a screen, a flow → the repo's documentation. A plan's docs phase usually did this already: check it, and write only what is missing, with the documentation skills your agent lists: `update-wiki` for flows across code units and the feature index (when the Docs Layout has a `### Wiki` table), `refine-docs` for reference docs. Neither installed → edit the doc that owns the subject.
 
 Done when: a reader of the repo alone can find what this feature does and what its words mean.
 
