@@ -230,7 +230,7 @@ Rules:
 **Verify:** `<command run>`
 <pasted output — or the literal "not run" plus the reason>
 
-**Docs:** <"refine-docs run" | "N/A — no doc phase">
+**Docs:** <"Phase <N> — <the documentation skills its items ran>" | "no docs phase — <the reason in the plan's Notes>" | "no docs phase — maintenance plan">
 
 **Suggested commit / PR:** <commit message, or "skip — maintenance plan">
 ```
@@ -267,6 +267,6 @@ When all items are checked:
 
 1. Update `Status` to `done`
 2. Run a final verify — the gates for whichever stacks the diff touched, with each slow suite at full scope once, unless a reviewer already ran it full after the last phase
-3. If docs were a phase, confirm `refine-docs` was run
+3. If the plan has a docs phase (its items name a documentation skill on `Skill:`, or only edit docs), confirm every box in it is ticked, and name the skills it ran on the report's `Docs:` line. A feature plan without one: give the reason from its `## Notes`, and name the docs step only with a documentation skill your agent lists.
 4. For a plan with no `PlanType:` line (a feature plan): suggest commit and PR. For a plan with a maintenance `PlanType:`: skip commit/PR suggestions
 5. Report using the Completion report template above
