@@ -88,7 +88,7 @@ Reply in the language of this conversation:
 - one line: `<thread> now lives in <workspace>`;
 - the line to continue with: `/resume-here <slug>` or `/discuss <slug> <topic>` for an existing workspace; `/discuss` the seeded PRD, then `/kickoff <slug>`, for a new one.
 
-From here on in this session, the thread belongs to the workspace: when the user returns to it, point at the workspace and its continue line, and carry on with whatever else they bring.
+From here on in this session, the thread belongs to the workspace. The continue line above is given once: when the user returns to the thread, say in one line that it now lives in <workspace>, give the continue line again only if they ask how to go on, and carry on with whatever else they bring.
 
 Commit nothing in this step, and run no git inside the workspace root when it has its own repository. Secrets (keys, tokens, passwords, personal data) stay out of every file; refer to where they are kept.
 

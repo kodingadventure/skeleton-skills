@@ -40,16 +40,17 @@ Generic routing for any repo. Skills marked _(if installed)_ come from outside t
 
 Feature workspaces (`.scratch/workspaces/<slug>/`, set up by `/kickoff`) — only when the workspace skills are installed.
 
-| Situation                                                                     | Next → Skill                                                                          |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| User stops mid-task in a workspace                                            | Save state → `/pause-here`                                                            |
-| `WHATNEXT.md` is behind the repo (work done without the workspace)            | Sync → `/pause-here <what was done>`                                                  |
-| Fresh session, a `WHATNEXT.md` exists                                         | Resume → `/resume-here <slug>`                                                        |
-| User wants to think a workspace topic through, not work on it                 | Discuss → `/discuss <slug> <topic>`                                                   |
-| A thread in this session (often outside any workspace) deserves its own focus | Hand it to a workspace → `/spin-off <slug> <topic>` or `/spin-off new <slug> <topic>` |
-| Every work item `done`                                                        | Close the workspace → `/wrap-up <slug>`                                               |
-| Work moved, or a stakeholder answered                                         | Update the tracker → `/tracker log` or `/tracker answer "<answer>"`                   |
-| Report due                                                                    | Draft → `/tracker report`; once sent → `/tracker sent <date> <N>%`                    |
+| Situation                                                                     | Next → Skill                                                                                                                                 |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| User stops mid-task in a workspace                                            | Save state → `/pause-here`                                                                                                                   |
+| `WHATNEXT.md` is behind the repo (work done without the workspace)            | Sync → `/pause-here <what was done>`                                                                                                         |
+| Fresh session, a `WHATNEXT.md` exists                                         | Resume → `/resume-here <slug>`                                                                                                               |
+| This conversation already resumed or is discussing the workspace              | Item 1 of its `WHATNEXT.md` directly; never the skill already running for it (`/resume-here` after a resume, `/discuss` inside a discussion) |
+| User wants to think a workspace topic through, not work on it                 | Discuss → `/discuss <slug> <topic>`                                                                                                          |
+| A thread in this session (often outside any workspace) deserves its own focus | Hand it to a workspace → `/spin-off <slug> <topic>` or `/spin-off new <slug> <topic>`                                                        |
+| Every work item `done`                                                        | Close the workspace → `/wrap-up <slug>`                                                                                                      |
+| Work moved, or a stakeholder answered                                         | Update the tracker → `/tracker log` or `/tracker answer "<answer>"`                                                                          |
+| Report due                                                                    | Draft → `/tracker report`; once sent → `/tracker sent <date> <N>%`                                                                           |
 
 ## During Implementation
 

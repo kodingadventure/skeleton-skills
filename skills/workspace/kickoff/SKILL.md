@@ -69,3 +69,5 @@ In the workspace language: the files written or updated (the index row included)
 ```
 /resume-here <slug>   (or: "read <path>/CONTEXT.md, then continue with <path>/WHATNEXT.md")
 ```
+
+The resume line goes in this report only; later replies in this conversation do not repeat it.

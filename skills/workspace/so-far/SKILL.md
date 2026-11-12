@@ -102,4 +102,4 @@ Done when: the check prints `ok` or only warnings you can justify, the page is o
 
 Read-only toward the repo and the workspace: no workspace file writes, no commits. The only files written are the draft and the page in the OS temp directory: `recap.py new` writes one new file under `<tmpdir>/so-far/`, `check` only reads, and neither touches the network. The opened page loads fonts from Google Fonts and runs only the template's own script; it sits unencrypted in the temp directory, so put nothing secret on it. A user who decides something in reply has started a discussion: record it as the `discuss` skill's "Record before the end" step says.
 
-Close with the line to continue: `/resume-here <slug>` to start the next step, or `/discuss <slug> <topic>` to talk one through first.
+Close with the line to continue: `/resume-here <slug>` to start the next step, or `/discuss <slug> <topic>` to talk one through first. This line belongs to the reply that opens the page; later replies in this conversation do not repeat it.
