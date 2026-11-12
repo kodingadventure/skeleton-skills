@@ -7,7 +7,9 @@
     "format:check": "prettier --check skills/ plugins/",
     "changeset": "changeset",
     "version": "changeset version && node scripts/sync-plugin-version.mjs",
-    "check-plugin-version": "node scripts/sync-plugin-version.mjs --check"
+    "check-plugin-version": "node scripts/sync-plugin-version.mjs --check",
+    "link-skills": "node scripts/link-skills.mjs",
+    "prepare": "node scripts/link-skills.mjs"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.7.0",

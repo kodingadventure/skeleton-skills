@@ -49,5 +49,6 @@ Run `npx changeset`, pick `minor` for a new skill, and write one line for the us
 - `npm run format:check` (covers `skills/` and `plugins/`; group READMEs are included, the root `README.md` and `docs/` are not).
 - A `description` is YAML: a colon followed by a space inside an unquoted value makes the skill disappear from the install list. Use a quoted string or a `>` block.
 - Run `npx skills add <this repo> --list` from a scratch folder, never from a real project, and confirm the new skill is listed.
+- `npm run link-skills`, so sessions in this repo load the new skill.
 - Hook tests: `node --test "skills/workspace/hooks/*.test.mjs"` (a folder argument fails on Node 24).
 - Further gates and sequencing: `docs/agents/verify.md`. Known failure modes: `docs/agents/failure-modes.md`.

@@ -105,6 +105,10 @@ Plan root: `.plans/`
 
 The whole repo has one version, tracked in `CHANGELOG.md`, which records what changed. Pin to a tag if you want a fixed version: `npx skills add 'kodingadventure/skeleton-skills#v0.1.0' ...`.
 
+## Contributing
+
+Problem reports go to [GitHub Issues](https://github.com/kodingadventure/skeleton-skills/issues). To work on the skills themselves, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## Credits
 
 - [Matt Pocock](https://github.com/mattpocock/skills) (MIT) — the suite above is a dependency, not copied.

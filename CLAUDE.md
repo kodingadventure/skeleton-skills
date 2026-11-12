@@ -16,6 +16,10 @@ The five default triage roles, label string equal to the role name. See `docs/ag
 
 Gates and sequencing: `docs/agents/verify.md`. Steps for a new skill (group, manifest, README bullet, invocation choice): `docs/agents/publish-skill.md`. Known failure modes: `docs/agents/failure-modes.md`.
 
+### Skills in this repo's own sessions
+
+`npm install` (and `npm run link-skills`) links `skills/*/*` and the phase agents into `.claude/skills/` and `.claude/agents/`, so sessions here run the working copy. Re-run `npm run link-skills` after adding, removing or renaming a skill. Never commit those two folders (`docs/adr/0001`).
+
 ### Decisions
 
 Architecture decisions: `docs/adr/`. Read the matching ADR before changing a behavior it records.
