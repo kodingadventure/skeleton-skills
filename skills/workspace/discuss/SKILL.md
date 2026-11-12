@@ -69,4 +69,9 @@ Done when: every outcome of the discussion is in exactly one file, or you have s
 
 ### 5. Close
 
-In the workspace language: what the discussion settled, what it left open, what you wrote where, and the one line to continue with (`/resume-here <slug>` to start working, or `/discuss <slug> <next topic>`).
+Only the reply in which you run step 3 gets the close: the reply that writes down what a topic settled, or the reply to a user who says they are stopping or moving on (run step 3 then, even when it writes nothing). Every other reply — an answer to a follow-up, a question back, a proposal — ends without a continue line. A long discussion can close more than once, once per topic it finishes.
+
+In the workspace language: what the discussion settled, what it left open, what you wrote where, and how to go on:
+
+- **In this conversation:** offer the next topic directly ("Discuss <next topic> now?"). This skill is already loaded, so never ask the user to type `/discuss` again here. To start working: `/resume-here <slug>`.
+- **In a new session** (after `/clear`, or another day): `/discuss <slug> <next topic>`, labelled as the way to pick this up later.
