@@ -69,7 +69,7 @@ When invoked from a plan item, the scope is **pre-defined** by the item's fields
 4. Read neighboring sections for consistency (don't create orphans)
 5. Update cross-links if the edit introduces a new section anchor
 
-The verify step is handled by `execute-plan` — no need to run checks yourself.
+The verify step and the commit are the plan runner's (`execute-plan`, `guard-plan`): run no checks and do not commit or print a commit command.
 
 ## Doc structure
 
@@ -170,6 +170,10 @@ Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And ne
 
 Read-only auditing is out of scope here. After editing, re-check the original gap list (or re-run the docs audit) to confirm the gaps are closed.
 
+## Commit
+
+After a manual run, commit under the repo's `CLAUDE.md` / `AGENTS.md`. If they let the agent commit verified changes, commit only the files this run changed, with explicit pathspecs and the message `docs(<scope>): <what changed>`. If they ask for confirmation, ask first. If they are silent or leave commits to the user, print the `git commit` command and stop. A run from a plan item does not commit (see Plan-driven usage). The summary and the commit belong to the reply that closes the run only.
+
 ## Key principles
 
 **Reference docs = source of truth for architecture**
@@ -269,6 +273,7 @@ A single-package library whose block lists a root `GLOSSARY.md` and `docs/adr/`,
 - [ ] Created an ADR only if it clears the three-part bar
 - [ ] Ran a link audit (all refs resolve)
 - [ ] Checked cross-glossary consistency
+- [ ] Committed under the repo's rules, or printed the commit command
 
 ### Plan-driven (via execute-plan)
 

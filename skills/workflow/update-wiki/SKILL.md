@@ -40,6 +40,7 @@ Done when the Flow pages and Feature index values are known.
 
 ## Step 1: Find the change
 
+- **From a plan item**: the item's `What:` and sub-bullets give the range and the pages; do not ask.
 - **Commit range given**: `git log --oneline <range>` and `git diff --stat <range>`.
 - **Unit or page given**: `git log --oneline -15 -- <the Where glob of that unit>`, then ask the
   user which commits belong to the change.
@@ -95,8 +96,14 @@ Done when every behaviour change has a document, or the reason it needs none.
 - If `verify.md` has a command that runs a single test, run each test you named for a new or
   changed rule. Otherwise say those tests were not run.
 
-## Step 6: Summarise, do not commit
+## Step 6: Summarise and commit
 
-Do not commit. Report one line each: the files changed; the suggested commit message
+Report one line each: the files changed; the suggested commit message
 (`docs(wiki): <what changed>`); behaviour changes that needed no document, with the reason; items
 for `/refine-docs`; code that does not match its tests or its earlier documentation.
+
+Commit under the repo's `CLAUDE.md` / `AGENTS.md`. If they let the agent commit verified changes, commit only the files this run changed, with explicit pathspecs and the suggested message. If they ask for confirmation, ask first. If they are silent or leave commits to the user, print the `git commit` command and stop.
+
+Exception: when this run is a plan item (a phase's `Skill:` line, under `execute-plan`, `guard-plan` or a phase agent), do not commit and do not print a commit command. Hand the changes to the plan runner, which checks and commits the phase as one commit.
+
+The summary and the commit belong to the reply that closes the run only.
