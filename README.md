@@ -26,7 +26,7 @@ Then run `/setup-matt-pocock-skills` once in each repo (without slash commands: 
 | Skill from `mattpocock/skills` | Class                  | What it is for                                                          | Needed by                                                                                                        |
 | ------------------------------ | ---------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | `domain-modeling`              | required               | Writes ADRs (decision records) and the glossary                         | `wrap-up`, `execute-plan` and `review-phase` (when an ADR is due), `refine-docs`; `discuss` uses it if installed |
-| `setup-matt-pocock-skills`     | required               | Creates `docs/agents/domain.md`, `issue-tracker.md`, `triage-labels.md` | `refine-docs`, `github-new-issue`, `github-spin-off`; `to-plan` and `execute-plan` carry on without it           |
+| `setup-matt-pocock-skills`     | required               | Creates `docs/agents/domain.md`, `issue-tracker.md`, `triage-labels.md` | `refine-docs`, `update-wiki`, `github-new-issue`, `github-spin-off`; `to-plan` and `execute-plan` carry on without it           |
 | `writing-for-agents`           | required for one skill | How to write a skill well                                               | `skill-from-context`                                                                                             |
 | `grilling`                     | recommended            | Stress-tests a plan or idea                                             | `discuss`, `skill-from-context`, `whatnext`                                                                      |
 | `diagnosing-bugs`              | recommended            | Diagnosis loop when verify keeps failing                                | `execute-plan`                                                                                                   |
@@ -45,7 +45,7 @@ The CLI lists the skills and lets you pick, or pass names. To follow the whole f
 ```bash
 npx skills add kodingadventure/skeleton-skills -a claude-code --skill \
   kickoff discuss tracker pause-here resume-here so-far spin-off wrap-up msg \
-  to-plan writing-great-plan execute-plan review-phase guard-plan verify whatnext refine-docs
+  to-plan writing-great-plan execute-plan review-phase guard-plan verify whatnext refine-docs update-wiki
 ```
 
 Check the current flags with `npx skills --help`.
@@ -74,7 +74,7 @@ The Workflow and Agent skills are not manual-only: the agent may pick one when y
 | Group                                     | Skills | What it covers                                                            |
 | ----------------------------------------- | ------ | ------------------------------------------------------------------------- |
 | [workspace](./skills/workspace/README.md) | 9      | Feature workspaces: discuss, kickoff, pause and resume, spin-off, wrap-up |
-| [workflow](./skills/workflow/README.md)   | 8      | Phased plans: write, execute, guard and verify them                       |
+| [workflow](./skills/workflow/README.md)   | 9      | Phased plans: write, execute, guard and verify them                       |
 | [agent](./skills/agent/README.md)         | 3      | Review pages, skill capture and change explainers                         |
 | [github](./skills/github/README.md)       | 3      | Announce, update and import GitHub issues (needs `workspace` and `gh`)    |
 

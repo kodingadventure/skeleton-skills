@@ -10,6 +10,7 @@ Plan-driven delivery: turn a spec into a phased plan, run it, and check every ph
 - **[verify](./verify/SKILL.md)** — Runs the project's gates for the paths a change touches, then drives the change where it runs. Called by `execute-plan`; also usable before any commit.
 - **[whatnext](./whatnext/SKILL.md)** — Reads the workspace, plans and git state and names the single next step and the skill for it. Use it when unsure what to do.
 - **[refine-docs](./refine-docs/SKILL.md)** — Keeps architecture docs, glossaries and ADRs current in the layout the repo declares in `docs/agents/domain.md`. Use it when a pattern or decision should be written down.
+- **[update-wiki](./update-wiki/SKILL.md)** — Writes the wiki: flow pages across code units, the feature index and, if kept, the preserved-behaviour page, from committed changes. Use it after a commit that changed what the system does.
 
 ## Running a plan
 
@@ -23,7 +24,7 @@ From idea to commit: discuss or write the spec, `to-plan`, one of the rows above
 
 ## Stand-alone and paired
 
-`to-plan` needs `writing-great-plan`, and `execute-plan` uses `verify` and `review-phase`; install those together. `guard-plan` needs the `phase-*` agents below. The rest stand alone.
+`to-plan` needs `writing-great-plan`, and `execute-plan` uses `verify` and `review-phase`; install those together. `guard-plan` needs the `phase-*` agents below. `update-wiki` is installed with `refine-docs`. The rest stand alone.
 
 Plans written outside a workspace go under the `Plan root:` line of `CLAUDE.md` / `AGENTS.md` (default `.plans/`); inside a workspace they go to `plans/NN-<name>/`.
 
@@ -42,4 +43,4 @@ These are not manual-only: the agent may pick one when your request matches what
 
 ## Dependencies
 
-`refine-docs` needs `docs/agents/domain.md` from `setup-matt-pocock-skills` and stops with a message naming it when missing. `to-plan` and `execute-plan` carry on without it, using `GLOSSARY.md` and `docs/adr/` at the repo root when they exist. `execute-plan` and `review-phase` need `domain-modeling` only when an ADR is due; `diagnosing-bugs` and `code-review` are used if installed. All come from [`mattpocock/skills`](https://github.com/mattpocock/skills); see the [root README](../../README.md) for the table and the pinned command.
+`refine-docs` and `update-wiki` need `docs/agents/domain.md` from `setup-matt-pocock-skills` and stop with a message naming it when missing. `to-plan` and `execute-plan` carry on without it, using `GLOSSARY.md` and `docs/adr/` at the repo root when they exist. `execute-plan` and `review-phase` need `domain-modeling` only when an ADR is due; `diagnosing-bugs` and `code-review` are used if installed. All come from [`mattpocock/skills`](https://github.com/mattpocock/skills); see the [root README](../../README.md) for the table and the pinned command.
