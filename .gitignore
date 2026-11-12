@@ -14,3 +14,9 @@ node_modules/
 # repo's .claude/skills/, whatever the manifest lists (docs/adr/0001).
 .claude/skills/
 .claude/agents/
+
+# Third-party skills a maintainer installs into this repo with the skills CLI (the
+# mattpocock/skills suite from the README). Never commit them or their lock file:
+# this repo does not list or vendor them (docs/adr/0001).
+.agents/
+skills-lock.json
