@@ -73,5 +73,5 @@ Only the reply in which you run step 3 gets the close: the reply that writes dow
 
 In the workspace language: what the discussion settled, what it left open, what you wrote where, and how to go on:
 
-- **In this conversation:** offer the next topic directly ("Discuss <next topic> now?"). This skill is already loaded, so never ask the user to type `/discuss` again here. To start working: `/resume-here <slug>`.
+- **In this conversation:** offer the next topic directly ("Discuss <next topic> now?"). This skill is already loaded, so never ask the user to type `/discuss` again here. When the user said they are stopping, skip the offer: the new-session line is enough. To start working: `/resume-here <slug>`.
 - **In a new session** (after `/clear`, or another day): `/discuss <slug> <next topic>`, labelled as the way to pick this up later.
