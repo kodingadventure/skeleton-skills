@@ -44,3 +44,21 @@ anyone reads it, because a sibling phase in the same batch inserted lines above 
 version PR and `CHANGELOG.md` leave it out.
 **Probe:** `git diff --cached --name-only` lists a path under `skills/` or `plugins/` but no new
 file in `.changeset/`.
+
+## skill-names-a-skill-it-cannot-assume
+
+**Shows up as:** a skill's rule says "use `<other-skill>` if installed", and the model names that
+skill in its answer even when it is not installed (or does not fit), only to say it is missing.
+The same happens with `Invoke: none`.
+**Probe:** read the rule for a named skill that the rule's own condition can exclude; the
+suggestion should come from what is installed, and leave the line out when nothing fits. Test with
+the named skill absent, not only present.
+
+## language-rule-covers-one-channel
+
+**Shows up as:** a skill that must answer in the workspace language replies in English, because
+the rule is a clause in one step while the repo's "English only" rule is read as covering the
+conversation too.
+**Probe:** the rule must name every channel (summary, replies, questions including option boxes,
+status lines), say what language applies before the workspace file is read, and say that the
+repo's English rule is only for what is committed.
