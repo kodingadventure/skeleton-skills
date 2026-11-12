@@ -9,6 +9,10 @@ disable-model-invocation: true
 
 Pick up a **workspace** (a feature folder set up by `kickoff`, `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) where `pause-here` left it.
 
+## Language
+
+Every message to the user is in the workspace language from `CONTEXT.md` `## Workspace rules`: the brief, each question (through a question tool too), each progress line. Before `CONTEXT.md` is read, use the language of the user's message. A repo rule that code, docs or commits be in English covers what gets committed, not the conversation.
+
 ## Steps
 
 ### 1. Locate
@@ -20,7 +24,7 @@ Done when: one workspace is chosen and named in one line (`Workspace: <slug>`).
 ### 2. Read, in order
 
 1. `WHATNEXT.md` — the whole file.
-2. `CONTEXT.md` — the whole file. `## Workspace rules` sets the language you use from here on.
+2. `CONTEXT.md` — the whole file. `## Workspace rules` sets the language (see [Language](#language)).
 3. The handoff named under "How to resume", if any.
 
 Open anything else (`TRACKER.md`, a finding, a plan phase) only when a next step needs its detail.
@@ -37,7 +41,7 @@ Done when: every line of `## State now` is confirmed, or every drift item is map
 
 ### 4. Brief the user
 
-In the workspace language, short:
+Short:
 
 - where the work stands (3–5 bullets);
 - drift, if any, with your mapping, as a question;

@@ -8,7 +8,7 @@ argument-hint: "What was just completed?"
 
 Suggests the single next development step and skill to invoke by analyzing conversation context or scanning project artifacts. Works in any repo: it assumes no stack, directory layout, or task runner.
 
-Every `Invoke` line names a skill your agent lists; otherwise write the step in plain words.
+Every `Invoke` line names a skill your agent lists; otherwise write the step in plain words. Never name a skill that is not installed, not even to say it is missing: the step reads as if a tool were expected.
 
 ## Safety
 
@@ -53,7 +53,7 @@ If this is a fresh session with no prior conversation, scan project artifacts fo
 
 4. **Check project health with the project's own commands** — find them, never assume them. Read, in this order, whichever exist: the `scripts` block of `package.json`, `Makefile`, `justfile`, `Taskfile.yml`, `moon.yml`, `Cargo.toml`, `pyproject.toml`, then `README.md` / `CONTRIBUTING.md` and CI workflow files (the `verify` skill's `bootstrap.md` lists the same sources). Then:
    - A test, lint, or build command exists and the working tree has changes → recommend `/verify`, which runs the gates. Do not run the command yourself unless the Safety rules above allow it; if you do and it fails → recommend `/diagnosing-bugs` (if installed) or fix it directly; if it passes, carry on to the next check.
-   - Source files changed — in the working tree, or in a behaviour-changing commit among the recent ones — and no test file changed alongside them or in a later commit → recommend writing the missing tests (`/tdd` if installed, else in plain words). This holds even when a later commit documented the change, and it outranks the docs suggestion (Step 3) and glossaries (Step 5).
+   - Source files changed — in the working tree, or in a behaviour-changing commit among the recent ones — and no test file changed alongside them or in a later commit → recommend writing tests for the code that already exists, in plain words, with an `Invoke` line only when an installed skill's description covers adding tests to existing code. A test-first skill (red-green-refactor) does not fit: the code is already written. This holds even when a later commit documented the change, and it outranks the docs suggestion (Step 3) and glossaries (Step 5).
    - No such command can be found → say so in the rationale, and recommend `/verify`, which bootstraps a config for the repo.
 
 5. **Required glossaries** — when `docs/agents/domain.md` has a Deep-context tier row with `Required: every unit`, check each folder matching that unit's `Where` glob for a file at its `Glossary path`; a missing one → suggest the installed documentation skill that covers glossaries (`/refine-docs <unit>`). Rows marked `by threshold`, or tiers without a `Required` column, are skipped.
@@ -83,7 +83,7 @@ state against those descriptions. Never treat any prose doc as the skill catalog
 hand-written list drifts, and it drifts worst for exactly the case that sent you here — a skill
 too new to be in it.
 
-Skills from outside this repo (from `mattpocock/skills`: the grilling, to-spec, to-tickets, tdd, diagnosing, code-review and prototype family) are recommended only when they are installed. Not installed → pick the nearest installed skill, or describe the step in plain words with no `Invoke` skill.
+Skills from outside this repo (from `mattpocock/skills`: the grilling, to-spec, to-tickets, tdd, diagnosing, code-review and prototype family) are recommended only when they are installed. Not installed → pick the nearest installed skill, or describe the step in plain words with no `Invoke` skill. A test-first skill fits only behaviour that is not written yet.
 
 ### Step 3: Output next action + rationale + skill invocation
 

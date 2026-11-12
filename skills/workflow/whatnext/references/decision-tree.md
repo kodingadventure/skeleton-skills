@@ -1,6 +1,6 @@
 # Decision Tree — What Next
 
-Generic routing for any repo. Skills marked _(if installed)_ come from outside this repo; when one is missing, fall back to the nearest installed skill or describe the step in plain words. Commands such as "the project's test command" are found in the project's own config (see SKILL.md Step 0.4), never assumed.
+Generic routing for any repo. Skills marked _(if installed)_ come from outside this repo; when one is missing, fall back to the nearest installed skill or describe the step in plain words, without naming the missing one. Commands such as "the project's test command" are found in the project's own config (see SKILL.md Step 0.4), never assumed.
 
 ## Contents
 
@@ -57,7 +57,8 @@ Feature workspaces (`.scratch/workspaces/<slug>/`, set up by `/kickoff`) — onl
 | -------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | Code written for a plan item                 | Tick the item, run the next one → `/execute-plan`                                        |
 | Code written, no plan                        | Verify → `/verify`                                                                       |
-| New behaviour with no test beside it         | Write the test first or now → `/tdd` _(if installed)_, otherwise add it directly         |
+| New behaviour about to be written            | Write the test first → `/tdd` _(if installed)_                                           |
+| Code written with no test beside it          | Add tests for the existing code, in plain words                                          |
 | Verify passed                                | Commit under the repo's own rules; read the change back → `/what-you-did`                |
 | Verify failed                                | Fix the reported gate; a cause that is not obvious → `/diagnosing-bugs` _(if installed)_ |
 | Unsure the design holds before building more | Throwaway experiment → `/prototype` _(if installed)_                                     |
@@ -80,7 +81,7 @@ Commit under the repo's own commit rules (`CONTRIBUTING.md`, `CLAUDE.md` / `AGEN
 | Completed                                                              | Next → Skill                                                                                                                                                                |
 | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Plan phase committed, items remain                                     | Next phase → `/execute-plan` (or `/guard-plan` for a multi-file plan; needs an agent with sub-agents, otherwise `/execute-plan`)                                            |
-| Commit changed behaviour, no test beside it (docs commit since or not) | Write the missing tests first → `/tdd` _(if installed)_, otherwise add them directly; the docs update waits until they are committed                                        |
+| Commit changed behaviour, no test beside it (docs commit since or not) | Add tests for the committed code first, in plain words; the docs update waits until they are committed                                                                      |
 | Plan finished, its commits changed behaviour and no docs commit since  | Update the docs for the plan's whole commit range → `/update-wiki <range>` _(if installed)_, else `/refine-docs <range>` _(if installed)_, else say the step in plain words |
 | Plan finished, docs current or no behaviour change                     | Read the whole change back → `/what-you-did`                                                                                                                                |
 | Workspace work item finished                                           | Update the tracker and handoff → `/pause-here`                                                                                                                              |
