@@ -28,6 +28,7 @@ Every `Invoke` line names a skill your agent lists; otherwise write the step in 
 
 - **Behaviour-changing** — the commit touches files other than docs, tests, or lock/format files. When `docs/agents/domain.md` has a Code units table, only files inside its `Where` globs count.
 - **Already documented** — that commit or a later one touched a Wiki-table page, a glossary, or a reference doc from the Docs Layout: no suggestion.
+- **Tests first** — when the commit's source changes have no test beside them (see Step 0, item 4), the missing tests come first and the docs suggestion waits until they are committed: the wiki cites the test that locks each rule.
 - **When** — while a plan has phases left, the next phase wins. After the plan's last phase is committed, suggest once for the plan's whole commit range. A behaviour-changing commit outside a plan gets the suggestion right away. Never with uncommitted changes or a failing check.
 - **Which skill** — `/update-wiki <range>` when installed (or an installed documentation skill whose description mentions commits that change rules, statuses, routes or screens); else `/refine-docs <range>` when installed and `docs/agents/domain.md` exists; else the step in plain words with no `Invoke` line.
 - **Glossaries** — see Step 0, item 5; only `Required: every unit` rows count.
@@ -52,12 +53,12 @@ If this is a fresh session with no prior conversation, scan project artifacts fo
 
 4. **Check project health with the project's own commands** — find them, never assume them. Read, in this order, whichever exist: the `scripts` block of `package.json`, `Makefile`, `justfile`, `Taskfile.yml`, `moon.yml`, `Cargo.toml`, `pyproject.toml`, then `README.md` / `CONTRIBUTING.md` and CI workflow files (the `verify` skill's `bootstrap.md` lists the same sources). Then:
    - A test, lint, or build command exists and the working tree has changes → recommend `/verify`, which runs the gates. Do not run the command yourself unless the Safety rules above allow it; if you do and it fails → recommend `/diagnosing-bugs` (if installed) or fix it directly; if it passes, carry on to the next check.
-   - Source files changed but no test file changed alongside them → recommend writing the missing tests (`/tdd` if installed).
+   - Source files changed — in the working tree, or in a behaviour-changing commit among the recent ones — and no test file changed alongside them or in a later commit → recommend writing the missing tests (`/tdd` if installed, else in plain words). This holds even when a later commit documented the change, and it outranks the docs suggestion (Step 3) and glossaries (Step 5).
    - No such command can be found → say so in the rationale, and recommend `/verify`, which bootstraps a config for the repo.
 
 5. **Required glossaries** — when `docs/agents/domain.md` has a Deep-context tier row with `Required: every unit`, check each folder matching that unit's `Where` glob for a file at its `Glossary path`; a missing one → suggest the installed documentation skill that covers glossaries (`/refine-docs <unit>`). Rows marked `by threshold`, or tiers without a `Required` column, are skipped.
 
-   Steps 3 (documentation suggestion) and 5 yield to an active workspace, an open plan, a dirty tree and a failing check.
+   Steps 3 (documentation suggestion) and 5 yield to an active workspace, an open plan, a dirty tree, a failing check and missing tests (Step 4).
 
 6. **No artifacts at all?** → the repo may be fresh or the work may live in the user's head:
    - Nothing under `.scratch/`, no plans, a clean tree → ask what to build, and recommend `/grilling` (if installed) to shape the idea, or `/to-plan "<what to build>"` when the request is already clear.

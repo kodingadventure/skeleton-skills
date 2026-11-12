@@ -77,16 +77,17 @@ Feature workspaces (`.scratch/workspaces/<slug>/`, set up by `/kickoff`) — onl
 
 Commit under the repo's own commit rules (`CONTRIBUTING.md`, `CLAUDE.md` / `AGENTS.md`, recent `git log` style). The optional `caveman-commit` skill from `JuliusBrussee/caveman` can draft the message if installed.
 
-| Completed                                                             | Next → Skill                                                                                                                                                                |
-| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Plan phase committed, items remain                                    | Next phase → `/execute-plan` (or `/guard-plan` for a multi-file plan; needs an agent with sub-agents, otherwise `/execute-plan`)                                            |
-| Plan finished, its commits changed behaviour and no docs commit since | Update the docs for the plan's whole commit range → `/update-wiki <range>` _(if installed)_, else `/refine-docs <range>` _(if installed)_, else say the step in plain words |
-| Plan finished, docs current or no behaviour change                    | Read the whole change back → `/what-you-did`                                                                                                                                |
-| Workspace work item finished                                          | Update the tracker and handoff → `/pause-here`                                                                                                                              |
-| Feature committed, no plan left                                       | Start the next thing → `/whatnext` again, or `/to-plan` for a new one                                                                                                       |
-| Commit outside a plan changed behaviour, no docs commit since         | Update the docs now → `/update-wiki <range>` _(if installed)_, else `/refine-docs <range>` _(if installed)_, else plain words                                               |
-| Quick fix with no behaviour change                                    | (done)                                                                                                                                                                      |
-| A `Required: every unit` glossary is missing for a unit folder        | Write it → `/refine-docs <unit>` _(if installed)_                                                                                                                           |
+| Completed                                                              | Next → Skill                                                                                                                                                                |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Plan phase committed, items remain                                     | Next phase → `/execute-plan` (or `/guard-plan` for a multi-file plan; needs an agent with sub-agents, otherwise `/execute-plan`)                                            |
+| Commit changed behaviour, no test beside it (docs commit since or not) | Write the missing tests first → `/tdd` _(if installed)_, otherwise add them directly; the docs update waits until they are committed                                        |
+| Plan finished, its commits changed behaviour and no docs commit since  | Update the docs for the plan's whole commit range → `/update-wiki <range>` _(if installed)_, else `/refine-docs <range>` _(if installed)_, else say the step in plain words |
+| Plan finished, docs current or no behaviour change                     | Read the whole change back → `/what-you-did`                                                                                                                                |
+| Workspace work item finished                                           | Update the tracker and handoff → `/pause-here`                                                                                                                              |
+| Feature committed, no plan left                                        | Start the next thing → `/whatnext` again, or `/to-plan` for a new one                                                                                                       |
+| Commit outside a plan changed behaviour, no docs commit since          | Update the docs now → `/update-wiki <range>` _(if installed)_, else `/refine-docs <range>` _(if installed)_, else plain words                                               |
+| Quick fix with no behaviour change                                     | (done)                                                                                                                                                                      |
+| A `Required: every unit` glossary is missing for a unit folder         | Write it → `/refine-docs <unit>` _(if installed)_                                                                                                                           |
 
 ## When Stuck
 
