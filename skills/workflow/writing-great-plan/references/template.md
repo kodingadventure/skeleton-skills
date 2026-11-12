@@ -16,6 +16,7 @@ An omitted section costs nothing; a padded one costs on every read.
 - [Feature-shape — multi-file (split per phase)](#feature-shape--multi-file-split-per-phase)
 - [Maintenance-shape — single-file](#maintenance-shape--single-file)
 - [Maintenance-shape — multi-file (split per session)](#maintenance-shape--multi-file-split-per-session)
+- [Docs phase](#docs-phase)
 - [Field reference](#field-reference)
 
 ---
@@ -311,6 +312,44 @@ session's range — including each phase's `Suggested commit:` line.>
 
 ---
 
+## Docs phase
+
+The last phase of a feature plan that changes behaviour (rule: `SKILL.md` → "Docs phase"). In a single-file plan the same items sit under `### Phase <N>: Documentation — Weight: M`.
+
+```markdown
+# Phase <N>: Documentation
+
+Weight: M
+Depends on: Phase 1, Phase 2 <!-- every code phase -->
+Repo: `/absolute/path`
+Prone to: <failure-mode names> <!-- omit the line if the repo has no docs/agents/failure-modes.md -->
+
+## Context
+
+Write only what the code holds after phases 1–<N-1>. Never name the plan, the workspace or its folders. Cite an ADR by its id.
+Range: the commits of phases 1–<N-1> (`git log --oneline <base>..HEAD` on the plan's branch).
+Review check: every claim in the changed docs matches the code — file paths, identifiers, UI text, error codes, test names, links and anchors. Find each with `grep`.
+
+## Checklist
+
+- [ ] **Document <feature> in the wiki** (M)
+  - [ ] `docs/wiki/<flow>.md` — rewrite <section>; rules that go in: <rule> (locked by <test>), <rule> (no test)
+  - [ ] `docs/wiki/_INDEX.md` — one row for <flow>
+  - Provenance: `grep -n '<route or status>' docs/wiki/*.md`
+  - Skill: `update-wiki`
+
+- [ ] **Update the glossary and reference docs for <feature>** (M)
+  - [ ] `<glossary path>` — terms: <term>, <term>
+  - [ ] `<reference doc>` — section <title>: <what changes>
+  - Skill: `refine-docs`
+
+Suggested commit: docs(<scope>): document <feature>
+```
+
+An item exists only when its skill is installed; with no documentation skill, write one item in plain words and no `Skill:` line. The paths above are examples: use the real paths from the repo's Docs Layout.
+
+---
+
 ## Field reference
 
 | Field                     | Applies to                | Description                                                                                                                                                                                                                                                   |
@@ -334,7 +373,7 @@ session's range — including each phase's `Suggested commit:` line.>
 | `Provenance`              | item                      | Data, not evidence — exempt from the evidence cut. Required only on a codebase claim the executor would otherwise take on faith; never on a decision. See "Data is not evidence" in `SKILL.md`. Feature-shape only.                                           |
 | `Runner`                  | item                      | `guardian` or `human`; omit for the executor (the default). Such an item is not dispatched to an executor agent: the guardian does it after the phase, or the run stops for the person. See "Standard fields" in `SKILL.md`.                                  |
 | `Files`                   | item                      | Files to create/modify. Omit for no-file items, or when sub-bullets already name them.                                                                                                                                                                        |
-| `Skill`                   | item                      | Skill to invoke. Omit if no skill covers it.                                                                                                                                                                                                                  |
+| `Skill`                   | item                      | Skill to invoke. Omit if no skill covers it. A documentation skill here (`update-wiki`, `refine-docs`) marks the item's phase as the docs phase; see "Docs phase" in `SKILL.md`.                                                                              |
 | `Sub-bullets`             | item                      | Required when an item batches multiple files — see partial-completion convention in `SKILL.md`.                                                                                                                                                               |
 | `Manual Test Checkpoints` | plan-level                | Mandatory section, every plan. Default text when no phase changes observable behavior.                                                                                                                                                                        |
 | `Open Questions`          | plan-level                | Question + `Default:` + `Affects:`; deleted once answered, the answer written into the affected item.                                                                                                                                                         |

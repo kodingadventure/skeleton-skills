@@ -134,6 +134,7 @@ A question that is still open when the plan is written goes in `## Open Question
 - [ ] **Completeness pass, against the source material, not the draft plan:** re-read the invoker's requirement/decision list one item at a time and confirm each one lands somewhere in the
       plan — a checklist item, a `Files:` entry, or `Notes`. Check the source, not your own draft — you already believe your draft is complete, that's not the failure mode this catches.
       Anything that doesn't land gets a checklist item or an explicit one-line "not in scope" note; it never just disappears.
+- [ ] A feature plan that changes behaviour ends with a docs phase in the template's shape, or a `## Notes` line says why it has none; every `Skill:` in it names an installed skill.
 - [ ] **For every L/XL item**, the rationale that shaped its design decision survived — not just the conclusion. If you cut it during Economy, that was the wrong call for this tier; put it back.
 - [ ] Every factual claim about the codebase carries `Provenance:` or an `unverified` marker.
 - [ ] `**Repo:**` names an absolute path (or `## Environment` does, for a plan that touches 2+ repos).
@@ -306,6 +307,28 @@ it explicitly:
 
 None — all changes are internal refactors verified by lint/build.
 ```
+
+## Docs phase
+
+A feature plan that changes behaviour ends with a docs phase, so the documentation is reviewed and committed like the code instead of waiting for a later docs step that may never come. The reason is accuracy and tidiness; never present it as a token saving.
+
+**When.** The plan has no `PlanType:` line, and one of its phases changes a file other than docs, tests, or lock/format files. When `docs/agents/domain.md` has a Code units table, only files inside its `Where` globs count. A maintenance or release plan (`PlanType:` present) gets none.
+
+**Items.** One item per documentation skill your agent lists, and only for a skill that is installed:
+
+- `update-wiki`, when the Docs Layout in `docs/agents/domain.md` has a `### Wiki` table: the flow pages and the feature index.
+- `refine-docs`, when `docs/agents/domain.md` exists: glossaries and reference docs. In a repo without a wiki this is the only item, and only when there is something to write: a new term, or a reference doc the plan makes wrong. Nothing to write → no docs phase.
+- No documentation skill installed: one item in plain words, with no `Skill:` line, naming the pages to edit.
+
+A plan that changes behaviour and has no docs phase says why in one `## Notes` line (`Applies to: all — no docs phase: <reason>`).
+
+**Tests first.** When a behaviour change in the plan has no test item, the missing tests become their own phase before the docs phase, never merged into it: the docs cite the test that locks each rule.
+
+**Shape.** The last phase, Weight `M`, `Depends on:` every code phase. Each item names the pages and, per page, the sections to rewrite and the rules that go in. The phase states the limits once: write only what the code holds after the earlier phases; never name the plan, the workspace or its folders; cite an ADR by its id. `Provenance:` is the search that finds each section the item rewrites. The phase carries the review check (every claim in the changed docs matches the code: file paths, identifiers, UI text, error codes, test names, links). `Suggested commit: docs(<scope>): …`. Template: `references/template.md` → "Docs phase".
+
+**Inside a code phase.** A doc item may sit in a code phase only for a specific sentence that phase makes wrong, found while the plan was written: quote the sentence and give its replacement. New flows, new terms and new pages stay in the docs phase.
+
+**How it is recognised.** There is no `PhaseType:` field. The docs phase is the phase whose items name a documentation skill on their `Skill:` line, or, with none installed, whose items only edit documentation.
 
 ## Suggested commit
 
