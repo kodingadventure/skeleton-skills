@@ -72,6 +72,8 @@ If the conversation has prior messages, scan for indicators of the completed pha
 - Artifacts generated (specs, plans, migration files, review pages)
 - Explicit user statements ("I finished the billing module", "tests pass")
 
+A workspace this conversation already resumed (`/resume-here <slug>` ran here) or is discussing (`/discuss <slug>`): the next step is item 1 of its `WHATNEXT.md` `## Next steps`. Never recommend the skill the conversation is already running for that workspace (`/resume-here <slug>` after a resume, `/discuss <slug>` inside that discussion): its instructions are already loaded, and re-running it only re-reads the same files. When item 1 names another installed skill, that skill is the `Invoke` line. Otherwise, after a resume leave the `Invoke` line out; inside a discussion, `/resume-here <slug>` is the `Invoke` line, since starting the work is another skill.
+
 ### Step 2: Match against the decision tree
 
 See `references/decision-tree.md` for the full lookup table.

@@ -98,6 +98,8 @@ Reply in the workspace language: the files written or updated (the index row inc
 /resume-here <slug>   (or: "read <path>/CONTEXT.md, then continue with <path>/WHATNEXT.md")
 ```
 
+The resume line goes in this report only; later replies in this conversation do not repeat it.
+
 Commit nothing: the workspace is git-ignored, and code changes are committed by the work itself, under the repo's rules.
 
 Leave secrets (keys, passwords, tokens, personal data) out of every file; refer to where they are kept.
