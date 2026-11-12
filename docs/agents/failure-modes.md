@@ -62,3 +62,13 @@ conversation too.
 **Probe:** the rule must name every channel (summary, replies, questions including option boxes,
 status lines), say what language applies before the workspace file is read, and say that the
 repo's English rule is only for what is committed.
+
+## close-step-read-as-reply-format
+
+**Shows up as:** a skill that runs over many replies (a discussion, a resumed workspace) ends
+every reply with its continue line, often telling the user to type the slash command of the skill
+that is already running. The close step never said which reply it belongs to, so it is read as
+the format of every reply.
+**Probe:** every close or report step names the one reply it applies to, and says later replies
+do not repeat it. A continue line never names the skill that is running in the same conversation;
+it names another skill, or the running one only for a new session.
