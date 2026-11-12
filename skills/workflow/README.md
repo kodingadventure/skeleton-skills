@@ -22,6 +22,16 @@ Plan-driven delivery: turn a spec into a phased plan, run it, and check every ph
 
 From idea to commit: discuss or write the spec, `to-plan`, one of the rows above, `verify`, commit. `whatnext` names the step when you lose the thread.
 
+## Keeping the docs current
+
+Three parts, all reading the doc map in `docs/agents/domain.md`:
+
+- `refine-docs` writes the doc map; its `### Wiki` table says where the flow pages, the index and the optional preserved-behaviour page live.
+- `update-wiki` writes the wiki pages from commits.
+- `whatnext` suggests the docs step once after a plan's last phase, or right away for a commit outside a plan; without `update-wiki` it suggests `refine-docs`.
+
+All need `docs/agents/domain.md` from `setup-matt-pocock-skills` (`mattpocock/skills`). A small repo without a wiki is not affected.
+
 ## Stand-alone and paired
 
 `to-plan` needs `writing-great-plan`, and `execute-plan` uses `verify` and `review-phase`; install those together. `guard-plan` needs the `phase-*` agents below. `update-wiki` is installed with `refine-docs`. The rest stand alone.
