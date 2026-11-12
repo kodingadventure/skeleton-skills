@@ -8,7 +8,7 @@ argument-hint: "What was just completed?"
 
 Suggests the single next development step and skill to invoke by analyzing conversation context or scanning project artifacts. Works in any repo: it assumes no stack, directory layout, or task runner.
 
-Every `Invoke` line names a skill your agent lists; otherwise write the step in plain words. Never name a skill that is not installed, not even to say it is missing: the step reads as if a tool were expected.
+Every `Invoke` line names a skill your agent lists; otherwise there is no `Invoke` line at all, and the step is written in plain words. Never name a skill that is not installed, not even to say it is missing: the step reads as if a tool were expected.
 
 ## Safety
 
@@ -95,13 +95,18 @@ Skills from outside this repo (from `mattpocock/skills`: the grilling, to-spec, 
 → Invoke: <skill-name> [args]
 ```
 
-Write `/name` when your agent uses slash commands. No fitting skill is loaded → drop the `Invoke` line and say the step in plain words.
+Write `/name` when your agent uses slash commands. No fitting skill is loaded → leave the `Invoke` line out entirely: the answer has two lines, `Next step` and `Why`. Never write `Invoke: none`, `Invoke: —` or an `Invoke` line that names no skill; if the reader needs to know why no skill fits, say it in `Why`.
 
 ## Examples
 
 ```
 → Next step: Write down what the checkout page should do before coding it
 → Why: The conversation settled the design but no spec or plan exists, and no spec or planning skill is loaded
+```
+
+```
+→ Next step: Write tests for refund() in src/payments/refund.js — a paid order becomes refunded, any other status throws — then commit them
+→ Why: The last commit changed refund.js with no test beside it, and no installed skill adds tests to existing code; the docs update waits until the tests are committed
 ```
 
 ```
