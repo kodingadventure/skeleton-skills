@@ -1,6 +1,6 @@
 # The `## Docs Layout` Contract
 
-`refine-docs` and any docs audit hold no paths of their own. Everything repo-specific —
+`refine-docs`, `update-wiki`, `whatnext` and any docs audit hold no paths of their own. Everything repo-specific —
 where code lives, which file documents it, which glossary holds its vocabulary — comes from a
 `## Docs Layout` block in `docs/agents/domain.md`.
 
@@ -15,7 +15,7 @@ devoid of implementation details." Path globs and doc-tier thresholds are exactl
 already writes and that other skills already read. The layout block belongs there.
 
 Do not move this config into any `GLOSSARY.md`, and do not edit `setup-matt-pocock-skills` or
-`domain-modeling` to accommodate it. The block is additive: those skills ignore it, these two read it.
+`domain-modeling` to accommodate it. The block is additive: those skills ignore it, the skills named above read it.
 
 ## Reading the block
 
@@ -38,6 +38,7 @@ Follow the Matt Pocock defaults, which most repos satisfy already:
 | `ARCHITECTURE*.md` in `docs/`                                                                                              | Reference docs.                                                                                            |
 | No `ARCHITECTURE*.md` at all                                                                                               | This repo keeps no reference docs. Audit glossary + ADR coverage only; do not invent an ARCHITECTURE file. |
 | Package/module dirs with their own manifest (`go.mod`, `Cargo.toml`, `package.json`, `pyproject.toml`) or a workspace glob | Candidate code units.                                                                                      |
+| Folder `docs/wiki/`, or an index file linking flow pages                                                                   | Candidate `### Wiki` table.                                                                                |
 
 A single-context repo with a root `GLOSSARY.md`, `docs/adr/`, and no reference docs is a
 perfectly valid input. It just means most audit steps report "not applicable."
@@ -52,7 +53,7 @@ Emit only the tables the repo actually has. Every path relative to the repo root
 ```markdown
 ## Docs Layout
 
-> Read by `refine-docs` and any docs audit. They carry no hardcoded paths — this
+> Read by `refine-docs`, `update-wiki`, `whatnext` and any docs audit. They carry no hardcoded paths — this
 > block is the only place this repo's layout lives. Drop a table and the matching audit
 > step is skipped. Format spec: the `refine-docs` skill's `references/docs-layout.md`.
 
@@ -76,6 +77,15 @@ Emit only the tables the repo actually has. Every path relative to the repo root
 | ---------- | ------------------------ |
 | Auth flows | `docs/AUTHENTICATION.md` |
 
+### Wiki
+
+| Key                 | Value                                         |
+| ------------------- | --------------------------------------------- |
+| Flow pages          | `docs/wiki/*.md`                              |
+| Feature index       | `docs/wiki/_INDEX.md` → `## Shipped Features` |
+| Preserved behaviour | `docs/wiki/preserved-behaviour.md`            |
+| Writer              | `update-wiki`                                 |
+
 ### Code units
 
 | Unit  | Where       | Registry                              | Documented in          | Vocab in      |
@@ -90,9 +100,9 @@ Emit only the tables the repo actually has. Every path relative to the repo root
 | Flag only if | AND non-trivial state/status logic, or multiple sub-concepts                 |
 | Never flag   | scaffold-shaped CRUD / master-data / lookup units, whatever their file count |
 
-| Unit  | Glossary path                    | Registered in                          |
-| ----- | -------------------------------- | -------------------------------------- |
-| Crate | `crates/<unit>/docs/GLOSSARY.md` | `GLOSSARY.md` → `## Crate Context Map` |
+| Unit  | Required       | Glossary path                    | Registered in                          |
+| ----- | -------------- | -------------------------------- | -------------------------------------- |
+| Crate | `by threshold` | `crates/<unit>/docs/GLOSSARY.md` | `GLOSSARY.md` → `## Crate Context Map` |
 
 ### ADRs
 
@@ -129,6 +139,14 @@ documented in its guide, never duplicated into a reference doc. `refine-docs` ex
 owning guide and cross-links; a docs audit treats guide-covered subjects as documented. Absent
 table means the repo folds everything into its reference docs — then don't invent guides.
 
+**Wiki** — flow pages are one page per flow that crosses two or more code units: what happens
+from start to finish, which status turns into which, and which unit changes it. The feature
+index has one row per flow page. `Preserved behaviour` is optional: behaviour known to be wrong
+but deliberately not fixed yet, each entry with the test that locks it. `Writer` names the one
+skill that edits these files: `refine-docs` and a docs audit never edit them, and route flow
+content there. Absent table means the repo has no wiki: flow content stays in the reference docs
+or topic guides as it does today, and do not create a wiki.
+
 **Code units** — the generic abstraction that replaces per-language hardcoding. A unit is any
 independently-documented chunk of code: a Go module, a React feature, a Rust crate, a Python
 package, a service. `Where` is a glob. `Documented in` and `Vocab in` must each name a file
@@ -144,6 +162,11 @@ when a unit type has none; then only deviation and vocabulary are checked.
 **Deep-context tier** — omit entirely if the repo doesn't use a per-unit glossary tier. Keep the
 qualitative gate mandatory: where a scaffold generates one-file-per-operation, file count
 measures scaffold output, not complexity, and a raw threshold flags every average-sized unit.
+
+The `Required` column sets how the tier applies to a unit. `Required: every unit` means every
+folder matching that unit's `Where` glob must have its glossary, whatever its size (the
+threshold rows do not apply), and `whatnext` checks for the missing ones. `by threshold` means
+the Nominate / Flag / Never rules decide. An absent column means `by threshold`.
 
 Give the tier **one row per Unit name** from the Code units table, spelling out that unit type's
 own glossary path and registration table. A single `<unit>/docs/GLOSSARY.md` placeholder shared

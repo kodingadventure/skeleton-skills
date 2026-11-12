@@ -1,11 +1,13 @@
 ---
 name: refine-docs
+argument-hint: "Optional: a topic, or a commit range (e.g. 'auth', 'HEAD~3..HEAD'). With neither and a clean tree, asks which recent commits to document."
 description: >
   Update architecture reference docs, glossaries and ADRs as patterns evolve. Edits the
   repo's reference docs, keeps glossaries vocabulary-only, adds ADRs, and maintains the repo's
   Docs Layout config. Language- and framework-agnostic — reads the repo's layout from
   docs/agents/domain.md. Use when the user asks to update documentation, fix doc gaps, add
   architectural patterns, record design decisions, sync glossary vocabulary, or create ADRs.
+  Also use after a commit that changes a pattern, with the commit range as the argument.
   Not for READMEs, tutorials or API reference, read-only audits, or editing generated code files.
 ---
 
@@ -13,7 +15,7 @@ description: >
 
 > **Role**: File editor. This skill modifies documentation — it writes, restructures, and creates files.
 > Start from a gap list — from the user, from a docs audit you ran, or from an audit skill if the repo has one — then run this skill to fix the gaps.
-> No gap list? Take the light path: read the latest change (`git diff`) or the topic the user named, list the 3-5 gaps you can see, get the user's approval, then run the matching workflow.
+> No gap list? Take the light path: read the change from, in order, the commit range given (`git log --oneline <range>`, `git diff <range>`); else the uncommitted changes (`git diff HEAD`); else the topic the user named. If none of the three exists, show `git log --oneline -10` and ask which commits belong to the change. Then list the 3-5 gaps you can see, get the user's approval, then run the matching workflow.
 
 Maintain documentation as architecture evolves. Keeps **reference docs** as the source of truth
 and **glossaries** (`GLOSSARY.md`) as vocabulary-only layers.
@@ -39,6 +41,11 @@ patterns only. If the layout has a **Topic guides** table and a guide owns the s
 grow the reference doc with a second copy. Operational content (commands, verification steps,
 tool config, feature inventories) never belongs in a reference doc, even when no guide exists
 yet; propose a new topic guide instead.
+
+If the layout has a **Wiki** table, flow content (what happens across units end to end, status
+changes, the user-facing steps of a feature) belongs in the pages it lists, which only the skill
+on its `Writer` row edits. Never edit those files: list the flow gaps for the user and name that
+skill (`/update-wiki <range>` if installed).
 
 - **Block present** → it's the truth. Write only to files it names.
 - **Block absent** (file present) → infer the layout (see `references/docs-layout.md`), and **offer to write the block** (Workflow 0) before doing anything else. An inferred layout re-derived every run is where drift comes from.
@@ -71,6 +78,7 @@ Read from the layout block, not from memory. The general shape it describes:
 ```
 <reference docs>     # Source of truth: architecture patterns, diagrams, flows, examples
 <topic guides>       # Optional: single-subject docs (auth, i18n, testing, tools) owning their topic
+<wiki>               # Optional: cross-unit flow pages + feature index, edited only by the Wiki table's Writer
 <glossaries>         # Vocabulary ONLY + links out to reference docs / topic guides
 <deep-context tier>  # Optional: per-unit business vocab + file map
 <ADR location>       # One file per hard-to-reverse decision
@@ -177,6 +185,11 @@ Read-only auditing is out of scope here. After editing, re-check the original ga
 - New operational/how-to content with no owning guide → new topic guide, registered in the
   layout's Topic guides table (Workflow 0 keeps that table current)
 
+**Wiki = owned by its Writer**
+
+- Flow pages and the feature index are edited only by the skill on the Wiki table's `Writer` row
+- This skill lists flow gaps and hands them over; it never writes those files
+
 **Glossary = vocabulary indexing layer**
 
 - Just the terms agents read to understand the domain language
@@ -251,6 +264,7 @@ A single-package library whose block lists a root `GLOSSARY.md` and `docs/adr/`,
 - [ ] Extracted vocabulary and updated the matching glossary if concepts changed
 - [ ] Verified no code/flows/diagrams leaked into a glossary
 - [ ] Left other-skill-owned glossary sections untouched
+- [ ] Left the Wiki table's files untouched; listed flow gaps for its Writer
 - [ ] Added/updated cross-links
 - [ ] Created an ADR only if it clears the three-part bar
 - [ ] Ran a link audit (all refs resolve)
