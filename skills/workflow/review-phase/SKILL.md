@@ -80,7 +80,7 @@ and verification it runs itself.
       status, and the ADR is a repo file to stage with the phase.
 
     Done when: the item's status, the Action Log row and `WHATNEXT.md` all reflect the review, no
-    `ADR: candidate` this phase settled is left without its ADR, and `grep -c '^\[x\]' TRACKER.md`
+    `ADR: candidate` this phase settled is left without its ADR, and `grep -c '^| \[x\]' TRACKER.md`
     prints the same number as before you edited it.
 
 Steps 3–5 and 7 are where defects actually surface — running things and checking claims, not

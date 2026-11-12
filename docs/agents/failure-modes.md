@@ -72,3 +72,12 @@ the format of every reply.
 **Probe:** every close or report step names the one reply it applies to, and says later replies
 do not repeat it. A continue line never names the skill that is running in the same conversation;
 it names another skill, or the running one only for a new session.
+
+## stop-check-buried-in-a-read-step
+
+**Shows up as:** a skill's "stop before doing anything" check is skipped at run time because it was
+appended as one more sentence to a step whose job is reading or locating something; the agent
+finishes that step's main job and moves on. The check fires later, if at all, after the work it
+should have prevented.
+**Probe:** a stop check gets its own numbered step with a command to run and a `Done when` line
+that names it; read the step list alone and confirm the check is visible there.
