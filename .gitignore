@@ -8,3 +8,9 @@ _local/
 
 # Dependencies
 node_modules/
+
+# Local skill and agent links for sessions in this repo (see _local/README.md).
+# Never commit them: the skills CLI installs every skill it finds under a source
+# repo's .claude/skills/, whatever the manifest lists (docs/adr/0001).
+.claude/skills/
+.claude/agents/
