@@ -68,3 +68,9 @@ for (const file of readdirSync(agentSrc)) {
 }
 
 console.log(`link-skills: ${wanted.size} skills linked into .claude/skills (${changed} changed)`);
+
+// Reminder only: no network, nothing installed. The suite is installed on request
+// by `npm run install-suite`, never from `prepare`.
+if (!existsSync(join(skillsDir, "domain-modeling"))) {
+  console.log("link-skills: run npm run install-suite to install the mattpocock/skills suite (see CONTRIBUTING.md)");
+}
