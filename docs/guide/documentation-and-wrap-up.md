@@ -64,12 +64,12 @@ Here is the pattern. An expensive finding came out of a workspace: the first ver
 
 `/wrap-up <slug>` does this, in order:
 
-1. Starts from the updated default branch. If the pull request is still open, it stops and tells you to merge first.
+1. Starts from the updated default branch. If the pull request is still open, it stops and tells you to merge first. In a repo with no remote it says so, skips the pull, and checks locally that your branch is merged.
 2. Checks that every work item is `done`, or that you chose to continue anyway.
 3. Writes the ADRs still owed, from the decisions tagged `ADR: candidate`.
 4. Moves new vocabulary into the glossary and checks that what shipped is documented.
 5. Sorts `findings/`: each file is either `repo: <path>` (moved into the repo) or `scope: workspace` (goes away with the folder).
-6. Commits the repo side, never anything inside the workspace folder.
+6. Commits the repo side, including a `Workspace root:` or `Plan root:` line a skill left uncommitted, and never anything inside the workspace folder.
 7. Writes the final report, when the workspace has a report audience.
 8. Moves the workspace to `## Shipped` in `INDEX.md`, with where the knowledge landed, and tells you the exact folder to delete. It does not delete it.
 

@@ -18,7 +18,7 @@ This expands "[Your first workspace](../../README.md#your-first-workspace)" in t
 3. Run `/kickoff <slug>`. It writes `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` and lays out the folder.
    - On the repo's first workspace it asks where workspaces live. The default is `.scratch/workspaces/`.
    - It checks that folder is git-ignored. If it is not, it offers to add it to `.gitignore` and writes nothing until you answer.
-   - It writes your answer as a `Workspace root:` line in `CLAUDE.md` or `AGENTS.md`. That line is a repo change, so you commit it.
+   - It writes your answer as a `Workspace root:` line in `CLAUDE.md` or `AGENTS.md` and commits that line when your repo's rules let the agent commit; otherwise it prints the commit command for you.
 4. Run `/to-plan` to turn the workspace into a phased plan.
 5. Run the plan with `/execute-plan` (this session, one item at a time) or `/guard-plan` (sub-agents). The difference is in [Skills that look alike](./skills-that-look-alike.md#execute-plan-and-guard-plan).
 6. Stop for the day with `/pause-here <slug>`. Come back with `/resume-here <slug>`, then repeat from step 5.

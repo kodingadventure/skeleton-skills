@@ -100,3 +100,22 @@ The agent's own report even claims the rule was followed. In one re-test, a glos
 "…which moves it to the refunded status" under a vocabulary-only rule.
 **Probe:** the step that writes the output names the rule as a concrete test, with one wrong and
 one right example. Re-run the scenario that failed, and check the file, not the skill's report.
+
+## repo-change-with-no-owner
+
+**Shows up as:** a skill writes a repo file as a side effect (a `Workspace root:` line in
+`CLAUDE.md`) and calls it "a repo change to commit" or "list it among the files you wrote",
+but no step commits it. Every later skill stages only its own paths, so the change stays
+uncommitted until the work ships, and `wrap-up` reports it as "left alone".
+**Probe:** grep the skill for "repo change" and "list it". Each hit names who commits the
+change and when, under the repo's rules, and the last skill of the flow catches a leftover.
+
+## unhandled-state-reported-as-expected
+
+**Shows up as:** a step lists the normal case and one skip case, and its `Done when` names the
+normal end state. In a state the step does not cover (a repo with no remote), the agent
+reports the normal end state anyway ("level with the remote") and may act on a check that is
+trivially true there ("the branch is gone from the remote").
+**Probe:** for each git or environment command a step runs, ask what it does with no remote,
+no branch, or no network. Each such state gets its own line and its own report wording, and
+`Done when` allows for it.

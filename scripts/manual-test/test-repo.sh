@@ -13,6 +13,9 @@
 #   behaviour-commit DIR    commit a cross-unit rule (refund) with its test and no docs
 #   workspace DIR           write .scratch/workspaces/demo/ (CONTEXT, TRACKER, WHATNEXT, a two-phase plan) and its INDEX.md
 #   prd DIR                 write .scratch/workspaces/double-pay/PRD.md, a short PRD for /kickoff
+#   root-line DIR [other]   append the "Workspace root" line to CLAUDE.md, uncommitted; with "other", also an unrelated rule line
+#   finish-workspace DIR    needs workspace: mark the demo tracker and plan done, WHATNEXT step 1 = /wrap-up demo, commit the W1 code
+#   feature-branch DIR NAME [merged]  branch NAME off main with one commit and stay on it; with "merged", merge it into main (--no-ff) first
 #   status DIR              show log, status, installed skills and agents
 # Add a command here for each new setup a scenario needs, rather than editing a fixture by hand.
 set -euo pipefail
@@ -424,6 +427,90 @@ Refunds.
 EOF
   echo "PRD written under $2/.scratch/workspaces/double-pay/ (git-ignored); tree stays clean"
   ;;
+root-line)
+  need_dir "${2:-}"
+  printf '\nWorkspace root: `.scratch/workspaces/`\n' >> "$2/CLAUDE.md"
+  if [[ "${3:-}" == "other" ]]; then
+    printf '\nRun npm test before every push.\n' >> "$2/CLAUDE.md"
+  fi
+  git -C "$2" status --short
+  ;;
+finish-workspace)
+  need_dir "${2:-}"; need_clean "$2"
+  w="$2/.scratch/workspaces/demo"
+  [[ -f "$w/CONTEXT.md" ]] || { echo "error: no demo workspace in $2 (run workspace first)" >&2; exit 1; }
+  cat > "$w/TRACKER.md" <<'EOF'
+# Double payment — Tracker
+
+## Report rules
+
+- **Audience:** none
+- **Language:** English
+
+## Work Items
+
+| Reported? | ID | Weight | Status | Item |
+| --------- | -- | ------ | ------ | ---- |
+| [ ] | W1 | 70 | done | Paying an order that is not pending is refused with a reason |
+| [ ] | W2 | 30 | done | The order payment wiki page says so |
+
+## Action Log
+
+| Date | Action |
+| ---- | ------ |
+| 2026-11-13 | Workspace created. |
+EOF
+  sedi 's/^\*\*Status:\*\* .*/**Status:** done/' "$w/plans/01-double-pay/IMPLEMENTATION_PLAN.md"
+  cat > "$w/WHATNEXT.md" <<'EOF'
+# Double payment — What next
+
+## State now
+
+The plan is done. Both work items are done.
+
+## Next steps
+
+1. Wrap up the workspace: `/wrap-up demo`.
+EOF
+  cat > "$2/src/payments/payments.js" <<'EOF'
+import { markPaid } from "../orders/orders.js";
+
+export function pay(order, amount) {
+  if (order.status !== "pending") return { ok: false, reason: "not-pending" };
+  if (amount < order.amount) return { ok: false, reason: "insufficient" };
+  markPaid(order);
+  return { ok: true };
+}
+EOF
+  cat >> "$2/src/payments/payments.test.js" <<'EOF'
+
+test("paying a paid order is refused", () => {
+  const order = createOrder("o4", 100);
+  pay(order, 100);
+  assert.deepEqual(pay(order, 100), { ok: false, reason: "not-pending" });
+});
+EOF
+  (cd "$2" && node --test >/dev/null 2>&1) || { echo "error: test suite fails" >&2; exit 1; }
+  commit "$2" "feat(payments): refuse paying an order that is not pending"
+  git -C "$2" log --oneline -1
+  git -C "$2" status --short
+  echo "demo workspace finished; tree clean"
+  ;;
+feature-branch)
+  need_dir "${2:-}"; need_clean "$2"
+  name="${3:?branch name}"
+  git -C "$2" checkout -q main
+  git -C "$2" checkout -q -b "$name"
+  printf '\nNote: payments are refused for non-pending orders.\n' >> "$2/docs/wiki/order-payment.md"
+  commit "$2" "docs(wiki): add a note on $name"
+  if [[ "${4:-}" == "merged" ]]; then
+    git -C "$2" checkout -q main
+    git -C "$2" -c user.name="Test User" -c user.email="test@example.invalid" merge -q --no-ff -m "Merge $name" "$name"
+    git -C "$2" checkout -q "$name"
+  fi
+  git -C "$2" branch --show-current
+  git -C "$2" log --oneline --graph --all
+  ;;
 status)
   need_dir "${2:-}"
   git -C "$2" log --oneline; echo "--- status"; git -C "$2" status --short
@@ -431,6 +518,6 @@ status)
   echo "--- agents"; ls "$2/.claude/agents" 2>/dev/null || true
   ;;
 *)
-  sed -n '2,19p' "$0"; exit 1
+  sed -n '2,22p' "$0"; exit 1
   ;;
 esac

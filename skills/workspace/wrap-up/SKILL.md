@@ -26,15 +26,23 @@ Never pick between two live workspaces. Before writing anything, name the one yo
 
 ### 1. Start from the updated default branch
 
-The work usually reached the default branch through a pull request, and this skill commits on top of it. Run `git fetch --prune`, then `git branch --show-current`.
+The work usually reached the default branch through a pull request, and this skill commits on top of it. Run `git remote` first.
+
+**With a remote.** Run `git fetch --prune`, then `git branch --show-current`.
 
 - On the default branch → `git pull --ff-only`.
 - On the feature branch, and its pull request is merged (`gh pr view --json state`, or the branch is gone from the remote after the prune) → `git switch <default> && git pull --ff-only`, then `git branch -d <feature branch>`.
 - On the feature branch, and its pull request is still open → stop: the work has not landed. Tell the user to merge it first, then run this skill again.
 
+**No remote** (`git remote` prints nothing). There is nothing to fetch or pull, and no pull request: say "no remote; nothing to pull" in the report, never that the branch is level with a remote. The default branch is whichever of `main` and `master` exists; both or neither → ask. Run `git branch --show-current`.
+
+- On the default branch → nothing to do.
+- On the feature branch, and `git merge-base --is-ancestor <feature branch> <default>` succeeds → `git switch <default>`, then `git branch -d <feature branch>`.
+- On the feature branch, and that check fails → stop: the work is not on the default branch yet. Tell the user to merge it locally first, then run this skill again.
+
 Not a git repository → skip this step and say so in the report. The commit in step 6 starts from here: on a new branch when the repo's rules send changes through a pull request, else on the default branch.
 
-Done when: the default branch is checked out and level with its remote, or the user has been told to merge first.
+Done when: the default branch is checked out, and level with its remote when there is one; or the user has been told to merge first.
 
 ### 2. Check the work is actually finished
 
@@ -78,9 +86,11 @@ Done when: every finding carries `repo: <path>` or `scope: workspace`, and every
 
 Verify the repo gates for what you touched (docs-only changes have nothing to gate — say so), then commit under the repo's own rules, with an explicit pathspec.
 
+Before that commit, run `git diff HEAD -- CLAUDE.md AGENTS.md`. When a file's only change is an added `Workspace root:` or `Plan root:` line (a skill wrote it and it was never committed), add that file to this commit's pathspec and name it in the report. When the file holds other uncommitted changes, leave it alone and say in the report that the line is still uncommitted.
+
 Never stage or commit anything under the workspace root, and never run git inside it when it has its own repository.
 
-Done when: the ADRs, glossary, docs and moved findings are committed, and the commit hash is in your report.
+Done when: the ADRs, glossary, docs, moved findings and any leftover root line are committed, and the commit hash is in your report.
 
 ### 7. Final report
 
