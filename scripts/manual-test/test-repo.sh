@@ -12,6 +12,7 @@
 #   drop-wiki DIR           remove the "### Wiki" table and docs/wiki/ (committed)
 #   behaviour-commit DIR    commit a cross-unit rule (refund) with its test and no docs
 #   workspace DIR           write .scratch/workspaces/demo/ (CONTEXT, TRACKER, WHATNEXT, a two-phase plan) and its INDEX.md
+#   prd DIR                 write .scratch/workspaces/double-pay/PRD.md, a short PRD for /kickoff
 #   status DIR              show log, status, installed skills and agents
 # Add a command here for each new setup a scenario needs, rather than editing a fixture by hand.
 set -euo pipefail
@@ -394,6 +395,35 @@ EOF
   git -C "$2" status --short
   echo "workspace written under $w (git-ignored); tree stays clean"
   ;;
+prd)
+  need_dir "${2:-}"
+  mkdir -p "$2/.scratch/workspaces/double-pay"
+  cat > "$2/.scratch/workspaces/double-pay/PRD.md" <<'EOF'
+# Refuse a second payment
+
+## Problem
+
+Paying an order that is already paid throws an error (`cannot pay a paid order`). The caller gets an exception instead of an answer.
+
+## What I want
+
+`pay` on an order that is not pending returns `{ ok: false, reason: "not-pending" }` and does not throw.
+
+## Known
+
+- `markPaid` in `src/orders/orders.js` throws for an order that is not pending.
+- The wiki page for order payment lists the rules.
+
+## Open
+
+- Should `markPaid` keep throwing when it is called directly? I think yes.
+
+## Out of scope
+
+Refunds.
+EOF
+  echo "PRD written under $2/.scratch/workspaces/double-pay/ (git-ignored); tree stays clean"
+  ;;
 status)
   need_dir "${2:-}"
   git -C "$2" log --oneline; echo "--- status"; git -C "$2" status --short
@@ -401,6 +431,6 @@ status)
   echo "--- agents"; ls "$2/.claude/agents" 2>/dev/null || true
   ;;
 *)
-  sed -n '2,18p' "$0"; exit 1
+  sed -n '2,19p' "$0"; exit 1
   ;;
 esac
