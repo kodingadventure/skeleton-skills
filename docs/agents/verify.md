@@ -51,8 +51,9 @@ on their own.
 | --------------------------------- | ------------------------------------------------------------------------------ |
 | A skill's `SKILL.md` frontmatter  | `npx skills add <repo path> --list` from a scratch dir — the listing must show it  |
 | `.claude-plugin/marketplace.json` | same listing — every entry must resolve to a directory that exists             |
-| A skill's body or references      | invoke the skill in a session and confirm it reaches the material it points at |
+| A skill's body or references      | manual test in a fixture repo: `docs/agents/manual-test.md`                    |
 
 A skill whose text changed has no automated surface: the gate proves it is formatted,
 not that it still works. When a phase rewrites a skill's workflow, say so in the
-checkpoint report and let the human decide whether to drive it.
+checkpoint report and let the human decide whether to drive it; the manual test is in
+`docs/agents/manual-test.md`.
