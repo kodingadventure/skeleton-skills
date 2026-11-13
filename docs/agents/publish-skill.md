@@ -38,7 +38,7 @@ Every group has `skills/<group>/README.md`: add one bullet for the new skill (na
 - **Model-invocable, reached by other skills or a fixed threshold**: `writing-great-plan`, `verify`, `review-phase`, `review-page`, `skill-from-context`. A skill that others route to by an "installed" condition stays visible to the model.
 - **Model-invocable, picked on a matching request**: `to-plan`, `execute-plan`, `guard-plan`, `whatnext`, `refine-docs`, `what-you-did`. The user asks for the job ("create a plan") rather than naming the skill; the description's "Use when" triggers carry the routing.
 
-Test routing with real sessions rather than by reading the skill: `claude -p` in a disposable clone, one prompt per fork from a session that has not yet run the skill, several samples.
+Test routing with real sessions rather than by reading the skill: `claude -p` in a disposable clone, one prompt per fork from a session that has not yet run the skill, several samples. Test what the skill does with the manual test in `docs/agents/manual-test.md`.
 
 ## Add a changeset
 

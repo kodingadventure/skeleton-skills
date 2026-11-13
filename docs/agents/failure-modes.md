@@ -81,3 +81,22 @@ finishes that step's main job and moves on. The check fires later, if at all, af
 should have prevented.
 **Probe:** a stop check gets its own numbered step with a command to run and a `Done when` line
 that names it; read the step list alone and confirm the check is visible there.
+
+## rule-restated-shorter-elsewhere
+
+**Shows up as:** a skill writes one list or rule twice, in full in a template and shortened in its
+`SKILL.md`, or states a rule and then breaks it in its own example. The agent copies the short
+version or the example, so the output loses exactly what the full rule named (a plan's docs-phase
+review check dropped file paths, UI text and links; a glossary entry got a code pointer because
+an example had one).
+**Probe:** grep the rule's key terms across the skill and its references. Keep one full copy, have
+the other places point to it ("copy word for word"), and check that every example obeys the rule.
+
+## rule-only-in-principles
+
+**Shows up as:** a rule that lives only in a principles or checklist section is ignored by the
+step that produces the output, most often when the rule is an abstract word ("no behaviour").
+The agent's own report even claims the rule was followed. In one re-test, a glossary entry read
+"…which moves it to the refunded status" under a vocabulary-only rule.
+**Probe:** the step that writes the output names the rule as a concrete test, with one wrong and
+one right example. Re-run the scenario that failed, and check the file, not the skill's report.
