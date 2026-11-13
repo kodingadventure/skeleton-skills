@@ -111,8 +111,8 @@ Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And ne
 2. **Update the reference doc** for that scope, with examples
 3. **Extract vocabulary** — pull 1–2 key terms from the new pattern
 4. **Update the glossary** named by that scope
-   - Add the term, terse, one line
-   - Add a link out to the reference doc section
+   - Add the term, terse, one line, saying what it **is**: never what it causes or what rule governs it (see "Glossary entry test" below)
+   - Add a link out to the reference doc section; no doc page to link to → no link
    - A unit-specific business term goes in the deep-context glossary **only if that unit already has one** — don't create one to hold a single term
 5. **Verify links** — no circular refs; all links resolve to real sections
 
@@ -135,9 +135,17 @@ Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And ne
    ```
    **NewTerm** = terse one-line definition
    ```
+   Run the "Glossary entry test" below on every entry you write.
 4. **Add a section reference** out to the reference doc
 5. **Check for removed terms** — drop vocabulary for deprecated patterns
 6. **Never copy**: diagrams, code samples, data flows, prose explanations
+
+### Glossary entry test
+
+Before saving a glossary entry, strike every clause that says what happens because of the term: a status it moves something to, a rule it enforces, when it is rejected or allowed, a side effect. Those belong in a reference doc or the wiki, and they are the part that goes stale. Strike any code path too. What is left is the entry.
+
+- Wrong: `**Cancellation** — a customer's request to stop an order, which moves it to cancelled`
+- Right: `**Cancellation** — a customer's request to stop an order`
 
 ### Workflow 4: Document a design decision (ADR)
 
@@ -255,7 +263,7 @@ _language_ changes, not when the mechanism does.
 A single-package library whose block lists a root `GLOSSARY.md` and `docs/adr/`, no reference docs:
 
 1. New pattern → **no reference doc exists to update**. Don't create one as a side effect
-2. Add the term to `GLOSSARY.md`: its definition only, with no code path and no behaviour
+2. Add the term to `GLOSSARY.md`: its definition only, with no code path and no behaviour (run the "Glossary entry test")
 3. If the pattern clears the ADR bar → write `docs/adr/0004-....md`
 4. If reference docs would genuinely help, propose that to the user as its own decision
 
