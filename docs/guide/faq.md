@@ -20,7 +20,7 @@ Progress reports are optional. `kickoff` asks whether anyone receives them, and 
 
 ## What does a good PRD look like?
 
-A PRD is a file you write yourself at `.scratch/workspaces/<slug>/PRD.md`, in plain prose, in the language you like. `kickoff` reads it, so these are worth putting in, as far as you know them:
+A PRD is `.scratch/workspaces/<slug>/PRD.md`, in plain prose. You can write it yourself, or let `spin-off` seed it from a conversation; either way you correct it before `kickoff`. `kickoff` reads it, so these are worth having in it, as far as you know them:
 
 - What the feature is.
 - Decisions already made.

@@ -1,8 +1,8 @@
 # skeleton-skills
 
-Agent skills for working with a coding agent in plans and feature workspaces: write a PRD, turn it into a workspace (`kickoff`), pause and resume across sessions, run a phased plan with a guardian reviewing every phase, and close the work out (`wrap-up`). Decisions that need you go to a short review page instead of a wall of chat.
+Agent skills for working with a coding agent in plans and feature workspaces: start from a PRD, turn it into a workspace (`kickoff`), pause and resume across sessions, run a phased plan with a guardian reviewing every phase, and close the work out (`wrap-up`). Decisions that need you go to a short review page instead of a wall of chat.
 
-- **PRD**: your request in your own words, a `PRD.md` file you write by hand.
+- **PRD**: your request in your own words, a `PRD.md` file you write by hand or that `spin-off` seeds from a conversation for you to correct.
 - **Workspace**: one git-ignored folder per feature or task, holding the PRD and three living documents (`CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`) that every later session reads first.
 - **Guardian**: the main session when a plan runs through sub-agents: each phase goes to a sub-agent, and the guardian re-checks and commits its work.
 - **Review page**: a short HTML page the agent writes and opens for you when it needs you to read or decide.

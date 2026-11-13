@@ -10,7 +10,7 @@ A workspace is one folder under `.scratch/workspaces/` (the default root).
 .scratch/workspaces/
   INDEX.md                  one row per workspace: active, seeded, shipped
   <slug>/
-    PRD.md                  written by you
+    PRD.md                  the request: written by you or seeded by spin-off
     CONTEXT.md              refined spec and workspace rules
     TRACKER.md              work items, decisions, questions, Action Log
     WHATNEXT.md             what to do next; rewritten, never appended
@@ -42,7 +42,7 @@ You may open these. You do not have to.
 
 | File | What it holds | Who reads it | Written by |
 | --- | --- | --- | --- |
-| `PRD.md` | Your request, in your own words | You, the agent | You |
+| `PRD.md` | The request: the problem, what is known, what is open | You, the agent | You, or `spin-off` from a conversation |
 | `WHATNEXT.md` | State now and the next steps | You, the agent | `kickoff`, `pause-here`, `execute-plan` |
 | `CONTEXT.md` | Refined spec, rules, decisions | The agent | `kickoff`; updated by `discuss`, `pause-here` and others |
 | `TRACKER.md` | Work items, Action Log, report rules | The agent | `kickoff`, `tracker`, `execute-plan` |

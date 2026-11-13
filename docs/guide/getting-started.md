@@ -13,7 +13,7 @@ Two things must be in place. Neither is repeated here.
 
 This expands "[Your first workspace](../../README.md#your-first-workspace)" in the README. Follow it in this order:
 
-1. Write `.scratch/workspaces/<slug>/PRD.md` by hand: what you want built, in your own words.
+1. Get a PRD at `.scratch/workspaces/<slug>/PRD.md`. Either write it yourself (what you want built, in your own words), or, when the idea comes up in a running session, ask the agent to spin it off: `spin-off` writes the PRD from the conversation and seeds the workspace. Either way the PRD is yours to correct.
 2. Discuss the PRD with the agent until the open points are settled.
 3. Run `/kickoff <slug>`. It writes `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` and lays out the folder.
    - On the repo's first workspace it asks where workspaces live. The default is `.scratch/workspaces/`.
