@@ -14,6 +14,8 @@ npm install
 
 `npm install` also links every skill under `skills/` into this repo's `.claude/skills/`, and the executor agents into `.claude/agents/`, so a Claude Code session opened here runs the versions you are editing. The links stay inside this repo: your other projects keep the released versions they installed. Re-run `npm run link-skills` after adding, removing or renaming a skill. Never commit `.claude/skills/` or `.claude/agents/` (they are git-ignored): the `skills` CLI would install whatever it finds there ([ADR 0001](./docs/adr/0001-matt-pocock-suite-is-a-separate-dependency.md)).
 
+Run `npm run install-suite` once after `npm install` to install the [`mattpocock/skills`](https://github.com/mattpocock/skills) suite that several skills depend on. It runs the pinned `npx skills add 'mattpocock/skills#…'` line from the README, so run it again whenever that pinned ref changes. The skills land in `.claude/skills/` (git-ignored), and neither they nor `skills-lock.json` may be committed ([ADR 0001](./docs/adr/0001-matt-pocock-suite-is-a-separate-dependency.md)). It is a separate command, not part of `npm install`, so nothing is downloaded until you ask.
+
 Before you change a skill, read:
 
 - [`CLAUDE.md`](./CLAUDE.md): the repo rules agents follow here.

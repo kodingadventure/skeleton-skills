@@ -12,6 +12,10 @@ Issues live in GitHub Issues `kodingadventure/skeleton-skills`. See `docs/agents
 
 The five default triage roles, label string equal to the role name. See `docs/agents/triage-labels.md`.
 
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
 ### Adding or changing a skill
 
 Gates and sequencing: `docs/agents/verify.md`. Steps for a new skill (group, manifest, README bullet, invocation choice): `docs/agents/publish-skill.md`. Known failure modes: `docs/agents/failure-modes.md`.
