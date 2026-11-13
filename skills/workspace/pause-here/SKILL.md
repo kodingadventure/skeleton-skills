@@ -82,7 +82,7 @@ Overwrite it, keeping its section headings (the shape is in [`references/whatnex
 - **Waiting on**: people and what they owe, each linked to its question file.
 - **Guardrails**: what the next agent keeps doing or holds back on, stated as the target behaviour.
 
-**Every work item `done`** → next step 1 is `/wrap-up <slug>`: the ADRs still owed, durable findings and vocabulary into the repo, the final report, then the user deleting the folder. When the work still sits in an open pull request, step 1 is the user merging it, and step 2 is switching to the default branch and pulling (`git switch <default> && git pull --ff-only`) before `/wrap-up <slug>`: the wrap-up commits on top of the merged work, never on the merged feature branch.
+**Every work item `done`** → next step 1 is `/wrap-up <slug>`: the ADRs still owed, durable findings and vocabulary into the repo, the final report, then the user deleting the folder. When the work still sits in an open pull request, step 1 is the user merging it, and step 2 is switching to the default branch and pulling (`git switch <default> && git pull --ff-only`) before `/wrap-up <slug>`. In a repo with no remote (`git remote` prints nothing) there is no pull request and nothing to pull: when the work is on a feature branch, step 1 is the user merging it into the default branch locally. Either way the wrap-up commits on top of the merged work, never on the feature branch.
 
 Keep it under about 40 lines; detail belongs in the handoff, a finding or a question.
 
