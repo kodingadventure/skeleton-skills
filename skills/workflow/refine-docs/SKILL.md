@@ -79,7 +79,7 @@ Read from the layout block, not from memory. The general shape it describes:
 <reference docs>     # Source of truth: architecture patterns, diagrams, flows, examples
 <topic guides>       # Optional: single-subject docs (auth, i18n, testing, tools) owning their topic
 <wiki>               # Optional: cross-unit flow pages + feature index, edited only by the Wiki table's Writer
-<glossaries>         # Vocabulary ONLY + links out to reference docs / topic guides
+<glossaries>         # Vocabulary ONLY + links out to doc pages (reference docs, topic guides, wiki)
 <deep-context tier>  # Optional: per-unit business vocab + file map
 <ADR location>       # One file per hard-to-reverse decision
 ```
@@ -111,8 +111,8 @@ Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And ne
 2. **Update the reference doc** for that scope, with examples
 3. **Extract vocabulary** — pull 1–2 key terms from the new pattern
 4. **Update the glossary** named by that scope
-   - Add the term, terse, one line
-   - Add a link out to the reference doc section
+   - Add the term, terse, one line, saying what it **is**: never what it causes or what rule governs it (see "Glossary entry test" below)
+   - Add a link out to the reference doc section; no doc page to link to → no link
    - A unit-specific business term goes in the deep-context glossary **only if that unit already has one** — don't create one to hold a single term
 5. **Verify links** — no circular refs; all links resolve to real sections
 
@@ -135,9 +135,17 @@ Never put this config in a `GLOSSARY.md`: glossaries are vocabulary only. And ne
    ```
    **NewTerm** = terse one-line definition
    ```
+   Run the "Glossary entry test" below on every entry you write.
 4. **Add a section reference** out to the reference doc
 5. **Check for removed terms** — drop vocabulary for deprecated patterns
 6. **Never copy**: diagrams, code samples, data flows, prose explanations
+
+### Glossary entry test
+
+Before saving a glossary entry, strike every clause that says what happens because of the term: a status it moves something to, a rule it enforces, when it is rejected or allowed, a side effect. Those belong in a reference doc or the wiki, and they are the part that goes stale. Strike any code path too. What is left is the entry.
+
+- Wrong: `**Cancellation** — a customer's request to stop an order, which moves it to cancelled`
+- Right: `**Cancellation** — a customer's request to stop an order`
 
 ### Workflow 4: Document a design decision (ADR)
 
@@ -199,6 +207,7 @@ After a manual run, commit under the repo's `CLAUDE.md` / `AGENTS.md`. If they l
 - Just the terms agents read to understand the domain language
 - Terse definitions, 1–2 lines per term
 - Always link out for detail; no code samples, diagrams, or flows
+- No behaviour and no code paths: what a term does goes in a reference doc or the wiki, and a file path goes stale. With no doc page to link to, the entry is the definition alone
 - Exception: sections the layout marks as owned by another skill
 
 **Deep-context tier = business vocab, not stack vocab**
@@ -244,7 +253,7 @@ Paths below are from an invented repo's block — illustrative only.
 Change how client code generation works:
 
 1. **Reference doc** → update the "Code Generation Pipeline" section with the new diagram + steps
-2. **Glossary** → term unchanged (`**Code Generation** = API spec → typed client; never edit generated files`)
+2. **Glossary** → term unchanged (`**Code Generation** = API spec → typed client`)
 
 No glossary change needed, because the vocabulary didn't shift. Only edit a glossary when the
 _language_ changes, not when the mechanism does.
@@ -254,7 +263,7 @@ _language_ changes, not when the mechanism does.
 A single-package library whose block lists a root `GLOSSARY.md` and `docs/adr/`, no reference docs:
 
 1. New pattern → **no reference doc exists to update**. Don't create one as a side effect
-2. Add the term to `GLOSSARY.md` with a pointer to the code that implements it
+2. Add the term to `GLOSSARY.md`: its definition only, with no code path and no behaviour (run the "Glossary entry test")
 3. If the pattern clears the ADR bar → write `docs/adr/0004-....md`
 4. If reference docs would genuinely help, propose that to the user as its own decision
 
@@ -266,7 +275,7 @@ A single-package library whose block lists a root `GLOSSARY.md` and `docs/adr/`,
 - [ ] Identified the scope the change belongs to
 - [ ] Updated the reference doc(s) the layout names for that scope
 - [ ] Extracted vocabulary and updated the matching glossary if concepts changed
-- [ ] Verified no code/flows/diagrams leaked into a glossary
+- [ ] Verified no code, code paths, behaviour, flows or diagrams leaked into a glossary
 - [ ] Left other-skill-owned glossary sections untouched
 - [ ] Left the Wiki table's files untouched; listed flow gaps for its Writer
 - [ ] Added/updated cross-links

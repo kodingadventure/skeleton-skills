@@ -314,7 +314,7 @@ session's range — including each phase's `Suggested commit:` line.>
 
 ## Docs phase
 
-The last phase of a feature plan that changes behaviour (rule: `SKILL.md` → "Docs phase"). In a single-file plan the same items sit under `### Phase <N>: Documentation — Weight: M`.
+The last phase of a feature plan that changes behaviour (rule: `SKILL.md` → "Docs phase"). In a single-file plan the same items sit under `### Phase <N>: Documentation — Weight: M`. Copy the `Review check:` line into the plan word for word.
 
 ```markdown
 # Phase <N>: Documentation
