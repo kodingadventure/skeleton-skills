@@ -12,7 +12,7 @@ It is for you if you are about to use the skills on a project of your own.
 | -------------------------------------------- | ---------------------------------------------------- |
 | Start here (this page)                       | What this guide covers and where to go next.         |
 | [Getting started](./getting-started.md)      | How to run your first skill on your own project.     |
-| [An example journey](./example-journey.md)   | What a feature looks like from idea to wrap-up.      |
+| [An example journey](./example-journey.md)   | What a feature looks like from idea to closed work.  |
 
 ## Open when you need it
 

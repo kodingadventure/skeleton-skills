@@ -1,6 +1,6 @@
 # An example journey
 
-This page answers one question: what does one small feature look like from the first PRD to `wrap-up`? The snippets come from one real run on a small shop repo with two modules, orders and payments. Parts are cut with `…`. Workspace files sit in the default root, `.scratch/workspaces/`.
+This page answers one question: what does one small feature look like from the first PRD until the work is closed? The last step, `wrap-up`, moves what is worth keeping into the repo and closes the workspace. The snippets come from one real run on a small shop repo with two modules, orders and payments. Parts are cut with `…`. Workspace files sit in the default root, `.scratch/workspaces/`.
 
 ## The request
 

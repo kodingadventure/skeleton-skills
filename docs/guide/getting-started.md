@@ -22,7 +22,7 @@ This expands "[Your first workspace](../../README.md#your-first-workspace)" in t
 4. Run `/to-plan` to turn the workspace into a phased plan.
 5. Run the plan with `/execute-plan` (this session, one item at a time) or `/guard-plan` (sub-agents). The difference is in [Skills that look alike](./skills-that-look-alike.md#execute-plan-and-guard-plan).
 6. Stop for the day with `/pause-here <slug>`. Come back with `/resume-here <slug>`, then repeat from step 5.
-7. When the work is done, run `/wrap-up <slug>`. See [Documentation and wrap-up](./documentation-and-wrap-up.md).
+7. When the work is done, run `/wrap-up <slug>`. It moves what is worth keeping (decisions, terms, docs) into the repo and closes the workspace. See [Documentation and wrap-up](./documentation-and-wrap-up.md).
 
 The same skill can be called in other ways; the [README](../../README.md#calling-a-skill) lists them.
 
