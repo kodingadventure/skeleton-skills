@@ -60,7 +60,7 @@ Done when: a fresh agent reading `CONTEXT.md`, `WHATNEXT.md` and the brief can t
 
 ### 4. Seed a new workspace
 
-**First workspace in this repo** (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `.scratch/workspaces/INDEX.md`): ask the user once where workspaces live — `.scratch/workspaces/` (the default) or a folder they name — and write the answer as that line, per [`references/workspace-root.md`](references/workspace-root.md). List the instructions-file edit among the files written: it is a repo change to commit.
+**First workspace in this repo** (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `.scratch/workspaces/INDEX.md`): ask the user once where workspaces live — `.scratch/workspaces/` (the default) or a folder they name — and write the answer as that line, per [`references/workspace-root.md`](references/workspace-root.md). Commit it as that file's "Asking once" says, and list the commit (or the printed command) among the files written.
 
 Create `<root>/<slug>/` and check it is git-ignored (`git check-ignore`). Write in the language the user speaks in this conversation: `kickoff` takes the workspace language from the PRD's prose.
 
