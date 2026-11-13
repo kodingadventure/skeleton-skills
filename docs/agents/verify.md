@@ -29,6 +29,8 @@ manifest makes every skill in the repo uninstallable, and nothing else catches i
 
 A commit that touches `skills/` or `plugins/` without a new file in `.changeset/` is a failure.
 
+A change to what a skill does, and a new, removed or renamed skill, also touches the user guide: `grep -rn '<skill-name>' docs/guide/` and update every sentence the change makes wrong, in the same commit.
+
 The four `plugins/phase-agents/agents/phase-*.md` bodies are copies of
 `skills/workflow/execute-plan/references/executor-rules.md`; edit both.
 
