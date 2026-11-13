@@ -19,7 +19,7 @@ The map of where each document lives is the Docs Layout in your repo's `docs/age
 
 ## Who reads them
 
-Mostly the agent, and it searches them instead of reading them whole. In one large private project, the wiki and glossaries were searched in about 3 of every 10 sessions, but the wiki was read in full only 7 times and the glossaries never.
+Mostly the agent, and it searches them instead of reading them whole. In one large private project, the wiki and glossaries were searched in about 3 of every 10 sessions, but almost never read in full.
 
 These numbers come from one large private project, about 170 sessions over three weeks, with nothing to compare against. They are observations, not benchmark results.
 

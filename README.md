@@ -9,6 +9,10 @@ Agent skills for working with a coding agent in plans and feature workspaces: st
 
 Most of it is common ground. The difference is control: skills run when you call them by name, and the agent hands you the decisions on a review page instead of making them. Three skills may also start on their own (see [Which skills start on their own](#which-skills-start-on-their-own)).
 
+## Guide
+
+New here? Read the [guide](./docs/guide/README.md) first: how to start in a new or an existing project, one feature followed from PRD to wrap-up, how the look-alike skills differ, and an FAQ.
+
 ## Prerequisites
 
 You need Node.js and an agent that reads skills. Skills are installed with the [`skills`](https://github.com/vercel-labs/skills) CLI, run through `npx` (nothing to install first). Claude Code is the best supported (the `phase-*` executor agents and the commit-reminder hook are Claude Code only).
