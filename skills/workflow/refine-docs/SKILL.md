@@ -79,7 +79,7 @@ Read from the layout block, not from memory. The general shape it describes:
 <reference docs>     # Source of truth: architecture patterns, diagrams, flows, examples
 <topic guides>       # Optional: single-subject docs (auth, i18n, testing, tools) owning their topic
 <wiki>               # Optional: cross-unit flow pages + feature index, edited only by the Wiki table's Writer
-<glossaries>         # Vocabulary ONLY + links out to reference docs / topic guides
+<glossaries>         # Vocabulary ONLY + links out to doc pages (reference docs, topic guides, wiki)
 <deep-context tier>  # Optional: per-unit business vocab + file map
 <ADR location>       # One file per hard-to-reverse decision
 ```
@@ -199,6 +199,7 @@ After a manual run, commit under the repo's `CLAUDE.md` / `AGENTS.md`. If they l
 - Just the terms agents read to understand the domain language
 - Terse definitions, 1–2 lines per term
 - Always link out for detail; no code samples, diagrams, or flows
+- No behaviour and no code paths: what a term does goes in a reference doc or the wiki, and a file path goes stale. With no doc page to link to, the entry is the definition alone
 - Exception: sections the layout marks as owned by another skill
 
 **Deep-context tier = business vocab, not stack vocab**
@@ -244,7 +245,7 @@ Paths below are from an invented repo's block — illustrative only.
 Change how client code generation works:
 
 1. **Reference doc** → update the "Code Generation Pipeline" section with the new diagram + steps
-2. **Glossary** → term unchanged (`**Code Generation** = API spec → typed client; never edit generated files`)
+2. **Glossary** → term unchanged (`**Code Generation** = API spec → typed client`)
 
 No glossary change needed, because the vocabulary didn't shift. Only edit a glossary when the
 _language_ changes, not when the mechanism does.
@@ -254,7 +255,7 @@ _language_ changes, not when the mechanism does.
 A single-package library whose block lists a root `GLOSSARY.md` and `docs/adr/`, no reference docs:
 
 1. New pattern → **no reference doc exists to update**. Don't create one as a side effect
-2. Add the term to `GLOSSARY.md` with a pointer to the code that implements it
+2. Add the term to `GLOSSARY.md`: its definition only, with no code path and no behaviour
 3. If the pattern clears the ADR bar → write `docs/adr/0004-....md`
 4. If reference docs would genuinely help, propose that to the user as its own decision
 
@@ -266,7 +267,7 @@ A single-package library whose block lists a root `GLOSSARY.md` and `docs/adr/`,
 - [ ] Identified the scope the change belongs to
 - [ ] Updated the reference doc(s) the layout names for that scope
 - [ ] Extracted vocabulary and updated the matching glossary if concepts changed
-- [ ] Verified no code/flows/diagrams leaked into a glossary
+- [ ] Verified no code, code paths, behaviour, flows or diagrams leaked into a glossary
 - [ ] Left other-skill-owned glossary sections untouched
 - [ ] Left the Wiki table's files untouched; listed flow gaps for its Writer
 - [ ] Added/updated cross-links
