@@ -16,6 +16,7 @@
 #   root-line DIR [other]   append the "Workspace root" line to CLAUDE.md, uncommitted; with "other", also an unrelated rule line
 #   finish-workspace DIR    needs workspace: mark the demo tracker and plan done, WHATNEXT step 1 = /wrap-up demo, commit the W1 code
 #   feature-branch DIR NAME [merged]  branch NAME off main with one commit and stay on it; with "merged", merge it into main (--no-ff) first
+#   notes-repo DIR [rule]   needs workspace or prd: git init DIR/.scratch and commit its notes; with "rule", write the notes-commit rule to DIR/CLAUDE.local.md (kept out of git via .git/info/exclude)
 #   status DIR              show log, status, installed skills and agents
 # Add a command here for each new setup a scenario needs, rather than editing a fixture by hand.
 set -euo pipefail
@@ -511,11 +512,30 @@ feature-branch)
   git -C "$2" branch --show-current
   git -C "$2" log --oneline --graph --all
   ;;
+notes-repo)
+  need_dir "${2:-}"
+  [[ -d "$2/.scratch" ]] || { echo "error: no .scratch/ in $2 — run workspace or prd first" >&2; exit 1; }
+  git -C "$2/.scratch" init -q -b main
+  commit "$2/.scratch" "docs: notes"
+  if [[ "${3:-}" == "rule" ]]; then
+    cat > "$2/CLAUDE.local.md" <<'EOF'
+## Workspace notes
+
+`.scratch/` is its own git repository. After you create or change files under `.scratch/workspaces/`, commit them there: `git -C .scratch add <explicit paths>`, then `git -C .scratch commit -m "docs: <summary>"`. Never stage `.scratch/` from the main repo, and leave out changes you did not make.
+EOF
+    grep -qxF 'CLAUDE.local.md' "$2/.git/info/exclude" || echo 'CLAUDE.local.md' >> "$2/.git/info/exclude"
+    rule=yes
+  else
+    rule=no
+  fi
+  echo "notes repo: $2/.scratch (rule: $rule)"
+  ;;
 status)
   need_dir "${2:-}"
   git -C "$2" log --oneline; echo "--- status"; git -C "$2" status --short
   echo "--- skills"; ls "$2/.claude/skills" 2>/dev/null || true
   echo "--- agents"; ls "$2/.claude/agents" 2>/dev/null || true
+  if [[ -d "$2/.scratch/.git" ]]; then echo "--- notes repo"; git -C "$2/.scratch" log --oneline | wc -l; fi
   ;;
 *)
   sed -n '2,22p' "$0"; exit 1
