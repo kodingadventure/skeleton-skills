@@ -19,7 +19,7 @@ The workspace is **self-describing**: its rules live in its own files, so a plai
 
 ### 1. Locate the workspace
 
-From the argument (a slug or a path), else the folder of the PRD discussed in this conversation. It must contain `PRD.md`; if there is none, ask the user for it and stop. On the repo's first workspace (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `INDEX.md` at the root), ask the one root question from [`references/workspace-root.md`](references/workspace-root.md) — the default, or another folder — and write the answer as that line, then commit it as that file's "Asking once" says. Check the root is git-ignored (`git check-ignore <path>/x`); if it is not, **offer** to add the root to `.gitignore` and write nothing, in the repo or the workspace, until the user has answered. If the root or its parent holds its own `.git`, it is a separate repository: say so in `### Layout`, with the line from `references/context-template.md` copied word for word. If it has none, tell the user once that `git init <root>` would keep a history of these notes, which are otherwise lost when a workspace is deleted — their call, not yours.
+From the argument (a slug or a path), else the folder of the PRD discussed in this conversation. It must contain `PRD.md`; if there is none, ask the user for it and stop. On the repo's first workspace (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `INDEX.md` at the root), ask the one root question from [`references/workspace-root.md`](references/workspace-root.md) — the default, or another folder — and write the answer as that line, then commit it as that file's "Asking once" says. Check the root is git-ignored (`git check-ignore <path>/x`); if it is not, **offer** to add the root to `.gitignore` and write nothing, in the repo or the workspace, until the user has answered. If the root or its parent holds its own `.git`, it is a separate repository: say so in `### Layout`, with the two lines from `references/context-template.md` copied word for word, in English, never rewritten to match the repo's own notes rule. If it has none, tell the user once that `git init <root>` would keep a history of these notes, which are otherwise lost when a workspace is deleted — their call, not yours.
 
 Done when: you have one workspace path holding a `PRD.md`.
 
@@ -49,7 +49,7 @@ Done when: the workspace root holds only `PRD.md`, the three living documents an
 
 ### 5. Write the three documents
 
-Write each from its template, translated into the workspace language (headings included). Keep literal: file and folder names, status tokens (`todo`, `in-progress`, `done`, `blocked`), checkboxes, code, UI strings.
+Write each from its template, translated into the workspace language (headings included). Keep literal: file and folder names, status tokens (`todo`, `in-progress`, `done`, `blocked`), checkboxes, code, UI strings, and the two separate-repository lines of `### Layout` (English, word for word).
 
 - `CONTEXT.md` ← `references/context-template.md`. Every entry in `## Decisions` gets its `ADR:` tag; the criteria are in the template's `### Conventions`.
 - `TRACKER.md` ← `references/tracker-template.md`. Weights of all work items sum to `100 − baseline`. Every row is unticked.
