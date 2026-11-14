@@ -46,9 +46,17 @@ for (const group of readdirSync(join(repo, "skills"), { withFileTypes: true })) 
     if (skill.isDirectory() && existsSync(join(dir, "SKILL.md"))) wanted.set(skill.name, dir);
   }
 }
-// Maintainer-only skill, present only where the private _local/ repo is checked out.
-const backflow = join(repo, "_local", "backflow");
-if (existsSync(join(backflow, "SKILL.md"))) wanted.set("backflow", backflow);
+// Maintainer-local skills, present only where the git-ignored _local/ folder holds them.
+// A catalog skill keeps its name: a local skill with the same name is skipped.
+const localSkills = join(repo, "_local", "skills");
+if (existsSync(localSkills)) {
+  for (const skill of readdirSync(localSkills, { withFileTypes: true })) {
+    const dir = join(localSkills, skill.name);
+    if (!skill.isDirectory() || !existsSync(join(dir, "SKILL.md"))) continue;
+    if (wanted.has(skill.name)) console.log(`link-skills: _local/skills/${skill.name} skipped, a catalog skill has that name`);
+    else wanted.set(skill.name, dir);
+  }
+}
 
 let changed = 0;
 for (const [name, dir] of wanted) if (link(dir, join(skillsDir, name))) changed++;
