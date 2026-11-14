@@ -57,7 +57,7 @@ Check the current flags with `npx skills --help`.
 - **Folders.** The CLI flattens the groups: with Claude Code each skill lands in `.claude/skills/<skill>/`; with opencode and codex in `.agents/skills/<skill>/` (both share it). Installing one skill brings only that skill, so install a group's skills together when they refer to each other.
 - **Claude Code plugin.** The same repo is a Claude Code marketplace: `claude plugin marketplace add kodingadventure/skeleton-skills`, then `claude plugin install workspace@skeleton-skills --scope project` (likewise `workflow`, `agent`, `github`).
 - **Executor agents.** `guard-plan` dispatches `phase-s`, `phase-m`, `phase-l` and `phase-xl`. The `skills` CLI never installs agents. Install the `phase-agents` plugin once: `claude plugin install phase-agents@skeleton-skills --scope project` (the agents are then named `phase-agents:phase-s` and so on), or copy `plugins/phase-agents/agents/phase-*.md` into `.claude/agents/` (bare names). Without sub-agents, `execute-plan` with `review-phase` does the same job in one session.
-- **Reminder hook.** `skills/workspace/hooks/workspace-reminder.mjs` is optional, Claude Code only, and installed by hand: see [skills/workspace/README.md](./skills/workspace/README.md).
+- **Reminder hook.** `skills/workspace/hooks/workspace-reminder.mjs` is optional, Claude Code only, and installed by hand: see [skills/workspace/README.md](./skills/workspace/README.md). When it helps, and how to check it is installed: [the FAQ](./docs/guide/faq.md#what-is-the-commit-reminder-hook-and-do-i-need-it).
 
 ### Calling a skill
 
