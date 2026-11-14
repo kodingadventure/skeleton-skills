@@ -5,7 +5,9 @@
 // workspaces, it reminds the agent to keep the matching workspace current
 // (WHATNEXT.md, TRACKER.md, the INDEX.md row). A session that never opened
 // the workspace does not know its conventions; this is the nudge it misses.
-// Silent otherwise: no commit, no INDEX.md, or no active row.
+// Silent otherwise: no commit, no INDEX.md, no active row, or a commit inside
+// the workspace root, in `.scratch`, or in another git repository (for example
+// a separate repository for the notes above the workspace root).
 //
 // Install: copy to .claude/hooks/ and register in .claude/settings.json:
 //   "hooks": { "PostToolUse": [{ "matcher": "Bash", "hooks": [{
@@ -69,25 +71,67 @@ function workspaceRoot(projectDir) {
   return ".scratch/workspaces";
 }
 
+// The repository a folder belongs to: the nearest ancestor (the folder itself
+// included) holding a `.git` entry, a folder or, in a worktree, a file. Null
+// when there is none.
+export function repoOf(dir) {
+  let d = path.resolve(dir);
+  for (;;) {
+    if (fs.existsSync(path.join(d, ".git"))) return d;
+    const parent = path.dirname(d);
+    if (parent === d) return null;
+    d = parent;
+  }
+}
+
+// Where the commit runs, and whether the command moved away from startDir.
+// Follows the command's `cd <dir>` and `git -C <dir>` targets as paths. With
+// afterCommand set, startDir is the shell's directory after the command ran
+// (the hook input's `cwd`), so a `cd` target is already reflected in it and
+// only the `git -C` targets after the last `cd` still apply.
+function resolveCommit(command, startDir, afterCommand) {
+  const target = /(?:\bcd\s+|\bgit\s+(?:\S+\s+)*?-C\s+)("[^"]+"|'[^']+'|[^\s;&|]+)/g;
+  const start = path.resolve(startDir);
+  let dir = start;
+  let moved = false;
+  for (const m of command.matchAll(target)) {
+    if (afterCommand && /^cd\b/.test(m[0])) {
+      dir = start;
+      moved = false;
+      continue;
+    }
+    dir = path.resolve(dir, m[1].replace(/^["']|["']$/g, ""));
+    moved = true;
+  }
+  return { dir, moved };
+}
+
+// The folder a `git commit` command runs in. startDir is the project
+// directory, or the hook input's `cwd` when afterCommand is true.
+export function commitDir(command, startDir, afterCommand = false) {
+  return resolveCommit(command, startDir, afterCommand).dir;
+}
+
 // True when the commit runs from a directory inside the workspace root (or
-// inside `.scratch`), found by following the command's `cd <dir>` and
-// `git -C <dir>` targets as paths. A folder name that merely appears
-// elsewhere in the command does not count.
-export function commitsInsideRoot(command, projectDir, root) {
+// inside `.scratch`). A folder name that merely appears elsewhere in the
+// command does not count. With `cwd` (the shell's directory after the
+// command) the shell itself may already sit inside the root.
+export function commitsInsideRoot(command, projectDir, root, cwd) {
   const rootAbs = path.resolve(projectDir, root);
   const scratchAbs = path.resolve(projectDir, ".scratch");
   const inside = (dir, base) => {
     const rel = path.relative(base, dir);
     return rel === "" || (!rel.startsWith("..") && !path.isAbsolute(rel));
   };
-  const target = /(?:\bcd\s+|\bgit\s+(?:\S+\s+)*?-C\s+)("[^"]+"|'[^']+'|[^\s;&|]+)/g;
-  let dir = path.resolve(projectDir);
-  let moved = false;
-  for (const m of command.matchAll(target)) {
-    dir = path.resolve(dir, m[1].replace(/^["']|["']$/g, ""));
-    moved = true;
-  }
-  return moved && (inside(dir, rootAbs) || inside(dir, scratchAbs));
+  const { dir, moved } = resolveCommit(command, cwd ?? projectDir, cwd != null);
+  return (moved || cwd != null) && (inside(dir, rootAbs) || inside(dir, scratchAbs));
+}
+
+// True when the commit lands in a different git repository than the project's,
+// such as a separate repository for the workspace notes.
+export function commitsInOtherRepo(command, projectDir, cwd) {
+  const dir = commitDir(command, cwd ?? projectDir, cwd != null);
+  return repoOf(dir) !== repoOf(projectDir);
 }
 
 function main() {
@@ -97,8 +141,10 @@ function main() {
   if (!/\bgit\b(\s+-\S+(\s+\S+)?)*\s+commit\b/.test(command)) return;
   const projectDir = process.env.CLAUDE_PROJECT_DIR || input?.cwd || ".";
   const root = workspaceRoot(projectDir);
-  // A commit inside the workspace root's own repository is not project work.
-  if (commitsInsideRoot(command, projectDir, root)) return;
+  const cwd = input?.cwd;
+  // A commit inside the workspace root, or in another git repository (such as
+  // a separate repository for the notes), is not project work.
+  if (commitsInsideRoot(command, projectDir, root, cwd) || commitsInOtherRepo(command, projectDir, cwd)) return;
   const indexPath = path.join(projectDir, root, "INDEX.md");
   if (!fs.existsSync(indexPath)) return;
 

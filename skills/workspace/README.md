@@ -63,7 +63,7 @@ The user picks the root once, on the repo's first workspace, and `spin-off` or `
 
 ## Optional hook: reminder after a commit
 
-`hooks/workspace-reminder.mjs` is a `PostToolUse` hook (matcher `Bash`). After a `git commit`, when the workspace root's `INDEX.md` has rows under `## Active`, it tells the agent which workspaces are live and asks it to update the one the commit moved (`WHATNEXT.md`, `TRACKER.md`, the `INDEX.md` row) — the nudge a session that never opened the workspace would otherwise miss. Silent in every other case. Claude Code only, and safe to skip. Copy it to `.claude/hooks/` and register it in `.claude/settings.json` with the block in `hooks/settings-snippet.json`. It is not installed by `skills add`.
+`hooks/workspace-reminder.mjs` is a `PostToolUse` hook (matcher `Bash`). After a `git commit`, when the workspace root's `INDEX.md` has rows under `## Active`, it tells the agent which workspaces are live and asks it to update the one the commit moved (`WHATNEXT.md`, `TRACKER.md`, the `INDEX.md` row) — the nudge a session that never opened the workspace would otherwise miss. Silent in every other case, including a commit in another git repository, such as a separate repository for your notes. Claude Code only, and safe to skip. Copy it to `.claude/hooks/` and register it in `.claude/settings.json` with the block in `hooks/settings-snippet.json`. It is not installed by `skills add`.
 
 ## Companion changes in other groups
 
