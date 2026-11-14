@@ -59,19 +59,20 @@ A discussion that changes nothing on disk is how decisions get lost. Before your
 
 Tick no checkbox: only `/tracker sent` does that. A seeded workspace is recorded in like any other: its `TBD (kickoff)` fields and placeholder work item stay for `kickoff` to replace.
 
+Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there.
+
 Done when: every outcome of the discussion is in exactly one file, or you have said there was none.
 
 ### 4. Boundaries
 
-- No code changes, no staging, no commits. A discussion that turns into work ends here: say so, and hand over to `/to-plan` (new scope), `/resume-here` (the existing next step) or `/execute-plan`.
-- Never run git inside the workspace root when it has its own repository.
+- No code changes, and no staging or commits in the main repo. A discussion that turns into work ends here: say so, and hand over to `/to-plan` (new scope), `/resume-here` (the existing next step) or `/execute-plan`.
 - Secrets (keys, tokens, passwords, personal data) stay out of every file; refer to where they are kept.
 
 ### 5. Close
 
 Only the reply in which you run step 3 gets the close: the reply that writes down what a topic settled, or the reply to a user who says they are stopping or moving on (run step 3 then, even when it writes nothing). Every other reply — an answer to a follow-up, a question back, a proposal — ends without a continue line. A long discussion can close more than once, once per topic it finishes.
 
-In the workspace language: what the discussion settled, what it left open, what you wrote where, and how to go on:
+In the workspace language: what the discussion settled, what it left open, what you wrote where (with the notes commit hash, or "notes not committed" and why), and how to go on:
 
 - **In this conversation:** offer the next topic directly ("Discuss <next topic> now?"). This skill is already loaded, so never ask the user to type `/discuss` again here. When the user said they are stopping, skip the offer: the new-session line is enough. To start working: `/resume-here <slug>`.
 - **In a new session** (after `/clear`, or another day): `/discuss <slug> <next topic>`, labelled as the way to pick this up later.

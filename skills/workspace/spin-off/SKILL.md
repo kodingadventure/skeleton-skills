@@ -85,12 +85,13 @@ Reply in the language of this conversation:
 
 - the files written (paths), and any area overlap found;
 - uncommitted files that belong to the thread, still in the working tree — commit them under the repo's rules before this session moves on, or leave them as the brief records;
+- the notes commit hash, or "notes not committed" and why;
 - one line: `<thread> now lives in <workspace>`;
 - the line to continue with: `/resume-here <slug>` or `/discuss <slug> <topic>` for an existing workspace; `/discuss` the seeded PRD, then `/kickoff <slug>`, for a new one.
 
 From here on in this session, the thread belongs to the workspace. The continue line above is given once: when the user returns to the thread, say in one line that it now lives in <workspace>, give the continue line again only if they ask how to go on, and carry on with whatever else they bring.
 
-Commit nothing in this step, and run no git inside the workspace root when it has its own repository. Secrets (keys, tokens, passwords, personal data) stay out of every file; refer to where they are kept.
+Commit nothing in the main repo in this step. Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there. Secrets (keys, tokens, passwords, personal data) stay out of every file; refer to where they are kept.
 
 ## The brief
 

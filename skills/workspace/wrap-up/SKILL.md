@@ -88,7 +88,7 @@ Verify the repo gates for what you touched (docs-only changes have nothing to ga
 
 Before that commit, run `git diff HEAD -- CLAUDE.md AGENTS.md`. When a file's only change is an added `Workspace root:` or `Plan root:` line (a skill wrote it and it was never committed), add that file to this commit's pathspec and name it in the report. When the file holds other uncommitted changes, leave it alone and say in the report that the line is still uncommitted.
 
-Never stage or commit anything under the workspace root, and never run git inside it when it has its own repository.
+Never stage or commit anything under the workspace root from the main repo; a notes commit, when the repo's instructions ask for one, happens in step 8.
 
 Done when: the ADRs, glossary, docs, moved findings and any leftover root line are committed, and the commit hash is in your report.
 
@@ -105,10 +105,11 @@ Done when: the final report is sent and ticked, or the user has said they will s
 - If the workspace has a `github.md`, offer (do not run) a closing comment on its issue with the `github-send-update` skill, when that skill is installed, and check the issue is closed: `gh issue view <url> --json state`. Report the state; closing the issue is the user's call.
 - Move the workspace's row from `## Active` to `## Shipped` in the root `INDEX.md`: the slug, today's date, and **where the knowledge landed** (ADR ids, doc paths, glossary terms). That row outlives the folder and is the only pointer from the feature's name to its reasoning.
 - Rewrite `WHATNEXT.md` one last time: state that the wrap-up is done, and that the only step left is the user deleting the folder.
-- Tell the user the exact path to delete, and that you are not deleting it. When the root has its own git repository, note that its history keeps these notes recoverable after the folder is gone — committing or tagging there is theirs to do, not yours.
+- Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there.
+- Tell the user the exact path to delete, and that you are not deleting it. When the root has its own git repository, note that its history keeps these notes recoverable after the folder is gone.
 
 Done when: the index shows the feature shipped, and the user has been told exactly what to delete.
 
 ### 9. Report
 
-In the workspace language: the ADRs written, the docs and glossary terms updated, the findings moved (and to where), the commit, the report status (or that no report was due), and the deletion line for the user.
+In the workspace language: the ADRs written, the docs and glossary terms updated, the findings moved (and to where), the commit, the notes commit hash (or "notes not committed" and why), the report status (or that no report was due), and the deletion line for the user.

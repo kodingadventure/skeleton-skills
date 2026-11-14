@@ -88,18 +88,18 @@ Keep it under about 40 lines; detail belongs in the handoff, a finding or a ques
 
 Then refresh this workspace's row in the root `INDEX.md`: status (`active` / `paused` / `blocked`), progress, today's date, who is being waited on, and the areas if they grew. Other sessions read that row before they read anything else here; leave every other row alone.
 
+Code changes are committed by the work itself, under the repo's rules; commit no code here. Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there.
+
 Done when: a fresh agent reading `CONTEXT.md` and this file knows the first action and has every caveat it needs to take it.
 
 ### 7. Report
 
-Reply in the workspace language: the files written or updated (the index row included), the steps marked done, one line on the next step, and the resume line:
+Reply in the workspace language: the files written or updated (the index row included), the steps marked done, the notes commit hash (or "notes not committed" and why), one line on the next step, and the resume line:
 
 ```
 /resume-here <slug>   (or: "read <path>/CONTEXT.md, then continue with <path>/WHATNEXT.md")
 ```
 
 The resume line goes in this report only; later replies in this conversation do not repeat it.
-
-Commit nothing: the workspace is git-ignored, and code changes are committed by the work itself, under the repo's rules.
 
 Leave secrets (keys, passwords, tokens, personal data) out of every file; refer to where they are kept.
