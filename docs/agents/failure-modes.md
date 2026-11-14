@@ -119,3 +119,15 @@ trivially true there ("the branch is gone from the remote").
 **Probe:** for each git or environment command a step runs, ask what it does with no remote,
 no branch, or no network. Each such state gets its own line and its own report wording, and
 `Done when` allows for it.
+
+## literal-text-inside-placeholder
+
+**Shows up as:** a template wraps text that must be copied word for word inside a `<…>`
+placeholder (`<When the root has its own git repository: …rule…>`). The agent treats the
+placeholder as something to fill: it rewrites the text, often to match the repo's own wording
+for the same rule, and drops a condition. A "copied word for word" in the `SKILL.md` does not
+stop it, and a step that translates the template into the workspace language rewrites it too.
+**Probe:** keep the placeholder to the instruction alone ("keep the next two lines word for word,
+in English; otherwise delete them and this line") and put the literal text on its own lines
+outside `<…>`. List those lines in the step's "keep literal" set, then `grep -F` the generated file
+for the exact sentence.
