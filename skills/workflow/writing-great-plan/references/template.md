@@ -35,7 +35,7 @@ Use when the plan stays under every splitting trigger.
 
 <!-- Status: only pending | in-progress | done | abandoned. Progress text goes on a separate optional
      `**Progress:**` line below it, never in Status.
-     Review: keep only when the repo has review-phase installed.
+     Review: keep when your agent lists the review-phase skill, even if Repo has no .claude/ of its own.
      Verify: only when the repo has no docs/agents/verify.md; otherwise omit the line.
      Repo: one repo. For 2+ repos replace the line with a `## Environment` table
      (| What | Absolute path |, one row per repo). -->
@@ -129,7 +129,7 @@ Use once any splitting trigger fires. Entry point holds no checklist items; each
 
 <!-- Status: only pending | in-progress | done | abandoned. Progress text goes on a separate optional
      `**Progress:**` line below it, never in Status.
-     Review: keep only when the repo has review-phase installed.
+     Review: keep when your agent lists the review-phase skill, even if Repo has no .claude/ of its own.
      Verify: only when the repo has no docs/agents/verify.md; otherwise omit the line.
      Repo: one repo. For 2+ repos replace the line with a `## Environment` table
      (| What | Absolute path |, one row per repo). -->

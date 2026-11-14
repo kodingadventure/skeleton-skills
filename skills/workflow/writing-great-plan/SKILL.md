@@ -362,8 +362,9 @@ Where a plan is written, and how a skill picks which plan to run, is set in `ref
 Canonical templates — feature-shape and maintenance-shape, each with single-file and multi-file variants — live in `references/template.md`. Every plan-producing skill uses that
 file instead of maintaining a local copy; keep only what's genuinely specific to a producer (linter bucket tables, JSON schemas, pattern-prediction rules) in that producer's own skill.
 
-Every template header carries `**Review:** guardian`: `execute-plan` stops after staging each phase and `/review-phase` reviews it and prepares the commit. Keep the line when the
-repo has `review-phase` installed; delete it when the user wants `execute-plan` to commit each phase itself, or when `review-phase` is not installed, since nothing would pick up
-the staged phase.
+Every template header carries `**Review:** guardian`: `execute-plan` stops after staging each phase and `/review-phase` reviews it and prepares the commit. Keep the line when
+your agent lists the `review-phase` skill. The skill runs in the session that executes the plan, so a plan whose `Repo` is another folder (a new project, a sibling repo, a
+gitignored one) without its own `.claude/skills/` still keeps the line. Delete it only when the user wants `execute-plan` to commit each phase itself, or when your agent does not
+list `review-phase`, since nothing would pick up the staged phase.
 
 The header is four lines: `Status`, `Review`, `Verify`, `Repo`, plus an optional `Progress` line. `Verify` appears only when the repo has no `docs/agents/verify.md`; `PlanType` only on a maintenance plan.
