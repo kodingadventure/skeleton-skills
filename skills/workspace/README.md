@@ -45,7 +45,7 @@ Feature workspaces: one git-ignored folder per feature or task, from a hand-writ
     findings/  questions/  handoffs/  reports/  docs/  logs/ (optional)
 ```
 
-The root is `.scratch/workspaces/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another. It must be git-ignored by the main repo; giving `.scratch/` its own git repository keeps a history of the notes after a workspace is deleted (the skills never run git inside it).
+The root is `.scratch/workspaces/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another. It must be git-ignored by the main repo; giving `.scratch/` its own git repository keeps a history of the notes after a workspace is deleted. The skills commit there only when your repo's instructions say so: see [the FAQ](../../docs/guide/faq.md#is-the-workspace-folder-committed).
 
 The user picks the root once, on the repo's first workspace, and `spin-off` or `kickoff` writes it as a `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, which every skill and the commit reminder hook read: `kickoff/references/workspace-root.md`.
 

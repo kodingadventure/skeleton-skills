@@ -16,7 +16,8 @@
 
 Everything about this <feature> stays in `<workspace path>/` (git-ignored). The folder is deleted when the work ships. `INDEX.md` at the root above lists every workspace; this one has a row there while it is live.
 
-<When the root has its own git repository: it is separate from the main repo — never stage anything under it from the main repo, and never run git inside it unless the user asks.>
+<When the root has its own git repository: it is separate from the main repo.
+Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there.>
 
 - `PRD.md` — the original request.
 - `CONTEXT.md` — this file.

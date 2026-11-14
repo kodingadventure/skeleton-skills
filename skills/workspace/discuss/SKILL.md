@@ -59,12 +59,13 @@ A discussion that changes nothing on disk is how decisions get lost. Before your
 
 Tick no checkbox: only `/tracker sent` does that. A seeded workspace is recorded in like any other: its `TBD (kickoff)` fields and placeholder work item stay for `kickoff` to replace.
 
+Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there.
+
 Done when: every outcome of the discussion is in exactly one file, or you have said there was none.
 
 ### 4. Boundaries
 
-- No code changes, no staging, no commits. A discussion that turns into work ends here: say so, and hand over to `/to-plan` (new scope), `/resume-here` (the existing next step) or `/execute-plan`.
-- Never run git inside the workspace root when it has its own repository.
+- No code changes, and no staging or commits in the main repo. A discussion that turns into work ends here: say so, and hand over to `/to-plan` (new scope), `/resume-here` (the existing next step) or `/execute-plan`.
 - Secrets (keys, tokens, passwords, personal data) stay out of every file; refer to where they are kept.
 
 ### 5. Close

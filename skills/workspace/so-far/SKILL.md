@@ -48,7 +48,7 @@ Never pick between two live workspaces. Name the one you resolved in one line: `
        --format='%h %ad %s' --date=format:'%Y-%m-%d %H:%M'
      ```
 
-     Keep the commits that touch this workspace's areas (the Areas column of its `INDEX.md` row, or the paths its plan names). Leave the workspace's own repository alone, as every workspace skill does.
+     Keep the commits that touch this workspace's areas (the Areas column of its `INDEX.md` row, or the paths its plan names). Leave out the workspace's own repository: its commits are notes, not work.
 4. The plan phase that next step 1 names (`plans/*/phases/`, or the plan's Phase Index): its Context section holds the reasons that step comes next. Also the repo's roadmap or status file, when `CONTEXT.md` or the repo's `README.md` names one.
 
 Open a finding, question or handoff only when a decision in the window points to it.

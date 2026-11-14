@@ -8,7 +8,17 @@ Only for the skills in the "Needed by" column of the Prerequisites table in the 
 
 ## Is the workspace folder committed?
 
-No. The workspace root (`.scratch/workspaces/` by default) must be ignored by git. You can give the folder its own git repository to keep a history of your notes after a workspace is deleted, but that is optional, and the skills never run git inside it.
+Not by the main repo. The workspace root (`.scratch/workspaces/` by default) must be ignored by git. You can give the folder above it its own git repository (`git init .scratch`) to keep a history of your notes after a workspace is deleted. That is optional.
+
+The skills never run git in that repository unless your repo's instructions tell them to. To have the agent commit your notes, add a rule like this to `CLAUDE.local.md` (Claude Code; kept out of git, so it is yours alone) or to `AGENTS.md` / `CLAUDE.md` when the whole team keeps notes this way:
+
+```markdown
+## Workspace notes
+
+`.scratch/` is its own git repository. After you create or change files under `.scratch/workspaces/`, commit them there: `git -C .scratch add <explicit paths>`, then `git -C .scratch commit -m "docs: <summary>"`. Never stage `.scratch/` from the main repo, and leave out changes you did not make.
+```
+
+With that rule, a skill that writes notes (`kickoff`, `discuss`, `pause-here`, `spin-off`, `wrap-up`) commits only the files it wrote and names the commit in its report. Without it, nothing changes: the notes stay uncommitted until you commit them.
 
 ## What are tracker, so-far and msg for when nobody receives reports?
 
