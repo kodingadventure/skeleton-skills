@@ -7,6 +7,10 @@ Agent skills for working with a coding agent in plans and feature workspaces: st
 - **Guardian**: the main session when a plan runs through sub-agents: each phase goes to a sub-agent, and the guardian re-checks and commits its work.
 - **Review page**: a short HTML page the agent writes and opens for you when it needs you to read or decide.
 
+A short tour (about 90 seconds):
+
+[![A short tour of skeleton-skills](https://img.youtube.com/vi/yoQ7tD5FEtE/maxresdefault.jpg)](https://youtu.be/yoQ7tD5FEtE)
+
 Most of it is common ground. The difference is control: skills run when you call them by name, and the agent hands you the decisions on a review page instead of making them. Three skills may also start on their own (see [Which skills start on their own](#which-skills-start-on-their-own)).
 
 ## Guide
@@ -107,7 +111,7 @@ Plan root: `.plans/`
 
 ## Versions
 
-The whole repo has one version, tracked in `CHANGELOG.md`, which records what changed. Pin to a tag if you want a fixed version: `npx skills add 'kodingadventure/skeleton-skills#v0.1.0' ...`.
+The whole repo has one version, recorded in `CHANGELOG.md`. It is still before 1.0, so a skill's behavior can change between versions. To stay on a fixed version, pin to a tag: `npx skills add 'kodingadventure/skeleton-skills#vX.Y.Z' ...`, replacing `vX.Y.Z` with a tag from [the list of tags](https://github.com/kodingadventure/skeleton-skills/tags).
 
 ## Contributing
 
