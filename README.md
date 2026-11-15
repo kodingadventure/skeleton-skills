@@ -7,8 +7,8 @@ Skills for working with a coding agent in plans and feature workspaces: start fr
 A skill is a folder of instructions (a `SKILL.md`) that your coding agent loads when you call it, for example `/kickoff`. Install the skills into your project, open your agent there, and type `/kickoff`.
 
 - **PRD** (product requirements document): your request in your own words, a `PRD.md` file you write by hand or that `spin-off` seeds from a conversation for you to correct.
-- **Workspace**: one git-ignored folder per feature or task, holding the PRD and three living documents (`CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`) that every later session reads first.
-- **Guardian**: when a plan runs through sub-agents (helper agents that each do one phase), the main session is the guardian: it re-checks each phase and commits the work.
+- **Workspace**: one git-ignored folder per feature or task, holding the PRD and three living documents (`CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`); every later session starts from `CONTEXT.md` and `WHATNEXT.md`.
+- **Guardian**: when a plan runs through sub-agents (helper agents that each do one phase), the main session is the guardian: it re-checks each phase and commits it, or prints the commit command when your rules leave commits to you.
 - **Review page**: a short HTML page the agent writes and opens for you when it needs you to read or decide.
 
 A short tour (about 90 seconds):
@@ -23,7 +23,7 @@ New here? Read the [guide](./docs/guide/README.md) first. It covers how to start
 
 ## Prerequisites
 
-You need Node.js (a current version; this repo's own automation runs on 22), and an agent that reads skills. The `github` group also needs `gh`, logged in. Skills are installed with the [`skills`](https://github.com/vercel-labs/skills) CLI, run through `npx` (nothing to install first). Claude Code is the best supported (the `phase-*` executor agents and the commit-reminder hook are Claude Code only).
+You need Node.js (a current version; this repo's own automation runs on 22), git, and an agent that reads skills. `review-page`, `so-far` and `what-you-did` also need Python 3 (standard library only), because they build their pages with Python scripts. The `github` group also needs `gh`, logged in. Skills are installed with the [`skills`](https://github.com/vercel-labs/skills) CLI, run through `npx` (nothing to install first). Claude Code is the best supported (the `phase-*` executor agents and the commit-reminder hook are Claude Code only).
 
 The examples below use `-a claude-code`. With opencode, pass `-a opencode`; for other agents, `npx skills --help` lists the names.
 
@@ -33,7 +33,7 @@ Some skills depend on the [`mattpocock/skills`](https://github.com/mattpocock/sk
 npx skills add 'mattpocock/skills#4ae2317' -a claude-code --skill domain-modeling setup-matt-pocock-skills writing-for-agents grilling diagnosing-bugs code-review
 ```
 
-Then run `/setup-matt-pocock-skills` once in each repo where you use `refine-docs`, `update-wiki` or the `github` skills. You can skip it for your first workspace: `to-plan` and `execute-plan` carry on without it. (On an agent without slash commands, ask it to use the setup-matt-pocock-skills skill.) It writes `docs/agents/` (`domain.md`, `issue-tracker.md`, `triage-labels.md`) that several skills read.
+Then run `/setup-matt-pocock-skills` once in each repo where you use `refine-docs`, `update-wiki`, `github-new-issue` or `github-spin-off`. You can skip it for your first workspace: `to-plan` and `execute-plan` carry on without it. (On an agent without slash commands, ask it to use the setup-matt-pocock-skills skill.) It writes `docs/agents/` (`domain.md`, `issue-tracker.md`, `triage-labels.md`) that several skills read.
 
 | Skill from `mattpocock/skills` | Needed?            | What it is for                                                          | Needed by                                                                                                                      |
 | ------------------------------ | ------------------ | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
@@ -41,8 +41,8 @@ Then run `/setup-matt-pocock-skills` once in each repo where you use `refine-doc
 | `setup-matt-pocock-skills`     | yes                | Creates `docs/agents/domain.md`, `issue-tracker.md`, `triage-labels.md` | `refine-docs`, `update-wiki`, `github-new-issue`, `github-spin-off`; `to-plan` and `execute-plan` carry on without it          |
 | `writing-for-agents`           | yes, for one skill | How to write a skill well                                               | `skill-from-context`                                                                                                           |
 | `grilling`                     | optional           | Stress-tests a plan or idea                                             | `discuss`, `skill-from-context`, `whatnext`                                                                                    |
-| `diagnosing-bugs`              | optional           | Diagnosis loop when verify keeps failing                                | `execute-plan`                                                                                                                 |
-| `code-review`                  | optional           | Full standards-and-spec review                                          | `review-phase`, `whatnext`                                                                                                     |
+| `diagnosing-bugs`              | optional           | Diagnosis loop when verify keeps failing                                | `execute-plan`, `whatnext`                                                                                                     |
+| `code-review`                  | optional           | Full standards-and-spec review                                          | `whatnext` recommends it; `review-phase` and `what-you-did` point to it                                                        |
 
 A skill marked "yes" is needed only by the skills in the last column. When it is missing, that skill stops with a message naming what to install; nothing else is affected. An optional skill is used "if installed".
 
@@ -84,7 +84,7 @@ Asking in words only works for skills the agent may pick by itself (see below). 
 Two kinds of skills can start without you typing the name:
 
 - **Three workspace skills: `pause-here`, `spin-off` and `kickoff`.** They close a session, split a topic out, and turn a discussion into a workspace the moment you say so ("let's stop for today", "spin this off").
-- **The `workflow` and `agent` skills.** The agent may pick one when your request matches what it is for ("create a plan", "verify this"), and some are called by other skills: `to-plan` calls `writing-great-plan`, `execute-plan` calls `verify` and hands each phase to `review-phase`, `review-page` steps in when there are two or more decisions, and `skill-from-context` only offers. Don't count on them starting by themselves, though: call them by name when it matters. A skill that calls another needs that one installed too.
+- **The `workflow` and `agent` skills.** The agent may pick one when your request matches what it is for ("create a plan", "verify this"), and some are called by other skills: `to-plan` calls `writing-great-plan`, `execute-plan` calls `verify` and, under `Review: guardian`, stops each phase for the `/review-phase` you run, `review-page` steps in when there are two or more decisions, and `skill-from-context` only offers. Don't count on them starting by themselves, though: call them by name when it matters. A skill that calls another needs that one installed too.
 
 Everything else (the other workspace skills and all GitHub skills) is manual-only: it runs only when you call it by name. That's on purpose: you stay in control.
 
@@ -103,7 +103,7 @@ The `workflow` skills work alone; inside a feature workspace they also use the `
 
 1. Get a PRD. Pick a slug, a short name for the work such as `login-page`. Write `.scratch/workspaces/<slug>/PRD.md` yourself (create the folder if needed), in your own words, or skip the writing: talk the idea through with the agent (optionally with `/grilling`), then run `/spin-off new <slug>` and it drafts the PRD from the conversation.
 2. Settle the open points: `/discuss <slug>` on a drafted PRD, or just keep talking about the one you wrote.
-3. Run `/kickoff <slug>`. On the first run it asks where workspaces live (the default is `.scratch/workspaces/`, where step 1 put the PRD; if you pick another folder, move the PRD there) and checks the folder is git-ignored.
+3. Run `/kickoff <slug>`. On the first run, unless `spin-off` already asked, it asks where workspaces live (the default is `.scratch/workspaces/`, where step 1 put the PRD; if you pick another folder, move the PRD there) and checks the folder is git-ignored.
 4. Run `/to-plan`, then `/execute-plan` (one session) or `/guard-plan` (sub-agents that each do one phase; needs the executor agents above). If unsure, start with `/execute-plan`.
 5. Stop with `/pause-here <slug>`; come back with `/resume-here <slug>`. Lost? `/whatnext` tells you where you are.
 6. Done? `/wrap-up <slug>` closes it out (and drafts a final report if the workspace has someone to report to).

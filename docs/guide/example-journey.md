@@ -69,7 +69,7 @@ You type `/pause-here double-pay`. It rewrites `WHATNEXT.md` and writes a handof
 2. Phase 3 (wiki).
 ```
 
-In a new session you type `/resume-here double-pay`. It takes the first next step. Phase by phase, `/execute-plan` stages the work, you run `/review-phase`, and it offers to continue, until the plan is done. These are the first line of its closing summary and the new `git log --oneline` lines:
+In a new session you type `/resume-here double-pay`. It takes the first next step. Phase by phase, you run `/execute-plan`, it stages the work and stops, you run `/review-phase`, and then `/execute-plan` again, until the plan is done. These are the first line of its closing summary and the new `git log --oneline` lines:
 
 ```
 All three phases of the double-pay plan are done and committed. Paying an order that isn't pending now returns `{ ok: false, reason: "not-pending" }` instead of throwing.

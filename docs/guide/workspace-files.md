@@ -42,14 +42,14 @@ You may open these. You do not have to.
 
 | File | What it holds | Who reads it | Main writers |
 | --- | --- | --- | --- |
-| `PRD.md` | The request: the problem, what is known, what is open | You, the agent | You, or `spin-off` from a conversation |
-| `WHATNEXT.md` | State now and the next steps | You, the agent | `kickoff`, `pause-here`, `resume-here`, `discuss`, `spin-off`, `execute-plan`, `review-phase`, `wrap-up` |
+| `PRD.md` | The request: the problem, what is known, what is open | You, the agent | You, or `spin-off` or `github-spin-off` from a conversation |
+| `WHATNEXT.md` | State now and the next steps | You, the agent | `kickoff`, `pause-here`, `resume-here`, `discuss`, `spin-off`, `tracker`, `execute-plan`, `guard-plan`, `review-phase`, `wrap-up` |
 | `CONTEXT.md` | Refined spec, rules, decisions | The agent | `kickoff`; updated by `discuss`, `pause-here` and others |
-| `TRACKER.md` | Work items, Action Log, report rules | The agent | `kickoff`, `tracker`, `pause-here`, `discuss`, `execute-plan`, `review-phase` |
+| `TRACKER.md` | Work items, Action Log, report rules | The agent | `kickoff`, `tracker`, `pause-here`, `discuss`, `spin-off`, `execute-plan`, `guard-plan`, `review-phase` |
 | `plans/` | The plan and its phase files | The agent | `to-plan` |
 | `findings/` | Discoveries to keep | The agent | `pause-here`, `spin-off`, `kickoff`, `discuss` |
 | `handoffs/` | Session handoffs | The agent | `pause-here`, `spin-off` |
-| `questions/` | Questions for others, with options and answers | You, the person who answers | `kickoff`, `pause-here`, `discuss`, `spin-off`, `tracker answer` |
+| `questions/` | Questions for others, with options and answers | You, the person who answers | `kickoff`, `pause-here`, `discuss`, `spin-off`, `tracker` (`answer`, `log`), `msg` (when you say it was sent) |
 | `reports/` | Progress report drafts | You, then your audience | `tracker report` |
 | `docs/` | Input material: mockups, sample data, notes | You, the agent | You; `kickoff` moves loose files in |
 

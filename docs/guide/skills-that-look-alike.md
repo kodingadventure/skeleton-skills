@@ -31,7 +31,7 @@ Use `execute-plan` to run a plan in this session. Use `guard-plan` to hand each 
 | | `execute-plan` | `guard-plan` |
 | --- | --- | --- |
 | Use it when | You want the plan done in this session, one item at a time | You want each phase done by an executor agent, and this session to be the guardian |
-| What it writes | The code, with the plan's boxes ticked. It stages and hands off, or commits, as the plan's `Review:` line and your repo's rules say. With `Review: guardian` it stops after staging each phase and waits for `/review-phase` | Each phase goes to the `phase-s`, `phase-m`, `phase-l` or `phase-xl` agent that matches its Weight. The guardian re-checks, fixes, and commits only if the run mode you chose when it started allows it. It never pushes |
+| What it writes | The code, with the plan's boxes ticked. It stages and hands off, or commits, as the plan's `Review:` line and your repo's rules say. With `Review: guardian` it stops after staging each phase and waits for `/review-phase` | Each phase goes to the `phase-s`, `phase-m`, `phase-l` or `phase-xl` agent that matches its Weight. The guardian re-checks, fixes, and commits only if the run mode you chose when it started allows it. It does not push unless you ask, or your repo's rules require it |
 | Starts on its own? | Maybe: the agent may pick it when your request matches | Maybe: the agent may pick it when your request matches |
 
 `guard-plan` needs sub-agents and the `phase-*` agents, which means Claude Code. Install them as the "Executor agents" bullet under [Install](../../README.md#install) says. Without them, `execute-plan` with `review-phase` does the same job in one session.
@@ -43,7 +43,7 @@ Use `refine-docs` for reference docs, glossaries and ADRs. Use `update-wiki` for
 | | `refine-docs` | `update-wiki` |
 | --- | --- | --- |
 | Use it when | A pattern changed, a term needs recording, or a decision needs an ADR | A commit changed a business rule, a status, a route or a screen |
-| What it writes | Architecture reference docs, glossary entries, ADRs, and the repo's `## Docs Layout` block | Flow pages that cross code units, the feature index, and a page of deliberately kept wrong behaviour when the repo has one |
+| What it writes | Architecture reference docs, glossary entries, ADRs, and the repo's `## Docs Layout` block | Flow pages that cross code units, the feature index, a `### Wiki` table in the Docs Layout, and a page of deliberately kept wrong behaviour when the repo has one |
 | Starts on its own? | Maybe: the agent may pick it when your request matches | Maybe: the agent may pick it when your request matches |
 
 Both read `docs/agents/domain.md`, which `/setup-matt-pocock-skills` creates.
