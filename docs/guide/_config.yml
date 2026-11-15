@@ -5,7 +5,6 @@ theme: minima
 repo_url: https://github.com/kodingadventure/skeleton-skills
 
 header_pages:
-  - README.md
   - getting-started.md
   - example-journey.md
   - skills-that-look-alike.md
