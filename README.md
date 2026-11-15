@@ -1,21 +1,23 @@
 # skeleton-skills
 
-Agent skills for working with a coding agent in plans and feature workspaces: start from a PRD, turn it into a workspace (`kickoff`), pause and resume across sessions, run a phased plan with a guardian reviewing every phase, and close the work out (`wrap-up`). Decisions that need you go to a short review page instead of a wall of chat.
+Agent skills for people who forget what they were doing yesterday. (Hi, that's me.)
+
+Skills for working with a coding agent in plans and feature workspaces: start from a PRD, turn it into a workspace (`kickoff`), pause and resume across sessions, run a phased plan with a guardian reviewing every phase, and close the work out (`wrap-up`). Decisions that need you go to a short review page instead of a wall of chat.
 
 - **PRD**: your request in your own words, a `PRD.md` file you write by hand or that `spin-off` seeds from a conversation for you to correct.
 - **Workspace**: one git-ignored folder per feature or task, holding the PRD and three living documents (`CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`) that every later session reads first.
 - **Guardian**: the main session when a plan runs through sub-agents: each phase goes to a sub-agent, and the guardian re-checks and commits its work.
 - **Review page**: a short HTML page the agent writes and opens for you when it needs you to read or decide.
 
-A short tour (about 90 seconds):
+A short tour (about 90 seconds, shorter than your coffee break):
 
 [![A short tour of skeleton-skills](https://img.youtube.com/vi/yoQ7tD5FEtE/maxresdefault.jpg)](https://youtu.be/yoQ7tD5FEtE)
 
-Most of it is common ground. The difference is control: skills run when you call them by name, and the agent hands you the decisions on a review page instead of making them. Three skills may also start on their own (see [Which skills start on their own](#which-skills-start-on-their-own)).
+Most of it is common ground. The difference is control, and you keep it: skills run when you call them by name, and the agent hands you the decisions on a review page instead of making them. A few may also start on their own (see [Which skills start on their own](#which-skills-start-on-their-own)).
 
 ## Guide
 
-New here? Read the [guide](./docs/guide/README.md) first: how to start in a new or an existing project, one feature followed from PRD to wrap-up, how the look-alike skills differ, and an FAQ.
+New here? Read the [guide](./docs/guide/README.md) first. It's shorter than this README, I promise 🤞 It covers how to start in a new or an existing project, one feature followed from PRD to wrap-up, how the look-alike skills differ, and an FAQ.
 
 ## Prerequisites
 
@@ -31,14 +33,14 @@ npx skills add 'mattpocock/skills#4ae2317' -a claude-code --skill domain-modelin
 
 Then run `/setup-matt-pocock-skills` once in each repo (without slash commands: ask the agent to use the setup-matt-pocock-skills skill). It writes `docs/agents/` (`domain.md`, `issue-tracker.md`, `triage-labels.md`) that several skills read.
 
-| Skill from `mattpocock/skills` | Class                  | What it is for                                                          | Needed by                                                                                                        |
-| ------------------------------ | ---------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `domain-modeling`              | required               | Writes ADRs (decision records) and the glossary                         | `wrap-up`, `execute-plan` and `review-phase` (when an ADR is due), `refine-docs`; `discuss` uses it if installed |
-| `setup-matt-pocock-skills`     | required               | Creates `docs/agents/domain.md`, `issue-tracker.md`, `triage-labels.md` | `refine-docs`, `update-wiki`, `github-new-issue`, `github-spin-off`; `to-plan` and `execute-plan` carry on without it           |
-| `writing-for-agents`           | required for one skill | How to write a skill well                                               | `skill-from-context`                                                                                             |
-| `grilling`                     | recommended            | Stress-tests a plan or idea                                             | `discuss`, `skill-from-context`, `whatnext`                                                                      |
-| `diagnosing-bugs`              | recommended            | Diagnosis loop when verify keeps failing                                | `execute-plan`                                                                                                   |
-| `code-review`                  | recommended            | Full standards-and-spec review                                          | `review-phase`, `whatnext`                                                                                       |
+| Skill from `mattpocock/skills` | Class                  | What it is for                                                          | Needed by                                                                                                             |
+| ------------------------------ | ---------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `domain-modeling`              | required               | Writes ADRs (decision records) and the glossary                         | `wrap-up`, `execute-plan` and `review-phase` (when an ADR is due), `refine-docs`; `discuss` uses it if installed      |
+| `setup-matt-pocock-skills`     | required               | Creates `docs/agents/domain.md`, `issue-tracker.md`, `triage-labels.md` | `refine-docs`, `update-wiki`, `github-new-issue`, `github-spin-off`; `to-plan` and `execute-plan` carry on without it |
+| `writing-for-agents`           | required for one skill | How to write a skill well                                               | `skill-from-context`                                                                                                  |
+| `grilling`                     | recommended            | Stress-tests a plan or idea                                             | `discuss`, `skill-from-context`, `whatnext`                                                                           |
+| `diagnosing-bugs`              | recommended            | Diagnosis loop when verify keeps failing                                | `execute-plan`                                                                                                        |
+| `code-review`                  | recommended            | Full standards-and-spec review                                          | `review-phase`, `whatnext`                                                                                            |
 
 A required skill is needed only by the skills in the last column. When it is missing, that skill stops with a message naming what to install; nothing else is affected. A recommended skill is used "if installed".
 
@@ -65,17 +67,24 @@ Check the current flags with `npx skills --help`.
 
 ### Calling a skill
 
-| Where                                                  | How                                 |
-| ------------------------------------------------------ | ----------------------------------- |
-| Claude Code plugin                                     | `/workspace:kickoff` (group prefix) |
-| Installed with the CLI                                 | `/kickoff` (plain name)             |
-| Any other agent (opencode, codex) or no slash commands | "use the kickoff skill"             |
+| How you installed               | What you type                      |
+| ------------------------------- | ---------------------------------- |
+| Claude Code plugin              | `/workspace:kickoff` (group first) |
+| `skills` CLI                    | `/kickoff` (plain name)            |
+| An agent without slash commands | "use the kickoff skill"            |
+
+The rest of this README uses plain names; add the group in front if you installed the plugin.
+
+Asking in words only works for skills the agent may pick by itself. Most workspace and GitHub skills are manual-only on purpose, so in Claude Code they need the slash command: "use the discuss skill" gets you a confused agent, `/discuss` gets you a discussion.
 
 ### Which skills start on their own
 
-Only `pause-here`, `spin-off` and `kickoff`. They close a session, split a topic out, and turn a discussion into a workspace the moment you say so, without you typing the name. Every other workspace and GitHub skill runs only when you call it by name.
+Two kinds of skills can start without you typing the name:
 
-The Workflow and Agent skills are not manual-only: the agent may pick one when your request matches what it is for ("create a plan", "verify this"), and other skills or a fixed threshold reach them too: `to-plan` calls `writing-great-plan`, `execute-plan` calls `verify` and `review-phase`, `review-page` is used when there are two or more decisions, and `skill-from-context` only offers. They are different from the three above: you do not rely on them starting by themselves, and a skill that routes to another skill needs it to be visible to the agent.
+- **Three workspace skills: `pause-here`, `spin-off` and `kickoff`.** They close a session, split a topic out, and turn a discussion into a workspace the moment you say so ("let's stop for today", "spin this off").
+- **The Workflow and Agent skills.** The agent may pick one when your request matches what it is for ("create a plan", "verify this"), and some are called by other skills: `to-plan` calls `writing-great-plan`, `execute-plan` calls `verify` and `review-phase`, `review-page` steps in when there are two or more decisions, and `skill-from-context` only offers. Don't count on them starting by themselves, though: call them by name when it matters. A skill that calls another needs that one installed too.
+
+Everything else (the other workspace skills and all GitHub skills) is manual-only: it runs only when you call it by name. That's on purpose: you stay in control.
 
 ## What is inside
 
@@ -90,11 +99,12 @@ The `workflow` skills work alone; inside a feature workspace they also use the `
 
 ## Your first workspace
 
-1. Write `.scratch/workspaces/<slug>/PRD.md`: what you want built, in your own words.
-2. Discuss it with the agent until the open points are settled (optionally with `/grilling`).
+1. Get a PRD. Write `.scratch/workspaces/<slug>/PRD.md` yourself, in your own words, or skip the writing: talk the idea through with the agent (optionally with `/grilling`), then run `/spin-off new <slug>` and it drafts the PRD from the conversation.
+2. Settle the open points: `/discuss <slug>` on a drafted PRD, or just keep talking about the one you wrote.
 3. Run `/kickoff <slug>`. On the first run it asks where workspaces live and checks the folder is git-ignored.
 4. Run `/to-plan`, then `/execute-plan` (one session) or `/guard-plan` (sub-agents).
-5. Stop with `/pause-here <slug>`; come back with `/resume-here <slug>`.
+5. Stop with `/pause-here <slug>`; come back with `/resume-here <slug>`. Lost? `/whatnext` tells you where you are.
+6. Done? `/wrap-up <slug>` closes it out with a final report.
 
 The full flow, with every other command, is in [skills/workspace/README.md](./skills/workspace/README.md#the-flow).
 
@@ -111,17 +121,21 @@ Plan root: `.plans/`
 
 ## Versions
 
-The whole repo has one version, recorded in `CHANGELOG.md`. It is still before 1.0, so a skill's behavior can change between versions. To stay on a fixed version, pin to a tag: `npx skills add 'kodingadventure/skeleton-skills#vX.Y.Z' ...`, replacing `vX.Y.Z` with a tag from [the list of tags](https://github.com/kodingadventure/skeleton-skills/tags).
+The whole repo has one version, recorded in `CHANGELOG.md`. It is still before 1.0, so a skill's behavior can change between versions. If that makes you nervous (fair), pin to a tag: `npx skills add 'kodingadventure/skeleton-skills#vX.Y.Z' ...`, replacing `vX.Y.Z` with a tag from [the list of tags](https://github.com/kodingadventure/skeleton-skills/tags).
 
 ## Contributing
 
-Problem reports go to [GitHub Issues](https://github.com/kodingadventure/skeleton-skills/issues). To work on the skills themselves, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+Found a bug? Something confusing? Tell me in [GitHub Issues](https://github.com/kodingadventure/skeleton-skills/issues). To work on the skills themselves, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Why this exists
 
-I'm forgetful: I lose track of where I left off and why I made a decision. I started using [Matt Pocock's skills](https://github.com/mattpocock/skills) to manage my projects, and I learned a lot from them, especially about project documentation. Some things needed to change to fit how I work, so I built skeleton-skills for my daily work: grouping tasks into workspaces, writing plans that are easy to track and follow, and writing progress reports.
+I'm forgetful. Very. "Where are my keys" forgetful, and also "why did I decide this three weeks ago, and who approved it? Oh. Me." forgetful.
 
-These skills lived in a private repo for a long time. I'm opening them up in case they help someone with the same problems.
+I started using [Matt Pocock's skills](https://github.com/mattpocock/skills) to manage my projects, and I learned a lot from them, especially about project documentation. Then I started bending them to fit how I actually work, and kept bending until skeleton-skills came out the other side.
+
+The trick is that I don't have to remember. Each piece of work lives in its own workspace, with the decisions and the next step written down, so I can focus on one thing and safely forget the rest. A pile of unfinished work stops being scary when every pile knows where it left off, and `/whatnext` tells me what to do when I don't. I use it every day: grouping tasks into workspaces, writing plans that are easy to track and follow, and writing progress reports.
+
+These skills lived in a private repo for a long time. I'm opening them up in case your brain leaks the same way mine does.
 
 Thank you, Matt Pocock!
 
