@@ -4,13 +4,13 @@ This page answers eight common questions about the skills.
 
 ## Is the Matt Pocock suite required?
 
-Only for the skills in the "Needed by" column of the Prerequisites table in the [root README](../../README.md#prerequisites). A skill that needs a missing one stops with a message that names what to install. Every other skill is unaffected. A "recommended" skill is used only if it is installed.
+Only for the skills in the "Needed by" column of the Prerequisites table in the [root README](../../README.md#prerequisites). A skill that needs a missing one stops with a message that names what to install. Every other skill is unaffected. An "optional" skill is used only if it is installed.
 
 ## Is the workspace folder committed?
 
 Not by the main repo. The workspace root (`.scratch/workspaces/` by default) must be ignored by git. You can give the folder above it its own git repository (`git init .scratch`) to keep a history of your notes after a workspace is deleted. That is optional.
 
-The skills never run git in that repository unless your repo's instructions tell them to. To have the agent commit your notes, add a rule like this to `CLAUDE.local.md` (Claude Code; kept out of git, so it is yours alone) or to `AGENTS.md` / `CLAUDE.md` when the whole team keeps notes this way:
+The skills never run git in that repository unless your repo's instructions tell them to. To have the agent commit your notes, add a rule like this to `CLAUDE.local.md` (Claude Code; yours alone as long as git ignores it, so check your `.gitignore`) or to `AGENTS.md` / `CLAUDE.md` when the whole team keeps notes this way:
 
 ```markdown
 ## Workspace notes
@@ -69,6 +69,6 @@ Run one of these, depending on what you lost:
 
 ## Does guard-plan save tokens?
 
-Probably, but it has not been measured, so this guide gives no number. Each phase runs in an agent with a fresh context, on a model chosen from the phase's Weight, and the main session only checks the result instead of doing the work. See [Model and effort](./model-and-effort.md) for the Weight table.
+That is the design goal, but it has not been measured, so this guide gives no number. Each phase runs in an agent with a fresh context, on a model chosen from the phase's Weight, and the main session only checks the result instead of doing the work. See [Model and effort](./model-and-effort.md) for the Weight table.
 
 Back to [Start here](./README.md)

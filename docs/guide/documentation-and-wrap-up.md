@@ -10,12 +10,12 @@ Four kinds of documents are permanent. They live in your repository and are comm
 
 | Document            | What it holds                                                                                       | Updated by                                                                              | When                                         |
 | ------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------- |
-| Wiki                | Flow pages that cross several modules (business rules, status changes, routes, screens), a feature index, and optionally a page of old behaviour kept on purpose | `update-wiki`                                                                           | After a commit that changes behaviour        |
-| Glossary            | Vocabulary only: a term and its meaning. One `GLOSSARY.md` for a small repo, one per code unit in a larger one           | `refine-docs`; a term born in a plan phase is added when that phase is reviewed         | When a new term appears                      |
+| Wiki                | Flow pages that cross several modules (business rules, status changes, routes, screens), a feature index, and optionally a page of wrong behaviour kept on purpose | `update-wiki`                                                                           | After a commit that changes behaviour        |
+| Glossary            | Vocabulary only: a term and its meaning. One `GLOSSARY.md` for a small repo, one per code unit in a larger one           | `refine-docs` (also as a docs-phase item); a term tied to an ADR is added when that phase lands; `wrap-up` sweeps the rest         | When a new term appears                      |
 | Reference docs      | Architecture and patterns: how the code is laid out and why                                         | `refine-docs`                                                                           | When a pattern changes                       |
 | ADR                 | One important decision per file: what was decided, the alternatives, and why they lost              | `domain-modeling`, called by `execute-plan`, `review-phase`, `guard-plan`, `refine-docs` or `wrap-up`  | When the code that embodies the decision lands |
 
-The map of where each document lives is the Docs Layout in your repo's `docs/agents/domain.md`. `refine-docs` writes it, and both documentation skills read their paths from it.
+The map of where each document lives is the Docs Layout in your repo's `docs/agents/domain.md`. `refine-docs` writes it (`update-wiki` adds its `### Wiki` table), and both documentation skills read their paths from it.
 
 ## Who reads them
 
@@ -43,7 +43,7 @@ For people the gain is different:
 
 You do not have to remember to write them. Four parts of the workflow do it:
 
-- **ADRs** are written by the phase whose code embodies the decision. A decision tagged `ADR: candidate` in the workspace becomes an ADR when that phase is reviewed.
+- **ADRs** are written by the phase whose code embodies the decision. A decision tagged `ADR: candidate` in the workspace becomes an ADR when that phase is reviewed (or, without `Review: guardian`, when `execute-plan` closes it).
 - **A docs phase** ends a feature plan that changes behaviour. It has one item per installed documentation skill and is reviewed and committed like the code. Reviewing the documentation phase caught 2 real errors before they were committed (numbers: see the note under "Who reads them").
 - **`whatnext`** suggests the documentation step once, after the last phase of a plan is committed, or right away after a behaviour-changing commit outside a plan. It stays quiet once the docs have been touched.
 - **`wrap-up`** sweeps what is left: ADRs not yet written, findings worth keeping, terms not yet in a glossary.
@@ -60,7 +60,7 @@ It does not promise token savings from documentation either. Small sessions come
 
 The workspace folder is ignored by git and then deleted. Whatever exists only in it is lost.
 
-Here is the pattern. An expensive finding came out of a workspace: the first version of a skill depended on one kind of test, and it failed in projects that do not have that kind of test. The finding sat only in the workspace folder until `wrap-up` moved it into a repo document. Without that step, the next feature would have paid for the same discovery again.
+Here is the pattern. Suppose an expensive finding came out of a workspace: the first fix for "refuse a second payment" assumed an order is paid only once, and a failing test showed that a retry after a timeout also arrives as a second payment. The finding sat only in the workspace folder until `wrap-up` moved it into a repo document. Without that step, the next feature would have paid for the same discovery again.
 
 `/wrap-up <slug>` does this, in order:
 
@@ -69,7 +69,7 @@ Here is the pattern. An expensive finding came out of a workspace: the first ver
 3. Writes the ADRs still owed, from the decisions tagged `ADR: candidate`.
 4. Moves new vocabulary into the glossary and checks that what shipped is documented.
 5. Sorts `findings/`: each file is either `repo: <path>` (moved into the repo) or `scope: workspace` (goes away with the folder).
-6. Commits the repo side, including a `Workspace root:` or `Plan root:` line a skill left uncommitted, and never anything inside the workspace folder.
+6. Commits the repo side, including a `Workspace root:` or `Plan root:` line a skill left uncommitted when it is that file's only change, and never anything inside the workspace folder.
 7. Writes the final report, when the workspace has a report audience.
 8. Moves the workspace to `## Shipped` in `INDEX.md`, with where the knowledge landed, and tells you the exact folder to delete. It does not delete it.
 
