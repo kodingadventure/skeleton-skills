@@ -125,7 +125,7 @@ The whole repo has one version, recorded in `CHANGELOG.md`. It is still before 1
 
 ## Contributing
 
-Found a bug? Something confusing? Tell me in [GitHub Issues](https://github.com/kodingadventure/skeleton-skills/issues). To work on the skills themselves, see [CONTRIBUTING.md](./CONTRIBUTING.md).
+Found a bug? Something confusing? Tell me in [GitHub Issues](https://github.com/kodingadventure/skeleton-skills/issues). Want to send a fix? Open an issue before a pull request, as explained in [CONTRIBUTING.md](./CONTRIBUTING.md#pull-requests). To work on the skills themselves, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Why this exists
 

@@ -4,6 +4,10 @@
 
 Open a [GitHub issue](https://github.com/kodingadventure/skeleton-skills/issues). One problem per issue, and put the steps that show the problem first: which skill, what you asked, what it did, what you expected. If an agent drafts the issue for you, keep it short and describe the problem rather than pasting a rewritten `SKILL.md`.
 
+## Pull requests
+
+Open an issue first. A pull request is welcome once the maintainer has agreed to that issue in its comments. A pull request without an agreed issue gets closed politely, with a link back to this section, so nobody's time is wasted. Fixing a small typo is the exception: send that straight as a pull request.
+
 ## Working on the skills
 
 ```bash
