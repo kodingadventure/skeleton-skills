@@ -1,0 +1,17 @@
+title: skeleton-skills guide
+description: How to try the skeleton-skills agent skills on your own project.
+lang: en
+theme: minima
+repo_url: https://github.com/kodingadventure/skeleton-skills
+
+header_pages:
+  - getting-started.md
+  - example-journey.md
+  - skills-that-look-alike.md
+  - faq.md
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default

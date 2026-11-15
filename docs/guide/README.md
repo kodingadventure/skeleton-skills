@@ -8,7 +8,7 @@ It is for you if you are about to use the skills on a project of your own.
 
 ## Installing
 
-See [Prerequisites](../../README.md#prerequisites) for what you need, then [Install](../../README.md#install) for the commands. The commands in this guide are plain names such as `/kickoff`; if you installed the Claude Code plugin, add the group in front (`/workspace:kickoff`).
+See [Prerequisites](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#prerequisites) for what you need, then [Install](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#install) for the commands. The commands in this guide are plain names such as `/kickoff`; if you installed the Claude Code plugin, add the group in front (`/workspace:kickoff`).
 
 ## Read these first (about 10 minutes)
 
@@ -30,6 +30,6 @@ See [Prerequisites](../../README.md#prerequisites) for what you need, then [Inst
 
 ## Found a problem?
 
-Report it as described in [Contributing](../../README.md#contributing).
+Report it as described in [Contributing](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#contributing).
 
 Next: [Getting started](./getting-started.md)

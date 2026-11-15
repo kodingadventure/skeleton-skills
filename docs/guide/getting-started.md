@@ -6,7 +6,7 @@ This page answers one question: what do you do first, in a new project and in on
 
 Two things must be in place. Neither is repeated here.
 
-1. The skills are installed. Commands and the pinned install line are in the [README](../../README.md#install) and its [Prerequisites](../../README.md#prerequisites).
+1. The skills are installed. Commands and the pinned install line are in the [README](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#install) and its [Prerequisites](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#prerequisites).
 2. Your project is a git repository with at least one commit. Work on a branch or on `main`, as you like; `wrap-up` comes after the work is merged.
 
 One more thing can wait: `/setup-matt-pocock-skills` (from the external `mattpocock/skills` suite; the README has the install line). It writes `docs/agents/` (`domain.md`, `issue-tracker.md`, `triage-labels.md`), which `refine-docs`, `update-wiki`, `github-new-issue` and `github-spin-off` read. You do not need it for your first workspace: `to-plan` and `execute-plan` carry on without it.
@@ -24,7 +24,7 @@ One more thing can wait: `/setup-matt-pocock-skills` (from the external `mattpoc
 
 ## In a new project
 
-This expands "[Your first workspace](../../README.md#your-first-workspace)" in the README. Follow it in this order:
+This expands "[Your first workspace](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#your-first-workspace)" in the README. Follow it in this order:
 
 1. Get a PRD. Pick a slug, then either write `.scratch/workspaces/<slug>/PRD.md` yourself (create the folder if needed; what you want built, in your own words), or, when the idea comes up in a running session, run `/spin-off new <slug>`: it writes the PRD from the conversation and seeds the workspace. Either way the PRD is yours to correct.
 2. Settle the open points: run `/discuss <slug>` on a PRD that `spin-off` drafted, or just keep talking about the one you wrote.
@@ -37,7 +37,7 @@ This expands "[Your first workspace](../../README.md#your-first-workspace)" in t
 6. Stop for the day with `/pause-here <slug>`. Come back with `/resume-here <slug>`: it takes the first next step itself. If it stops, run step 5 again.
 7. When the work is done, run `/wrap-up <slug>`. It moves what is worth keeping (decisions, terms, docs) into the repo and closes the workspace. See [Documentation and wrap-up](./documentation-and-wrap-up.md).
 
-The same skill can be called in other ways; the [README](../../README.md#calling-a-skill) lists them.
+The same skill can be called in other ways; the [README](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#calling-a-skill) lists them.
 
 ## In an existing project
 

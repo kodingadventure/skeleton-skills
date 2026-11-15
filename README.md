@@ -19,7 +19,7 @@ The idea is simple, and you keep control: you can always call a skill by name, a
 
 ## Guide
 
-New here? Read the [guide](./docs/guide/README.md) first. It covers how to start in a new or an existing project, one feature followed from PRD to wrap-up, how the look-alike skills differ, and an FAQ.
+New here? Read the [guide](https://kodingadventure.github.io/skeleton-skills/) first. It covers how to start in a new or an existing project, one feature followed from PRD to wrap-up, how the look-alike skills differ, and an FAQ (also readable in [docs/guide](./docs/guide/README.md)).
 
 ## Prerequisites
 
