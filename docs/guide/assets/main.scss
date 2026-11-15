@@ -45,17 +45,17 @@ hr { border: 0; border-top: 1px solid $navy-line; margin: 2em 0; }
 .site-header { border: 0; border-bottom: 1px solid $navy-line; background: rgba($navy, 0.94); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); }
 .header-bar { display: flex; align-items: center; gap: 28px; min-height: 68px; max-width: 1180px; }
 .site-header .wrapper { padding: 0 24px; }
-.site-title, .site-title:visited { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.05rem; line-height: 1; color: $ink; letter-spacing: -0.01em; border: 0; white-space: nowrap; }
+.site-title, .site-title:visited { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.15rem; line-height: 1; color: $ink; letter-spacing: -0.01em; border: 0; white-space: nowrap; }
 .site-title:hover { color: $yellow; }
 .site-title em { font-style: normal; font-weight: 500; color: $grey-color; }
-.site-logo { width: 34px; height: 34px; border-radius: 9px; border: 1px solid $navy-line; display: block; }
+.site-logo { width: 40px; height: 40px; border-radius: 9px; border: 1px solid $navy-line; display: block; }
 .site-nav { float: none; display: flex; align-items: center; gap: 4px; margin-left: auto; line-height: 1; }
 .site-nav .page-link { color: $grey-color; line-height: 1; margin: 0; padding: 8px 11px; font-size: 0.92rem; border: 0; border-radius: 8px; white-space: nowrap; }
 .site-nav .page-link:hover { color: $ink; background: $navy-raised; }
 .site-nav .page-link.is-current { color: $yellow; background: rgba($yellow, 0.1); }
 
-.site-search { position: relative; width: 200px; flex: none; }
-.site-search input { width: 100%; box-sizing: border-box; background: $navy-raised; border: 1px solid $navy-line; border-radius: 10px; color: $ink; font: inherit; font-size: 0.92rem; padding: 9px 36px 9px 14px; outline: 0; -webkit-appearance: none; }
+.site-search { position: relative; width: 190px; flex: none; }
+.site-search input { width: 100%; box-sizing: border-box; background: $navy-raised; border: 1px solid $navy-line; border-radius: 10px; color: $ink; font: inherit; font-size: 0.9rem; height: 40px; padding: 0 36px 0 14px; outline: 0; -webkit-appearance: none; }
 .site-search input::placeholder { color: #64748b; }
 .site-search input:focus { border-color: $yellow; box-shadow: 0 0 0 3px rgba($yellow, 0.15); }
 .search-hint { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-family: $code-font-family; font-size: 0.75rem; color: #64748b; border: 1px solid $navy-line; border-radius: 5px; padding: 0 6px; pointer-events: none; }
@@ -71,8 +71,10 @@ hr { border: 0; border-top: 1px solid $navy-line; margin: 2em 0; }
 
 @include media-query(1120px) {
   .site-header .header-bar { flex-wrap: wrap; gap: 8px 16px; padding-top: 12px; padding-bottom: 8px; }
-  .site-search { margin-left: auto; width: 200px; }
-  .site-nav { order: 3; width: calc(100% + 24px); margin: 0 -12px; overflow-x: auto; padding-bottom: 4px; }
+  .site-search { margin-left: auto; }
+  .site-nav { order: 3; width: 100%; margin: 0; overflow-x: auto; padding-bottom: 4px; }
+  .site-nav .page-link:first-child { margin-left: auto; }
+  .site-nav .page-link:last-child { margin-right: auto; }
 }
 @include media-query($on-palm) {
   .site-header .site-nav { position: static; background: none; border: 0; border-radius: 0; }
