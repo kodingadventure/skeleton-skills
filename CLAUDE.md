@@ -4,6 +4,10 @@
 
 - All project code, comments, docs, commit messages — must be in English only.
 
+### Commits
+
+The agent commits its own reviewed work (the guardian commits each phase after review). It never pushes, merges, opens or closes a pull request, or changes repo settings or visibility: those need the owner's permission, one at a time.
+
 ### Issue tracker
 
 Issues live in GitHub Issues `kodingadventure/skeleton-skills`. See `docs/agents/issue-tracker.md`.
