@@ -131,3 +131,12 @@ stop it, and a step that translates the template into the workspace language rew
 in English; otherwise delete them and this line") and put the literal text on its own lines
 outside `<…>`. List those lines in the step's "keep literal" set, then `grep -F` the generated file
 for the exact sentence.
+
+## location-changed-copies-left
+
+**Shows up as:** a skill changes where a file lives (or the rule that locates it) while a group
+README or guide page keeps the old location, and files already written there stay put. Readers
+follow whichever copy they meet first, and the skill no longer finds the existing file (`msg`
+moved `TEAM.md` next to `INDEX.md`; the group README still said `.scratch/TEAM.md`).
+**Probe:** `git grep` the file name across `skills/`, `docs/` and `README.md`, and check every hit
+names the new location. Name what has to move for users already on the old one.
