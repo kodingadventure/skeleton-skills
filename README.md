@@ -117,6 +117,14 @@ The whole repo has one version, recorded in `CHANGELOG.md`. It is still before 1
 
 Problem reports go to [GitHub Issues](https://github.com/kodingadventure/skeleton-skills/issues). To work on the skills themselves, see [CONTRIBUTING.md](./CONTRIBUTING.md).
 
+## Why this exists
+
+I'm forgetful: I lose track of where I left off and why I made a decision. I started using [Matt Pocock's skills](https://github.com/mattpocock/skills) to manage my projects, and I learned a lot from them, especially about project documentation. Some things needed to change to fit how I work, so I built skeleton-skills for my daily work: grouping tasks into workspaces, writing plans that are easy to track and follow, and writing progress reports.
+
+These skills lived in a private repo for a long time. I'm opening them up in case they help someone with the same problems.
+
+Thank you, Matt Pocock!
+
 ## Credits
 
 - [Matt Pocock](https://github.com/mattpocock/skills) (MIT) — the suite above is a dependency, not copied.
