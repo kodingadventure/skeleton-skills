@@ -20,12 +20,12 @@ Paying an order that is already paid throws an error (`cannot pay a paid order`)
 
 ## 1. kickoff
 
-You type `/kickoff double-pay`. It wrote `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` next to the PRD, laid out the empty folders, and added a row to `.scratch/workspaces/INDEX.md`. The open question became a decision: `markPaid` keeps throwing. From `WHATNEXT.md`:
+You type `/kickoff double-pay`. It writes `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` next to the PRD, lays out the empty folders, and adds a row to `.scratch/workspaces/INDEX.md`. Once you confirm it, the open question becomes a decision: `markPaid` keeps throwing. From `WHATNEXT.md`:
 
 ```markdown
 ## Next steps
 
-1. The agent writes the first plan into `plans/01-refuse-second-payment/` with `to-plan` (work items W1–W4 in `TRACKER.md`).
+1. The agent writes the first plan into `plans/01-refuse-second-payment/` with `to-plan` (the work items are in `TRACKER.md`).
 …
 ## Guardrails
 
@@ -34,7 +34,7 @@ You type `/kickoff double-pay`. It wrote `CONTEXT.md`, `TRACKER.md` and `WHATNEX
 
 ## 2. to-plan
 
-You type `/to-plan for the double-pay workspace`. The plan has three phases: failing tests, the fix, and the wiki. Its phase headings:
+You type `/to-plan for the double-pay workspace`. The plan has three phases: failing tests, the fix, and the wiki. (This repo already had a wiki and a Docs Layout; see [Documentation and wrap-up](./documentation-and-wrap-up.md).) Its phase headings:
 
 ```markdown
 ### Phase 1: Failing tests — Weight: S (Tracker: W1, W3)
@@ -46,7 +46,7 @@ You type `/to-plan for the double-pay workspace`. The plan has three phases: fai
 
 ## 3. execute-plan
 
-You type `/execute-plan`. Phase 1 adds three payment tests and one test that `markPaid` still throws. The plan says `Review: guardian`, so `/review-phase` checked it before anything was committed. The phase was written, reviewed and staged. The three new tests are red on purpose:
+You type `/execute-plan`. Phase 1 adds three payment tests and one test that `markPaid` still throws. The plan says `Review: guardian`, so `/execute-plan` stopped after staging the phase and you ran `/review-phase`, which checked it before anything was committed. The three new tests are red on purpose:
 
 ```
 ok 2 - markPaid still throws for a non-pending order
@@ -60,7 +60,7 @@ not ok 7 - checks status before amount
 
 ## 4. pause-here and resume-here
 
-You type `/pause-here double-pay`. It rewrote `WHATNEXT.md` and wrote a handoff for the staged work. From `WHATNEXT.md`:
+You type `/pause-here double-pay`. It rewrites `WHATNEXT.md` and writes a handoff for the staged work. From `WHATNEXT.md`:
 
 ```markdown
 - Progress: 30% (`TRACKER.md`). W1, W3 done (Phase 1 reviewed). Next: W2.
@@ -69,7 +69,7 @@ You type `/pause-here double-pay`. It rewrote `WHATNEXT.md` and wrote a handoff 
 2. Phase 3 (wiki).
 ```
 
-In a new session you type `/resume-here double-pay`. This run carried on to the end of the plan. These are the first line of its closing summary and the new `git log --oneline` lines:
+In a new session you type `/resume-here double-pay`. It takes the first next step. Phase by phase, `/execute-plan` stages the work, you run `/review-phase`, and it offers to continue, until the plan is done. These are the first line of its closing summary and the new `git log --oneline` lines:
 
 ```
 All three phases of the double-pay plan are done and committed. Paying an order that isn't pending now returns `{ ok: false, reason: "not-pending" }` instead of throwing.
@@ -87,15 +87,15 @@ Phase 3 updated the wiki page `docs/wiki/order-payment.md`. The old rule "(no te
 +- Only a pending order can be paid; paying any other order returns `{ ok: false, reason: "not-pending" }` and does not throw. `refuses to pay an order that is not pending` (`src/payments/payments.test.js`)
 ```
 
-`wrap-up` later added one line to `GLOSSARY.md`. No ADR was needed, because both decisions were marked `ADR: no`.
+## 6. wrap-up
+
+You type `/wrap-up double-pay`. It adds one line to `GLOSSARY.md`. No ADR is needed, because the decisions were marked `ADR: no`.
 
 ```diff
 +- **Refusal** — the result `{ ok: false, reason }` that a payment returns when it is declined by a rule (for example `not-pending`), as opposed to throwing an error.
 ```
 
-## 6. wrap-up
-
-You type `/wrap-up double-pay`. It moved the INDEX row from Active to Shipped. It does not delete the workspace folder. It tells you to do that:
+It moves the INDEX row from Active to Shipped. It does not delete the workspace folder; it tells you to do that:
 
 ```
 Wrap-up is done. The only step left is yours: delete `.scratch/workspaces/double-pay/`. I haven't deleted it.

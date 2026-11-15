@@ -8,7 +8,7 @@ It names model tiers only (Haiku, Sonnet, Opus, Fable), not version numbers, so 
 
 Two things need no choice from you:
 
-- **Phase executors.** `guard-plan` (and `execute-plan`, when it dispatches a batch of phases) picks the agent from the phase's Weight. Each agent carries its own model and effort in its frontmatter:
+- **Phase executors.** `guard-plan` (and `execute-plan`, when it dispatches a batch of phases) picks the agent from the phase's Weight. Each agent carries its own model and effort in its frontmatter. (With the plugin install they are named `phase-agents:phase-s` and so on.)
 
   | Weight | Meant for                        | Agent      | Model  | Effort |
   | ------ | -------------------------------- | ---------- | ------ | ------ |
@@ -31,11 +31,11 @@ In a `guard-plan` run, the model of your session is the model of the **guardian*
 
 This is a starting point from what each skill does. It has not been measured.
 
-"Strong" below means Opus. Fable is another option for these rows if your subscription includes it.
+Fable is another option for the Opus rows if your subscription includes it.
 
 | Kind of session        | Skills                                                                                              | Suggested                     |
 | ---------------------- | --------------------------------------------------------------------------------------------------- | ----------------------------- |
-| Weighing and designing | `to-plan`, `kickoff`, `discuss` for big decisions, `review-phase`, `code-review`, `diagnosing-bugs` | Opus, high effort             |
+| Weighing and designing | `to-plan`, `kickoff`, `discuss` for big decisions, `review-phase`, `code-review`, `diagnosing-bugs` (both from `mattpocock/skills`) | Opus, high effort             |
 | Guarding a plan        | the `guard-plan` session                                                                            | Opus, high effort             |
 | Running and upkeep     | `execute-plan` inline, `refine-docs`, `update-wiki`, `wrap-up`, `what-you-did`                      | Sonnet or Opus, medium effort |
 | Notes and resuming     | `pause-here`, `resume-here`, `so-far`, `tracker`, `whatnext`                                        | Sonnet, medium effort         |
@@ -43,7 +43,7 @@ This is a starting point from what each skill does. It has not been measured.
 
 The idea behind the rows: decisions and reviews are where a weak answer costs the most, so they get the strongest model. Recording and resuming only move known facts around, so a lighter model is enough.
 
-## Tell us what you ran
+## Tell me what you ran
 
 When you report a problem, say which model and effort the session used. That is how this table gets corrected from real use instead of guesses.
 

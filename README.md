@@ -35,14 +35,14 @@ npx skills add 'mattpocock/skills#4ae2317' -a claude-code --skill domain-modelin
 
 Then run `/setup-matt-pocock-skills` once in each repo where you use `refine-docs`, `update-wiki` or the `github` skills. You can skip it for your first workspace: `to-plan` and `execute-plan` carry on without it. (On an agent without slash commands, ask it to use the setup-matt-pocock-skills skill.) It writes `docs/agents/` (`domain.md`, `issue-tracker.md`, `triage-labels.md`) that several skills read.
 
-| Skill from `mattpocock/skills` | Needed?            | What it is for                                                          | Needed by                                                                                                             |
-| ------------------------------ | ------------------ | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `domain-modeling`              | yes                | Writes ADRs (decision records) and the glossary                         | `wrap-up`, `execute-plan` and `review-phase` (when an ADR is due), `refine-docs`; `discuss` uses it if installed      |
-| `setup-matt-pocock-skills`     | yes                | Creates `docs/agents/domain.md`, `issue-tracker.md`, `triage-labels.md` | `refine-docs`, `update-wiki`, `github-new-issue`, `github-spin-off`; `to-plan` and `execute-plan` carry on without it |
-| `writing-for-agents`           | yes, for one skill | How to write a skill well                                               | `skill-from-context`                                                                                                  |
-| `grilling`                     | optional           | Stress-tests a plan or idea                                             | `discuss`, `skill-from-context`, `whatnext`                                                                           |
-| `diagnosing-bugs`              | optional           | Diagnosis loop when verify keeps failing                                | `execute-plan`                                                                                                        |
-| `code-review`                  | optional           | Full standards-and-spec review                                          | `review-phase`, `whatnext`                                                                                            |
+| Skill from `mattpocock/skills` | Needed?            | What it is for                                                          | Needed by                                                                                                                      |
+| ------------------------------ | ------------------ | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `domain-modeling`              | yes                | Writes ADRs (decision records) and the glossary                         | `wrap-up`, `execute-plan`, `review-phase` and `guard-plan` (when an ADR is due), `refine-docs`; `discuss` uses it if installed |
+| `setup-matt-pocock-skills`     | yes                | Creates `docs/agents/domain.md`, `issue-tracker.md`, `triage-labels.md` | `refine-docs`, `update-wiki`, `github-new-issue`, `github-spin-off`; `to-plan` and `execute-plan` carry on without it          |
+| `writing-for-agents`           | yes, for one skill | How to write a skill well                                               | `skill-from-context`                                                                                                           |
+| `grilling`                     | optional           | Stress-tests a plan or idea                                             | `discuss`, `skill-from-context`, `whatnext`                                                                                    |
+| `diagnosing-bugs`              | optional           | Diagnosis loop when verify keeps failing                                | `execute-plan`                                                                                                                 |
+| `code-review`                  | optional           | Full standards-and-spec review                                          | `review-phase`, `whatnext`                                                                                                     |
 
 A skill marked "yes" is needed only by the skills in the last column. When it is missing, that skill stops with a message naming what to install; nothing else is affected. An optional skill is used "if installed".
 
@@ -84,7 +84,7 @@ Asking in words only works for skills the agent may pick by itself (see below). 
 Two kinds of skills can start without you typing the name:
 
 - **Three workspace skills: `pause-here`, `spin-off` and `kickoff`.** They close a session, split a topic out, and turn a discussion into a workspace the moment you say so ("let's stop for today", "spin this off").
-- **The `workflow` and `agent` skills.** The agent may pick one when your request matches what it is for ("create a plan", "verify this"), and some are called by other skills: `to-plan` calls `writing-great-plan`, `execute-plan` calls `verify` and `review-phase`, `review-page` steps in when there are two or more decisions, and `skill-from-context` only offers. Don't count on them starting by themselves, though: call them by name when it matters. A skill that calls another needs that one installed too.
+- **The `workflow` and `agent` skills.** The agent may pick one when your request matches what it is for ("create a plan", "verify this"), and some are called by other skills: `to-plan` calls `writing-great-plan`, `execute-plan` calls `verify` and hands each phase to `review-phase`, `review-page` steps in when there are two or more decisions, and `skill-from-context` only offers. Don't count on them starting by themselves, though: call them by name when it matters. A skill that calls another needs that one installed too.
 
 Everything else (the other workspace skills and all GitHub skills) is manual-only: it runs only when you call it by name. That's on purpose: you stay in control.
 
@@ -106,7 +106,7 @@ The `workflow` skills work alone; inside a feature workspace they also use the `
 3. Run `/kickoff <slug>`. On the first run it asks where workspaces live (the default is `.scratch/workspaces/`, where step 1 put the PRD; if you pick another folder, move the PRD there) and checks the folder is git-ignored.
 4. Run `/to-plan`, then `/execute-plan` (one session) or `/guard-plan` (sub-agents that each do one phase; needs the executor agents above). If unsure, start with `/execute-plan`.
 5. Stop with `/pause-here <slug>`; come back with `/resume-here <slug>`. Lost? `/whatnext` tells you where you are.
-6. Done? `/wrap-up <slug>` closes it out with a final report.
+6. Done? `/wrap-up <slug>` closes it out (and drafts a final report if the workspace has someone to report to).
 
 The full flow, with every other command, is in [skills/workspace/README.md](./skills/workspace/README.md#the-flow).
 

@@ -6,7 +6,11 @@ The catalog is a set of agent skills for working with a coding agent in plans an
 
 It is for you if you are about to use the skills on a project of your own.
 
-## Before you start (about 10 minutes)
+## Installing
+
+See [Prerequisites](../../README.md#prerequisites) for what you need, then [Install](../../README.md#install) for the commands. The commands in this guide are plain names such as `/kickoff`; if you installed the Claude Code plugin, add the group in front (`/workspace:kickoff`).
+
+## Read these first (about 10 minutes)
 
 | Page                                         | Answers                                              |
 | -------------------------------------------- | ---------------------------------------------------- |
@@ -20,13 +24,9 @@ It is for you if you are about to use the skills on a project of your own.
 | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | [Skills that look alike](./skills-that-look-alike.md)               | Which of two similar skills to use: `spin-off`/`kickoff`, `resume-here`/`discuss`, `execute-plan`/`guard-plan`, `refine-docs`/`update-wiki`, `pause-here`/`wrap-up`. |
 | [What is in a workspace](./workspace-files.md)                      | Which files are for you and which are the agent's working memory.                                                   |
-| [Documentation and wrap-up](./documentation-and-wrap-up.md)         | The kinds of documents, why they are checked with the code, and why `wrap-up` matters.                              |
+| [Documentation and wrap-up](./documentation-and-wrap-up.md)         | The kinds of documents, why they are committed with the code, and why `wrap-up` matters.                              |
 | [Model and effort](./model-and-effort.md)                           | A starting point for which model to run each kind of session on.                                                    |
 | [FAQ](./faq.md)                                                     | Short answers to common questions.                                                                                  |
-
-## Installing
-
-See [Prerequisites](../../README.md#prerequisites) for what you need, then [Install](../../README.md#install) for the commands.
 
 ## Found a problem?
 

@@ -18,7 +18,7 @@ A workspace is one folder under `.scratch/workspaces/` (the default root).
     findings/  questions/  handoffs/  reports/  docs/  logs/
 ```
 
-`logs/` appears only when the work involves manual tests.
+`logs/` appears only when the work involves manual tests. If you use `msg`, a `TEAM.md` (names and contacts) sits next to `INDEX.md`, outside any workspace; keep it git-ignored.
 
 ## What you read
 
@@ -36,20 +36,20 @@ You may open these. You do not have to.
 - **`TRACKER.md`.** Weights, statuses, the Action Log and report rules.
 - **`findings/`.** One discovery per file: a test result, a root cause, a dead end.
 - **Plans and phases.** `plans/NN-<name>/IMPLEMENTATION_PLAN.md` and its `phases/` files.
-- **`handoffs/`.** A note per paused session, written once and never edited.
+- **`handoffs/`.** A note per paused session, or per thread moved in by `spin-off`; written once and never edited.
 
 ## All files at a glance
 
-| File | What it holds | Who reads it | Written by |
+| File | What it holds | Who reads it | Main writers |
 | --- | --- | --- | --- |
 | `PRD.md` | The request: the problem, what is known, what is open | You, the agent | You, or `spin-off` from a conversation |
-| `WHATNEXT.md` | State now and the next steps | You, the agent | `kickoff`, `pause-here`, `execute-plan` |
+| `WHATNEXT.md` | State now and the next steps | You, the agent | `kickoff`, `pause-here`, `resume-here`, `discuss`, `spin-off`, `execute-plan`, `review-phase`, `wrap-up` |
 | `CONTEXT.md` | Refined spec, rules, decisions | The agent | `kickoff`; updated by `discuss`, `pause-here` and others |
-| `TRACKER.md` | Work items, Action Log, report rules | The agent | `kickoff`, `tracker`, `execute-plan` |
+| `TRACKER.md` | Work items, Action Log, report rules | The agent | `kickoff`, `tracker`, `pause-here`, `discuss`, `execute-plan`, `review-phase` |
 | `plans/` | The plan and its phase files | The agent | `to-plan` |
-| `findings/` | Discoveries to keep | The agent | `pause-here`, `spin-off` |
+| `findings/` | Discoveries to keep | The agent | `pause-here`, `spin-off`, `kickoff`, `discuss` |
 | `handoffs/` | Session handoffs | The agent | `pause-here`, `spin-off` |
-| `questions/` | Questions for others, with options and answers | You, the person who answers | `kickoff`, `pause-here`, `tracker answer` |
+| `questions/` | Questions for others, with options and answers | You, the person who answers | `kickoff`, `pause-here`, `discuss`, `spin-off`, `tracker answer` |
 | `reports/` | Progress report drafts | You, then your audience | `tracker report` |
 | `docs/` | Input material: mockups, sample data, notes | You, the agent | You; `kickoff` moves loose files in |
 

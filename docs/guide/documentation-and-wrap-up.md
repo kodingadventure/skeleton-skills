@@ -60,7 +60,7 @@ It does not promise token savings from documentation either. Small sessions come
 
 The workspace folder is ignored by git and then deleted. Whatever exists only in it is lost.
 
-Here is the pattern. An expensive finding came out of a workspace: the first version of a skill depended on one kind of test, and it failed in projects that do not have that kind of test. The finding sat only in the workspace folder until `wrap-up` moved it into a repo document. Without that step, the next feature would have paid for the same discovery again.
+Here is the pattern. An expensive finding came out of a workspace: the first fix for "refuse a second payment" assumed an order is paid only once, and a failing test showed that a retry after a timeout also arrives as a second payment. The finding sat only in the workspace folder until `wrap-up` moved it into a repo document. Without that step, the next feature would have paid for the same discovery again.
 
 `/wrap-up <slug>` does this, in order:
 
