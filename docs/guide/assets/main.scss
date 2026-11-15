@@ -1,0 +1,118 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+// KodingAdventure palette: navy #0f172a, yellow #ffd166.
+$base-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$code-font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+$base-font-size: 17px;
+$base-line-height: 1.7;
+$content-width: 880px;
+
+$text-color: #cbd5e1;
+$background-color: #0f172a;
+$brand-color: #ffd166;
+$grey-color: #94a3b8;
+$grey-color-light: #1e293b;
+$grey-color-dark: #cbd5e1;
+
+@import "minima";
+
+$navy: #0f172a;
+$navy-raised: #162033;
+$navy-line: #1f2b40;
+$yellow: #ffd166;
+$ink: #f1f5f9;
+
+html { background: $navy; }
+body { background: $navy; color: $text-color; -webkit-font-smoothing: antialiased; }
+::selection { background: rgba($yellow, 0.3); color: $ink; }
+
+a { color: $yellow; text-decoration: none; border-bottom: 1px solid rgba($yellow, 0.35); transition: border-color 0.15s, color 0.15s; }
+a:visited { color: $yellow; }
+a:hover { color: #ffe29a; border-bottom-color: $yellow; text-decoration: none; }
+
+h1, h2, h3, h4, h5, h6 { color: $ink; font-weight: 700; letter-spacing: -0.015em; line-height: 1.25; }
+.page-content { padding: 40px 0 56px; }
+.page-content h1 { font-size: 2.3rem; margin-bottom: 0.6em; }
+.page-content h1::after { content: ""; display: block; width: 56px; height: 4px; margin-top: 14px; border-radius: 2px; background: $yellow; }
+.page-content h2 { font-size: 1.55rem; margin-top: 2.2em; padding-top: 0.2em; }
+.page-content h3 { font-size: 1.2rem; margin-top: 1.8em; }
+strong { color: $ink; font-weight: 600; }
+hr { border: 0; border-top: 1px solid $navy-line; margin: 2em 0; }
+
+// Header
+.site-header { border: 0; border-bottom: 1px solid $navy-line; background: rgba($navy, 0.94); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); }
+.header-bar { display: flex; align-items: center; gap: 28px; min-height: 68px; max-width: 1180px; }
+.site-header .wrapper { padding: 0 24px; }
+.site-title, .site-title:visited { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.05rem; line-height: 1; color: $ink; letter-spacing: -0.01em; border: 0; white-space: nowrap; }
+.site-title:hover { color: $yellow; }
+.site-title em { font-style: normal; font-weight: 500; color: $grey-color; }
+.site-logo { width: 34px; height: 34px; border-radius: 9px; border: 1px solid $navy-line; display: block; }
+.site-nav { float: none; display: flex; align-items: center; gap: 4px; margin-left: auto; line-height: 1; }
+.site-nav .page-link { color: $grey-color; line-height: 1; margin: 0; padding: 8px 11px; font-size: 0.92rem; border: 0; border-radius: 8px; white-space: nowrap; }
+.site-nav .page-link:hover { color: $ink; background: $navy-raised; }
+.site-nav .page-link.is-current { color: $yellow; background: rgba($yellow, 0.1); }
+
+.site-search { position: relative; width: 200px; flex: none; }
+.site-search input { width: 100%; box-sizing: border-box; background: $navy-raised; border: 1px solid $navy-line; border-radius: 10px; color: $ink; font: inherit; font-size: 0.92rem; padding: 9px 36px 9px 14px; outline: 0; -webkit-appearance: none; }
+.site-search input::placeholder { color: #64748b; }
+.site-search input:focus { border-color: $yellow; box-shadow: 0 0 0 3px rgba($yellow, 0.15); }
+.search-hint { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-family: $code-font-family; font-size: 0.75rem; color: #64748b; border: 1px solid $navy-line; border-radius: 5px; padding: 0 6px; pointer-events: none; }
+.site-search input:focus + .search-hint { display: none; }
+.search-results { position: absolute; right: 0; top: calc(100% + 10px); width: 420px; max-width: calc(100vw - 32px); background: $navy-raised; border: 1px solid $navy-line; border-radius: 12px; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45); padding: 6px; max-height: 70vh; overflow-y: auto; }
+.search-results[hidden] { display: none; }
+.search-hit { display: block; padding: 10px 12px; border: 0; border-radius: 8px; color: $text-color; }
+.search-hit:hover, .search-hit:focus { background: rgba($yellow, 0.1); outline: 0; border: 0; color: $text-color; }
+.search-hit strong { display: block; color: $ink; font-size: 0.95rem; }
+.search-hit span { display: block; margin-top: 2px; font-size: 0.82rem; line-height: 1.45; color: $grey-color; }
+.search-hit mark { background: rgba($yellow, 0.25); color: $yellow; border-radius: 3px; padding: 0 2px; }
+.search-empty { margin: 0; padding: 12px; color: $grey-color; font-size: 0.9rem; }
+
+@include media-query(1120px) {
+  .site-header .header-bar { flex-wrap: wrap; gap: 8px 16px; padding-top: 12px; padding-bottom: 8px; }
+  .site-search { margin-left: auto; width: 200px; }
+  .site-nav { order: 3; width: calc(100% + 24px); margin: 0 -12px; overflow-x: auto; padding-bottom: 4px; }
+}
+@include media-query($on-palm) {
+  .site-header .site-nav { position: static; background: none; border: 0; border-radius: 0; }
+  .site-header .header-bar { padding-left: 16px; padding-right: 16px; }
+  .site-search { width: 100%; order: 2; margin-left: 0; }
+  .site-nav { order: 3; }
+  .search-results { left: 0; right: 0; width: auto; }
+}
+
+// Code
+code, pre { font-family: $code-font-family; font-size: 0.86em; }
+code { background: $navy-raised; border: 1px solid $navy-line; border-radius: 6px; padding: 0.12em 0.4em; color: #ffe29a; }
+pre { background: $navy-raised; border: 1px solid $navy-line; border-radius: 12px; padding: 16px 20px; color: $text-color; line-height: 1.6; }
+pre code { background: none; border: 0; padding: 0; color: inherit; font-size: 1em; }
+.highlight, .highlighter-rouge .highlight { background: transparent; }
+// Rouge tokens: Minima ships light-theme colours, so map them to the palette.
+.highlight .err { color: #fda4af; background: none; }
+.highlight .c, .highlight .cm, .highlight .c1, .highlight .cs { color: #64748b; font-style: italic; }
+.highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt, .highlight .o, .highlight .ow { color: $yellow; font-weight: 400; }
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx { color: #86efac; }
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .il { color: #7dd3fc; }
+.highlight .nb, .highlight .nc, .highlight .nf, .highlight .nn, .highlight .nt, .highlight .na, .highlight .no, .highlight .nv { color: #93c5fd; font-weight: 400; }
+.highlight .gh, .highlight .gu { color: $ink; font-weight: 600; }
+
+// Quotes and tables
+blockquote { color: $grey-color; border-left: 4px solid $yellow; background: $navy-raised; border-radius: 0 10px 10px 0; padding: 10px 20px; margin: 1.4em 0; font-style: normal; }
+blockquote > :last-child { margin-bottom: 0; }
+table { display: block; overflow-x: auto; border: 1px solid $navy-line; border-radius: 12px; border-collapse: separate; border-spacing: 0; margin: 1.5em 0; }
+table th { background: $navy-raised; color: $ink; font-weight: 600; border: 0; border-bottom: 1px solid $navy-line; padding: 10px 14px; }
+table td { border: 0; border-bottom: 1px solid $navy-line; padding: 10px 14px; }
+table tr:last-child td { border-bottom: 0; }
+table tr:nth-child(even) td { background: transparent; }
+ul, ol { padding-left: 1.4em; }
+li > ul, li > ol { margin-bottom: 0; }
+li::marker { color: $yellow; }
+img { border-radius: 10px; }
+
+// Footer
+.site-footer { border: 0; border-top: 1px solid $navy-line; padding: 28px 0 36px; color: $grey-color; font-size: 0.9rem; }
+.site-footer p { margin: 0; }
+.site-footer a { color: $grey-color; border-bottom-color: transparent; }
+.site-footer a:hover { color: $yellow; border-bottom-color: $yellow; }
+.site-footer .sep { margin: 0 8px; opacity: 0.5; }

@@ -4,7 +4,7 @@ This page answers eight common questions about the skills.
 
 ## Is the Matt Pocock suite required?
 
-Only for the skills in the "Needed by" column of the Prerequisites table in the [root README](../../README.md#prerequisites). A skill that needs a missing one stops with a message that names what to install. Every other skill is unaffected. An "optional" skill is used only if it is installed.
+Only for the skills in the "Needed by" column of the Prerequisites table in the [root README](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#prerequisites). A skill that needs a missing one stops with a message that names what to install. Every other skill is unaffected. An "optional" skill is used only if it is installed.
 
 ## Is the workspace folder committed?
 
@@ -57,7 +57,7 @@ You do not need all of it. `kickoff` asks for the missing parts in one round. Pu
 
 ## What is a review page?
 
-It is a short HTML page that an agent writes to your temp folder and opens in your browser, so you can decide several things in a few minutes. It has plain-word text, diagrams, a recommended option for each decision, and an answer box at the end. You copy the answer and paste it back into the conversation. There is no server and nothing is saved in the browser, so the page never changes behind your back. The Explain button works the same way: it copies a question for you to paste into the conversation, and the agent answers there. The reasons are in [ADR 0007](../adr/0007-review-page-answers-by-copy-paste.md). The skill is `review-page`.
+It is a short HTML page that an agent writes to your temp folder and opens in your browser, so you can decide several things in a few minutes. It has plain-word text, diagrams, a recommended option for each decision, and an answer box at the end. You copy the answer and paste it back into the conversation. There is no server and nothing is saved in the browser, so the page never changes behind your back. The Explain button works the same way: it copies a question for you to paste into the conversation, and the agent answers there. The reasons are in [ADR 0007](https://github.com/kodingadventure/skeleton-skills/blob/main/docs/adr/0007-review-page-answers-by-copy-paste.md). The skill is `review-page`.
 
 ## What do I do when I am lost?
 

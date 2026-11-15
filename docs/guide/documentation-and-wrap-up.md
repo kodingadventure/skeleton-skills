@@ -48,7 +48,7 @@ You do not have to remember to write them. Four parts of the workflow do it:
 - **`whatnext`** suggests the documentation step once, after the last phase of a plan is committed, or right away after a behaviour-changing commit outside a plan. It stays quiet once the docs have been touched.
 - **`wrap-up`** sweeps what is left: ADRs not yet written, findings worth keeping, terms not yet in a glossary.
 
-Details are in the "Keeping the docs current" section of [`skills/workflow/README.md`](../../skills/workflow/README.md).
+Details are in the "Keeping the docs current" section of [`skills/workflow/README.md`](https://github.com/kodingadventure/skeleton-skills/blob/main/skills/workflow/README.md).
 
 ## What this does not promise
 

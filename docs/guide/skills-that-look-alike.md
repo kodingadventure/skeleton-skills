@@ -2,7 +2,7 @@
 
 This page answers one question: which of two similar skills do you call? Five pairs, each with a rule of thumb and a table.
 
-"Starts on its own?" asks whether the agent may run a skill without you naming it. `pause-here`, `spin-off` and `kickoff` do, when you say so ("let's stop for today"). `execute-plan`, `guard-plan`, `refine-docs` and `update-wiki` are picked only when your request matches what they are for, so call them by name when it matters. The rest are manual-only. The rest of the story is in the [README](../../README.md#which-skills-start-on-their-own).
+"Starts on its own?" asks whether the agent may run a skill without you naming it. `pause-here`, `spin-off` and `kickoff` do, when you say so ("let's stop for today"). `execute-plan`, `guard-plan`, `refine-docs` and `update-wiki` are picked only when your request matches what they are for, so call them by name when it matters. The rest are manual-only. The rest of the story is in the [README](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#which-skills-start-on-their-own).
 
 ## `spin-off` and `kickoff`
 
@@ -34,7 +34,7 @@ Use `execute-plan` to run a plan in this session. Use `guard-plan` to hand each 
 | What it writes | The code, with the plan's boxes ticked. It stages and hands off, or commits, as the plan's `Review:` line and your repo's rules say. With `Review: guardian` it stops after staging each phase and waits for `/review-phase` | Each phase goes to the `phase-s`, `phase-m`, `phase-l` or `phase-xl` agent that matches its Weight. The guardian re-checks, fixes, and commits only if the run mode you chose when it started allows it. It does not push unless you ask, or your repo's rules require it |
 | Starts on its own? | Maybe: the agent may pick it when your request matches | Maybe: the agent may pick it when your request matches |
 
-`guard-plan` needs sub-agents and the `phase-*` agents, which means Claude Code. Install them as the "Executor agents" bullet under [Install](../../README.md#install) says. Without them, `execute-plan` with `review-phase` does the same job in one session.
+`guard-plan` needs sub-agents and the `phase-*` agents, which means Claude Code. Install them as the "Executor agents" bullet under [Install](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#install) says. Without them, `execute-plan` with `review-phase` does the same job in one session.
 
 ## `refine-docs` and `update-wiki`
 
