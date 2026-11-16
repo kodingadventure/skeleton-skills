@@ -14,6 +14,8 @@
 #   workspace DIR           write .scratch/workspaces/demo/ (CONTEXT, TRACKER, WHATNEXT, a two-phase plan) and its INDEX.md
 #   prd DIR                 write .scratch/workspaces/double-pay/PRD.md, a short PRD for /kickoff
 #   root-line DIR [other]   append the "Workspace root" line to CLAUDE.md, uncommitted; with "other", also an unrelated rule line
+#   workspace-root DIR PATH append a committed "Workspace root: PATH" line to CLAUDE.md and git-ignore PATH's top folder
+#   ignore DIR PATH         append PATH to .gitignore (committed)
 #   finish-workspace DIR    needs workspace: mark the demo tracker and plan done, WHATNEXT step 1 = /wrap-up demo, commit the W1 code
 #   feature-branch DIR NAME [merged]  branch NAME off main with one commit and stay on it; with "merged", merge it into main (--no-ff) first
 #   notes-repo DIR [rule]   needs workspace or prd: git init DIR/.scratch and commit its notes; with "rule", write the notes-commit rule to DIR/CLAUDE.local.md (kept out of git via .git/info/exclude)
@@ -435,6 +437,22 @@ root-line)
     printf '\nRun npm test before every push.\n' >> "$2/CLAUDE.md"
   fi
   git -C "$2" status --short
+  ;;
+workspace-root)
+  need_dir "${2:-}"; need_clean "$2"
+  [[ -n "${3:-}" ]] || { echo "error: usage: workspace-root DIR PATH" >&2; exit 1; }
+  printf '\nWorkspace root: `%s`\n' "$3" >> "$2/CLAUDE.md"
+  top="${3%%/*}"
+  grep -qx "$top/" "$2/.gitignore" || printf '%s/\n' "$top" >> "$2/.gitignore"
+  commit "$2" "chore: set the workspace root"
+  echo "workspace root: $3 (committed, $top/ git-ignored)"
+  ;;
+ignore)
+  need_dir "${2:-}"; need_clean "$2"
+  [[ -n "${3:-}" ]] || { echo "error: usage: ignore DIR PATH" >&2; exit 1; }
+  printf '%s\n' "$3" >> "$2/.gitignore"
+  commit "$2" "chore: ignore $3"
+  echo "ignored: $3 (committed)"
   ;;
 finish-workspace)
   need_dir "${2:-}"; need_clean "$2"

@@ -1,6 +1,6 @@
 # FAQ
 
-This page answers eight common questions about the skills.
+This page answers nine common questions about the skills.
 
 ## Is the Matt Pocock suite required?
 
@@ -19,6 +19,12 @@ The skills never run git in that repository unless your repo's instructions tell
 ```
 
 With that rule, a skill that writes notes (`kickoff`, `discuss`, `pause-here`, `spin-off`, `wrap-up`) commits only the files it wrote and names the commit in its report. Without it, nothing changes: the notes stay uncommitted until you commit them.
+
+## What is the plan root, and how is it different from the workspace root?
+
+The workspace root holds your feature workspaces, one folder each. A plan made for a workspace stays inside that workspace, in its `plans/` folder. The plan root is only for plans written outside any workspace, such as a `/to-plan` on a small task. Each of those plans gets its own dated folder, `<plan root>/<YYYY-MM-DD>-<slug>/`. If you never plan outside a workspace, the plan root stays empty.
+
+Keep them as two separate folders: the plan root is never the workspace root, nor a folder inside it. To keep all your notes in one place, put them side by side, for example `Workspace root: _local/workspaces/` and `Plan root: _local/plans/`. Both lines go in `CLAUDE.md` or `AGENTS.md`; the [README](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#configuration) shows the defaults.
 
 ## What is the commit reminder hook, and do I need it?
 

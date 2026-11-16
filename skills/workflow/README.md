@@ -37,7 +37,7 @@ All need `docs/agents/domain.md` from `setup-matt-pocock-skills` (`mattpocock/sk
 
 `to-plan` needs `writing-great-plan`, and `execute-plan` uses `verify` and `review-phase`; install those together. `guard-plan` needs the `phase-*` agents below. `update-wiki` is installed with `refine-docs`. The rest stand alone.
 
-Plans written outside a workspace go under the `Plan root:` line of `CLAUDE.md` / `AGENTS.md` (default `.plans/`); inside a workspace they go to `plans/NN-<name>/`.
+Plans written outside a workspace go under the `Plan root:` line of `CLAUDE.md` / `AGENTS.md` (default `.scratch/plans/`, next to the default workspace root); inside a workspace they go to `plans/NN-<name>/`.
 
 ## Executor agents
 

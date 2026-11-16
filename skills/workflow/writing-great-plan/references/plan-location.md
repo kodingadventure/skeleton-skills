@@ -9,15 +9,21 @@
 A repo names the folder that holds its plans with one line in `CLAUDE.md` or `AGENTS.md`, a path relative to the repo root:
 
 ```markdown
-Plan root: `.plans/`
+Plan root: `.scratch/plans/`
 ```
 
-Without the line the root is `.plans/`, except in a repo whose `docs/agents/domain.md` still has the older `Plan output` key: that key's folder stays in use, and nothing is asked.
+Without the line the root is `.scratch/plans/`, next to the default workspace root (`.scratch/workspaces/`), except in a repo whose `docs/agents/domain.md` still has the older `Plan output` key: that key's folder stays in use, and nothing is asked.
 
 ### Asking once
 
-On the repo's first plan outside a workspace — no `Plan root:` line, no `Plan output` key, no `.plans/` folder — ask the user one question: keep `.plans/` (the default) or name another folder.
+On the repo's first plan outside a workspace — no `Plan root:` line, no `Plan output` key, no `.scratch/plans/` folder — ask the user one question: keep the default or name another folder. The default is `.scratch/plans/`, with two exceptions read from the `Workspace root:` line:
 
+- It names a `workspaces/` folder inside a notes folder (for example `_local/workspaces/`): the default is its sibling (`_local/plans/`), so all local notes stay in one folder.
+- It names the older `.scratch/plan/`: the default is `.plans/`, because `.scratch/plan/` and `.scratch/plans/` side by side differ by one letter.
+
+Then:
+
+- Compare the answer with the workspace root (the `Workspace root:` line, or `.scratch/workspaces/` without one) before anything else, path against path. When the answer is that folder, or starts with it (`_local/plans/` starts with `_local/`), it is inside the workspace root and plan folders would mix with workspace folders: write no line and no plan there, tell the user that in one sentence that names both paths, and ask again. With nobody to answer, use `.scratch/plans/`.
 - Check the answer is git-ignored (`git check-ignore <root>/x`). When it is not, say so and offer to add it to `.gitignore`: plans must never be staged by accident.
 - Write the answer as the `Plan root:` line, even when it is the default, so the question is never asked again. Put it in `CLAUDE.md`, or in `AGENTS.md` when the repo keeps its agent rules there; create `CLAUDE.md` when the repo has neither.
 - That line is a repo change, and the skill that wrote it commits it at once:
