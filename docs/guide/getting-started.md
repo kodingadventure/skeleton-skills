@@ -6,7 +6,7 @@ This page answers one question: what do you do first, in a new project and in on
 
 Two things must be in place. Neither is repeated here.
 
-1. The skills are installed. Commands and the pinned install line are in the [README](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#install) and its [Prerequisites](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#prerequisites).
+1. The skills are installed. Commands and the pinned install line are in the [README](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#install) and its [Prerequisites](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#prerequisites). You can also paste one sentence to your agent and let it do the setup: see [Let your agent set it up](https://github.com/kodingadventure/skeleton-skills/blob/main/README.md#let-your-agent-set-it-up).
 2. Your project is a git repository with at least one commit. Work on a branch or on `main`, as you like; `wrap-up` comes after the work is merged.
 
 One more thing can wait: `/setup-matt-pocock-skills` (from the external `mattpocock/skills` suite; the README has the install line). It writes `docs/agents/` (`domain.md`, `issue-tracker.md`, `triage-labels.md`), which `refine-docs`, `update-wiki`, `github-new-issue` and `github-spin-off` read. You do not need it for your first workspace: `to-plan` and `execute-plan` carry on without it.

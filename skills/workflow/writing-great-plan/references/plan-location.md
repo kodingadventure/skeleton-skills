@@ -16,8 +16,9 @@ Without the line the root is `.plans/`, except in a repo whose `docs/agents/doma
 
 ### Asking once
 
-On the repo's first plan outside a workspace — no `Plan root:` line, no `Plan output` key, no `.plans/` folder — ask the user one question: keep `.plans/` (the default) or name another folder.
+On the repo's first plan outside a workspace — no `Plan root:` line, no `Plan output` key, no `.plans/` folder — ask the user one question: keep `.plans/` (the default) or name another folder. When the `Workspace root:` line names a `workspaces/` folder inside a notes folder (for example `_local/workspaces/`), offer its sibling (`_local/plans/`) as the other choice, so all local notes stay in one folder.
 
+- The plan root is never the workspace root itself, nor a folder inside it: plan folders would mix with workspace folders. When the answer is one of those, say so and ask again.
 - Check the answer is git-ignored (`git check-ignore <root>/x`). When it is not, say so and offer to add it to `.gitignore`: plans must never be staged by accident.
 - Write the answer as the `Plan root:` line, even when it is the default, so the question is never asked again. Put it in `CLAUDE.md`, or in `AGENTS.md` when the repo keeps its agent rules there; create `CLAUDE.md` when the repo has neither.
 - That line is a repo change, and the skill that wrote it commits it at once:

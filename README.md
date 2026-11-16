@@ -67,6 +67,25 @@ Check the current flags with `npx skills --help`.
 - **Executor agents.** `guard-plan` dispatches `phase-s`, `phase-m`, `phase-l` and `phase-xl`. The `skills` CLI never installs agents. Add the marketplace as above, then install the `phase-agents` plugin once: `claude plugin install phase-agents@skeleton-skills --scope project` (the agents are then named `phase-agents:phase-s` and so on), or, from a clone of this repo, copy `plugins/phase-agents/agents/phase-*.md` into `.claude/agents/` (bare names). Without sub-agents, `execute-plan` with `review-phase` does the same job in one session.
 - **Commit-reminder hook.** The file `skills/workspace/hooks/workspace-reminder.mjs` is optional, Claude Code only, and installed by hand: see [skills/workspace/README.md](./skills/workspace/README.md). When it helps, and how to check it is installed: [the FAQ](./docs/guide/faq.md#what-is-the-commit-reminder-hook-and-do-i-need-it).
 
+### Let your agent set it up
+
+Rather not type the commands? Open your agent in your project and paste this, with the folder you want for your local notes:
+
+```text
+Set up https://github.com/kodingadventure/skeleton-skills in this project, following the "Let your agent set it up" section of its README. Keep my local notes in `_local/`.
+```
+
+Leave out the last sentence to keep the defaults (`.scratch/workspaces/` and `.plans/`). Restart the agent afterwards so it loads the new skills.
+
+If you are the agent doing the setup, do exactly this and nothing more:
+
+1. Install the full flow with the second command under [Install](#install), with the `-a` flag of the agent you are, and the `mattpocock/skills` line under [Prerequisites](#prerequisites).
+2. If the user named a folder for their local notes, write two lines in `CLAUDE.md` (or `AGENTS.md` when the project keeps its agent rules there): `Workspace root: <folder>/workspaces/` and `Plan root: <folder>/plans/`. Never make the named folder itself the workspace root. If the user named no folder, write neither line: the skills ask on first use.
+3. Make sure the notes folder (or both roots) is listed in `.gitignore`.
+4. Commit nothing unless the project's rules let the agent commit. If the project is not a git repository with at least one commit, say so: the skills need one. Do not run `git init` yourself.
+5. Do not install the executor agents or the commit-reminder hook. Name them in one line each as optional, with a link to [Install](#install), where their steps are.
+6. End with what you installed, what you wrote, and the next step: restart the agent, then [Your first workspace](#your-first-workspace).
+
 ### Calling a skill
 
 | How you installed               | What you type                                                        |
@@ -119,7 +138,17 @@ Workspace root: `.scratch/workspaces/`
 Plan root: `.plans/`
 ```
 
-`Workspace root:` is where feature workspaces live; `Plan root:` is where plans written outside a workspace live. Both defaults are shown above, and both folders must be git-ignored.
+- **`Workspace root:`** is where feature workspaces live, one folder per workspace (`<root>/<slug>/`), plus the `INDEX.md` that lists them. A plan made for a workspace stays inside it, in `<root>/<slug>/plans/`.
+- **`Plan root:`** is only for plans written outside a workspace, for example a `/to-plan` on a small task. Each plan gets its own dated folder, `<root>/<YYYY-MM-DD>-<slug>/`, so no plan overwrites another. If you never plan outside a workspace, this folder is never created.
+
+Both defaults are shown above. Both folders must be git-ignored, and they must be two separate folders: the plan root is never the workspace root, nor a folder inside it.
+
+To keep all your local notes in one folder (for example to give it its own git repository), put the two roots side by side in it:
+
+```markdown
+Workspace root: `_local/workspaces/`
+Plan root: `_local/plans/`
+```
 
 ## Versions
 
