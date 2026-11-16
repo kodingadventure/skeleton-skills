@@ -52,12 +52,13 @@ A skill marked "yes" is needed only by the skills in the last column. When it is
 npx skills add kodingadventure/skeleton-skills
 ```
 
-This is the simplest route, and it works with several agents. The CLI lists the skills and lets you pick, or pass names. To follow the whole flow (a workspace, then a plan, with review pages for your decisions), install the `workspace` and `workflow` groups plus `review-page`:
+This is the simplest route, and it works with several agents. The CLI lists the skills and lets you pick, or pass names. To follow the whole flow (a workspace, then a plan, with review pages for your decisions and a page of what changed), install the `workspace` and `workflow` groups plus `review-page` and `what-you-did`:
 
 ```bash
 npx skills add kodingadventure/skeleton-skills -a claude-code --skill \
   kickoff discuss tracker pause-here resume-here so-far spin-off wrap-up msg \
-  to-plan writing-great-plan execute-plan review-phase guard-plan verify whatnext refine-docs update-wiki review-page
+  to-plan writing-great-plan execute-plan review-phase guard-plan verify whatnext refine-docs update-wiki \
+  review-page what-you-did
 ```
 
 Check the current flags with `npx skills --help`.
