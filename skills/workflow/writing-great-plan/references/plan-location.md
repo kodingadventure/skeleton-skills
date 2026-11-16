@@ -23,7 +23,7 @@ On the repo's first plan outside a workspace — no `Plan root:` line, no `Plan 
 
 Then:
 
-- The plan root is never the workspace root itself, nor a folder inside it: plan folders would mix with workspace folders. When the answer is one of those, say so and ask again.
+- Compare the answer with the workspace root (the `Workspace root:` line, or `.scratch/workspaces/` without one) before anything else, path against path. When the answer is that folder, or starts with it (`_local/plans/` starts with `_local/`), it is inside the workspace root and plan folders would mix with workspace folders: write no line and no plan there, tell the user that in one sentence that names both paths, and ask again. With nobody to answer, use `.scratch/plans/`.
 - Check the answer is git-ignored (`git check-ignore <root>/x`). When it is not, say so and offer to add it to `.gitignore`: plans must never be staged by accident.
 - Write the answer as the `Plan root:` line, even when it is the default, so the question is never asked again. Put it in `CLAUDE.md`, or in `AGENTS.md` when the repo keeps its agent rules there; create `CLAUDE.md` when the repo has neither.
 - That line is a repo change, and the skill that wrote it commits it at once:
