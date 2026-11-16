@@ -1,5 +1,15 @@
 # skeleton-skills
 
+## 0.4.0
+
+### Minor Changes
+
+- [#25](https://github.com/kodingadventure/skeleton-skills/pull/25) [`52a2589`](https://github.com/kodingadventure/skeleton-skills/commit/52a25898dd127420243f8b534b089987701bcc58) Thanks [@budiadiono](https://github.com/budiadiono)! - `to-plan`, `writing-great-plan` and `whatnext`: plans written outside a workspace now default to `.scratch/plans/`, next to the default workspace root `.scratch/workspaces/`, instead of `.plans/`. All your local notes now sit under `.scratch/` by default. When your workspace root is a `workspaces/` folder somewhere else (such as `_local/workspaces/`), the plan root offered is its sibling (`_local/plans/`). A repo that already has a `Plan root:` line keeps it.
+
+### Patch Changes
+
+- [#25](https://github.com/kodingadventure/skeleton-skills/pull/25) [`bbd431b`](https://github.com/kodingadventure/skeleton-skills/commit/bbd431b7d5a4251c9e41d74f57f2e14f6aa1bc45) Thanks [@budiadiono](https://github.com/budiadiono)! - `to-plan` and other plan writers: when they ask for the plan root on a repo's first plan outside a workspace, they now refuse the workspace root itself or a folder inside it, and offer a sibling folder (such as `_local/plans/` next to `_local/workspaces/`) so all your local notes stay in one folder. The README explains what each root is for and adds a sentence you can paste to have your agent set the skills up.
+
 ## 0.3.0
 
 ### Minor Changes
