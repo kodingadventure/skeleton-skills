@@ -81,8 +81,8 @@ If you are the agent doing the setup, read this section word for word from the r
 
 1. Install the full flow with the second command under [Install](#install), with the `-a` flag of the agent you are, and the `mattpocock/skills` line under [Prerequisites](#prerequisites).
 2. If the user named a folder for their local notes, write these two lines, backticks included, in `CLAUDE.md` (or `AGENTS.md` when the project keeps its agent rules there): ``Workspace root: `<folder>/workspaces/` `` and ``Plan root: `<folder>/plans/` ``. Never make the named folder itself the workspace root. If the user named no folder, write neither line: the skills ask on first use.
-3. Make sure the notes folder (or both roots) is listed in `.gitignore`.
-4. Leave `skills-lock.json` (the `skills` CLI's record of where each skill came from) as the installed skill folders are: commit it with them when the project commits its skills, ignore it when they are ignored. Commit nothing unless the project's rules let the agent commit. If the project is not a git repository with at least one commit, say so: the skills need one. Do not run `git init` yourself.
+3. Make sure the notes folder (or both roots) is listed in `.gitignore`. Then check the installed skill folder (`git check-ignore .claude/skills/x`, or `.agents/skills/x`): when it is ignored, add `skills-lock.json` (the `skills` CLI's record of where each skill came from) to `.gitignore` as well; when it is not, leave the lockfile untracked so it is committed with the skills.
+4. Commit nothing unless the project's rules let the agent commit. If the project is not a git repository with at least one commit, say so: the skills need one. Do not run `git init` yourself.
 5. Do not install the executor agents or the commit-reminder hook. Name them in one line each as optional, with a link to [Install](#install), where their steps are.
 6. End with what you installed, what you wrote, and the next step: restart the agent, then [Your first workspace](#your-first-workspace).
 
