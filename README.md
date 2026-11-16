@@ -72,12 +72,12 @@ Check the current flags with `npx skills --help`.
 Rather not type the commands? Open your agent in your project and paste this, with the folder you want for your local notes:
 
 ```text
-Set up https://github.com/kodingadventure/skeleton-skills in this project, following the "Let your agent set it up" section of its README (https://raw.githubusercontent.com/kodingadventure/skeleton-skills/main/README.md). Keep my local notes in `_local/`.
+Set up https://github.com/kodingadventure/skeleton-skills in this project. Download its README with `curl -sL https://raw.githubusercontent.com/kodingadventure/skeleton-skills/main/README.md` (not a web fetch, which only returns a summary) and follow its "Let your agent set it up" section word for word. Keep my local notes in `_local/`.
 ```
 
 Leave out the last sentence to keep the defaults (`.scratch/workspaces/` and `.scratch/plans/`). Restart the agent afterwards so it loads the new skills.
 
-If you are the agent doing the setup, read this section word for word from the raw README above, not from a summary, then do exactly this and nothing more:
+If you are the agent doing the setup, read this section word for word from the raw README (the `curl` above), not from a summary, then do exactly this and nothing more:
 
 1. Install the full flow with the second command under [Install](#install), with the `-a` flag of the agent you are, and the `mattpocock/skills` line under [Prerequisites](#prerequisites).
 2. If the user named a folder for their local notes, write these two lines, backticks included, in `CLAUDE.md` (or `AGENTS.md` when the project keeps its agent rules there): ``Workspace root: `<folder>/workspaces/` `` and ``Plan root: `<folder>/plans/` ``. Never make the named folder itself the workspace root. If the user named no folder, write neither line: the skills ask on first use.
