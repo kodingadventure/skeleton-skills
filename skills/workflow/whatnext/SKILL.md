@@ -44,7 +44,7 @@ If this is a fresh session with no prior conversation, scan project artifacts fo
 2. **Scan `.scratch/` and the plan root** for active features:
    - Specs (`.scratch/*/spec.md`) — features planned but not started
    - Issues (`.scratch/*/issues/*.md`) — tickets waiting for implementation. If `docs/agents/issue-tracker.md` exists, read the tracker location from it instead of assuming `.scratch/`.
-   - Implementation plans — `<plan root>/*/IMPLEMENTATION_PLAN.md` (the repo's `Plan root:` line, `.plans/` by default; also the folder of a legacy `Plan output` key), `.scratch/*/IMPLEMENTATION_PLAN.md` and `.scratch/workspaces/*/plans/*/IMPLEMENTATION_PLAN.md` — plans whose `**Status:**` is `pending` or `in-progress`, or that still have unchecked `[ ]` items → resume with `/execute-plan`. Skip `done` and `abandoned`.
+   - Implementation plans — `<plan root>/*/IMPLEMENTATION_PLAN.md` (the repo's `Plan root:` line, `.scratch/plans/` by default; also the folder of a legacy `Plan output` key), `.scratch/*/IMPLEMENTATION_PLAN.md` and `.scratch/workspaces/*/plans/*/IMPLEMENTATION_PLAN.md` — plans whose `**Status:**` is `pending` or `in-progress`, or that still have unchecked `[ ]` items → resume with `/execute-plan`. Skip `done` and `abandoned`.
 
 3. **Check git for dirty state** (not a git repo → skip this step and say so in the rationale):
    - Uncommitted changes → suggest verifying them (`/verify`), then committing under the repo's own commit rules, or continuing what is in progress

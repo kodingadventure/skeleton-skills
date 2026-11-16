@@ -75,7 +75,7 @@ Rather not type the commands? Open your agent in your project and paste this, wi
 Set up https://github.com/kodingadventure/skeleton-skills in this project, following the "Let your agent set it up" section of its README. Keep my local notes in `_local/`.
 ```
 
-Leave out the last sentence to keep the defaults (`.scratch/workspaces/` and `.plans/`). Restart the agent afterwards so it loads the new skills.
+Leave out the last sentence to keep the defaults (`.scratch/workspaces/` and `.scratch/plans/`). Restart the agent afterwards so it loads the new skills.
 
 If you are the agent doing the setup, do exactly this and nothing more:
 
@@ -135,7 +135,7 @@ Two optional lines in the file where your agent reads repo instructions (`CLAUDE
 
 ```markdown
 Workspace root: `.scratch/workspaces/`
-Plan root: `.plans/`
+Plan root: `.scratch/plans/`
 ```
 
 - **`Workspace root:`** is where feature workspaces live, one folder per workspace (`<root>/<slug>/`), plus the `INDEX.md` that lists them. A plan made for a workspace stays inside it, in `<root>/<slug>/plans/`.

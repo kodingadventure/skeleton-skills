@@ -27,4 +27,4 @@ Move the folder, then edit the line. Nothing else names the path.
 
 ## Not the plan root
 
-Plans written outside a workspace live under a different root, named by the `Plan root:` line (default `.plans/`; see the `writing-great-plan` skill's `references/plan-location.md`). The two roots are independent: asking for one never asks for the other, and a workspace's own plans stay in its `plans/NN-<name>/`.
+Plans written outside a workspace live under a different root, named by the `Plan root:` line (default `.scratch/plans/`; see the `writing-great-plan` skill's `references/plan-location.md`). The two roots are independent: asking for one never asks for the other, and a workspace's own plans stay in its `plans/NN-<name>/`.
