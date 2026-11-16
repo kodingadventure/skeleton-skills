@@ -62,7 +62,7 @@ npx skills add kodingadventure/skeleton-skills -a claude-code --skill \
 
 Check the current flags with `npx skills --help`.
 
-- **Folders.** The CLI flattens the groups: with Claude Code each skill lands in `.claude/skills/<skill>/`; with opencode and codex in `.agents/skills/<skill>/` (both share it). Installing one skill brings only that skill, so install a group's skills together when they refer to each other.
+- **Folders.** The CLI flattens the groups: with Claude Code each skill lands in `.claude/skills/<skill>/`; with opencode and codex in `.agents/skills/<skill>/` (both share it). Installing one skill brings only that skill, so install a group's skills together when they refer to each other. The CLI also writes `skills-lock.json`, its record of each skill's source and ref; commit it alongside the skill folders if you commit them.
 - **Claude Code plugin.** An alternative to the `skills` CLI, for Claude Code only (pick one of the two for a project, not both). The same repo is a Claude Code marketplace: `claude plugin marketplace add kodingadventure/skeleton-skills`, then `claude plugin install workspace@skeleton-skills --scope project` (likewise `workflow`, `agent`, `github`).
 - **Executor agents.** `guard-plan` dispatches `phase-s`, `phase-m`, `phase-l` and `phase-xl`. The `skills` CLI never installs agents. Add the marketplace as above, then install the `phase-agents` plugin once: `claude plugin install phase-agents@skeleton-skills --scope project` (the agents are then named `phase-agents:phase-s` and so on), or, from a clone of this repo, copy `plugins/phase-agents/agents/phase-*.md` into `.claude/agents/` (bare names). Without sub-agents, `execute-plan` with `review-phase` does the same job in one session.
 - **Commit-reminder hook.** The file `skills/workspace/hooks/workspace-reminder.mjs` is optional, Claude Code only, and installed by hand: see [skills/workspace/README.md](./skills/workspace/README.md). When it helps, and how to check it is installed: [the FAQ](./docs/guide/faq.md#what-is-the-commit-reminder-hook-and-do-i-need-it).
@@ -72,17 +72,17 @@ Check the current flags with `npx skills --help`.
 Rather not type the commands? Open your agent in your project and paste this, with the folder you want for your local notes:
 
 ```text
-Set up https://github.com/kodingadventure/skeleton-skills in this project, following the "Let your agent set it up" section of its README. Keep my local notes in `_local/`.
+Set up https://github.com/kodingadventure/skeleton-skills in this project, following the "Let your agent set it up" section of its README (https://raw.githubusercontent.com/kodingadventure/skeleton-skills/main/README.md). Keep my local notes in `_local/`.
 ```
 
 Leave out the last sentence to keep the defaults (`.scratch/workspaces/` and `.scratch/plans/`). Restart the agent afterwards so it loads the new skills.
 
-If you are the agent doing the setup, do exactly this and nothing more:
+If you are the agent doing the setup, read this section word for word from the raw README above, not from a summary, then do exactly this and nothing more:
 
 1. Install the full flow with the second command under [Install](#install), with the `-a` flag of the agent you are, and the `mattpocock/skills` line under [Prerequisites](#prerequisites).
-2. If the user named a folder for their local notes, write two lines in `CLAUDE.md` (or `AGENTS.md` when the project keeps its agent rules there): `Workspace root: <folder>/workspaces/` and `Plan root: <folder>/plans/`. Never make the named folder itself the workspace root. If the user named no folder, write neither line: the skills ask on first use.
+2. If the user named a folder for their local notes, write these two lines, backticks included, in `CLAUDE.md` (or `AGENTS.md` when the project keeps its agent rules there): ``Workspace root: `<folder>/workspaces/` `` and ``Plan root: `<folder>/plans/` ``. Never make the named folder itself the workspace root. If the user named no folder, write neither line: the skills ask on first use.
 3. Make sure the notes folder (or both roots) is listed in `.gitignore`.
-4. Commit nothing unless the project's rules let the agent commit. If the project is not a git repository with at least one commit, say so: the skills need one. Do not run `git init` yourself.
+4. Leave `skills-lock.json` (the `skills` CLI's record of where each skill came from) as the installed skill folders are: commit it with them when the project commits its skills, ignore it when they are ignored. Commit nothing unless the project's rules let the agent commit. If the project is not a git repository with at least one commit, say so: the skills need one. Do not run `git init` yourself.
 5. Do not install the executor agents or the commit-reminder hook. Name them in one line each as optional, with a link to [Install](#install), where their steps are.
 6. End with what you installed, what you wrote, and the next step: restart the agent, then [Your first workspace](#your-first-workspace).
 
