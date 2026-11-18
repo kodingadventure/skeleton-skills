@@ -20,6 +20,10 @@ _Avoid_: Owner, actor
 A separate agent session that walks a person through a human-run Manual Test Checkpoint, one step at a time, and records what they observe without fixing anything.
 _Avoid_: Test session, helper session
 
+**Companion**:
+A sub-agent the guardian sends to drive an agent-run Manual Test Checkpoint and record its result, without fixing anything; the agent counterpart of a guide session.
+_Avoid_: Tester agent, verifier
+
 **Handoff prompt**:
 The file the guardian writes for a guide session: the checkpoint's scenarios word for word, the setup, and where to record the result.
 _Avoid_: Test script

@@ -6,6 +6,8 @@ How the guardian hands a `Runner: human` checkpoint to a guide session. The file
 
 - Scenarios and expected results: copied word for word from the checkpoint in the plan.
 - Setup steps (install, start the app, seed data): derived from the phase's diff and from `## Surfaces` in the repo's `docs/agents/verify.md`. Write "None" when there are none.
+- What the agent already tried: fill only for a fallback from an agent checkpoint (`agent-checkpoint.md`); otherwise delete the section.
+- Result file for a fallback: the file already holds the companion's rows. Replace the Result file section's first line with "Append to `<absolute result file path>` a `## Re-run <scenario> by a person` section with the table below; keep everything already in the file."
 - Result file format: the block in `checkpoint-files.md`, copied word for word.
 - Language: the user's language in the guardian session. In a workspace, the workspace language from `CONTEXT.md`.
 - Plan language: the language the plan's files are written in.
@@ -34,6 +36,10 @@ Every message to the person is in <language>: each step, question and summary. T
 ## Setup
 
 <numbered setup steps, or "None">
+
+## What the agent already tried
+
+<only when this handoff is the fallback from an agent checkpoint: quote the `not run` row from the companion's result file, its "could not drive" text included. Otherwise delete this whole section>
 
 ## Scenarios
 

@@ -37,7 +37,7 @@ YYYY-MM-DD · runner: <guide session | companion> · repo: <absolute repo path> 
 - <anything odd that broke no scenario, or "none">
 ```
 
-A re-run after a fix adds a `## Re-run <scenario> after fix` section with the same table and keeps the first record.
+A re-run after a fix adds a `## Re-run <scenario> after fix` section with the same table and keeps the first record. A scenario the companion could not drive, handed to a person, adds a `## Re-run <scenario> by a person` section the same way.
 
 ## Waiting line
 

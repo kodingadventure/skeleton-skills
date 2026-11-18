@@ -81,4 +81,6 @@ That is the design goal, but it has not been measured, so this guide gives no nu
 
 The guardian writes a prompt for a separate session and prints one command that opens it, with a suggested model and effort. That session guides you through the test step by step and records the result in the plan's folder. The guardian suggests whether to wait for you or to stop, and you choose. If it stops, run `/guard-plan` in a new session: it reads the result and carries on.
 
+A checkpoint the plan marks for the agent is run by a sub-agent instead, without stopping the run. The report lists each such checkpoint with its result file, so you can check it yourself. If the agent cannot drive a scenario, that scenario is handed to you the same way as a manual test.
+
 Back to [Start here](./README.md)

@@ -93,7 +93,7 @@ The ADR and glossary are repo files: they go into this phase's commit. The other
 
 ## 3. Manual test checkpoints
 
-A `Runner: guardian` checkpoint is run by a companion (see below). A checkpoint marked `Runner: human`, or with no `Runner:`, goes to a guide session:
+A checkpoint marked `Runner: guardian` is run by a companion sub-agent (see "Agent checkpoint" below). A checkpoint marked `Runner: human`, or with no `Runner:`, goes to a guide session:
 
 1. Prepare the files as `references/checkpoint-files.md` says.
 2. Write the handoff prompt as `references/manual-test-handoff.md` says.
@@ -105,6 +105,27 @@ A `Runner: guardian` checkpoint is run by a companion (see below). A checkpoint 
    - Any `fail`: triage and patch the plan as the `execute-plan` skill's "Handling manual-test feedback" says (a regression reopens the item; a coverage gap becomes a new item `Found-in: manual test`), fix it through the usual defect flow in section 2, then write a new handoff for the failed scenarios and any other scenario the fix touched, to be recorded as a `## Re-run … after fix` section in the same result file, and go on from step 3.
    - Any `not run`: ask the user to run it again, or to accept it with its reason.
 
+### Agent checkpoint
+
+A `Runner: guardian` checkpoint does not stop the run: no `Waiting:` line, no guide-session command.
+
+1. Prepare the result file as `references/checkpoint-files.md` says.
+2. Start the companion as `references/agent-checkpoint.md` says (model, effort and brief) and wait for its report.
+3. Read the result file, not the report, and match every row with the report. A row that differs, or a scenario with no row, is unfinished: send the companion a follow-up (Claude Code: `SendMessage`) to finish it.
+4. Process the rows:
+   - All `pass`: go on to the next phase, without stopping and without a `Waiting:` line.
+   - Any `fail`: triage, patch the plan and fix as the `fail` bullet of "Process the result" says. Then re-test through the same companion, not through steps 3-5: send it the failed scenarios and any other scenario the fix touched, and it records a `## Re-run … after fix` section in the same result file. Process that section the same way.
+   - Any `not run` because the companion could not drive the scenario: hand that scenario, and only that one, to the user as a human checkpoint (steps 1-5 above). Put the companion's "could not drive" text from the result file under `## What the agent already tried` in the prompt (`references/manual-test-handoff.md`). The guide session appends its rows to the same result file as a `## Re-run <scenario> by a person` section and keeps the companion's rows; process that section, not the companion's `not run` row. The marker moves from `guardian` to `human` only this way, never back: the user chooses to look at a scenario, the guardian does not.
+
+**Changing a scenario.** This holds for both runners. The guardian may change _how_ a scenario is run so that it matches the code: a route name, a flag, a setup step. Note it as `> Plan correction — <said> / <true>` under the checkpoint in the entry point. The guardian may not weaken or delete a scenario, or change what it expects so that it matches what the code does. A test run by an agent proves only what the scenario says, and a loosened scenario deletes the only evidence.
+
+- Wrong: the expected result "the command exits 1 with `not-pending`" becomes "the command exits 0", because the code exits 0.
+- Right: the route `/orders/:id/pay` becomes `/orders/:id/payment`, because the phase named it that way; noted as a `> Plan correction`.
+
+When a change to what a scenario expects looks needed, it is a decision outside the phase: stop and ask the user.
+
 ## 4. Report
 
 Per guarded phase, one line: `✅ Phase N — <what changed> · gates: <commands> green (or "no gate") · defects fixed: <n> · workspace: <ID> → <status> (or "n/a") · <commit sha, or "staged, commit command printed">`. At a stop, add what the user must do next; at a checkpoint, that is the one-line guide-session command. Paste gate output only when it is red.
+
+Per checkpoint a companion ran, one line: `🧪 Checkpoint N — agent · <n> pass, <n> fail, <n> not run · result <path>`. The final report of the plan lists every agent checkpoint with its result file path, so the user can spot-check it.
