@@ -66,7 +66,7 @@ Create `<root>/<slug>/` and check it is git-ignored (`git check-ignore`). Before
 
 - **`PRD.md`**, from the slice only: the problem, why it matters, what is known, what is open, what is out of scope. First line, literally: `Written by /spin-off on YYYY-MM-DD from a session about <one line>. The user owns it from here.` Nothing from the rest of the session goes in.
 - **The brief** as `docs/YYYY-MM-DD-<topic>-origin.md` (shape below). What the thread decided goes under its `## Decided`, each decision with how the user decided it. Findings and questions stay inside the brief: `kickoff` turns them into files.
-- **Run the `kickoff` skill** on `<root>/<slug>/`, and tell it to read `PRD.md` and the brief only, not this conversation. Its question round (report audience and the rest) runs here with the user.
+- **Run the `kickoff` skill** on `<root>/<slug>/`, and tell it to read `PRD.md` and the brief only, not this conversation. Invoke it through your skill tool (`/kickoff <slug>`); never fill its templates yourself, which skips its question round and its checks. Its question round (report audience and the rest) runs here with the user.
 - **`kickoff` is not in your list of available skills**: stop after `PRD.md` and the brief, write no `INDEX.md`, and say that the workspace is complete once the workspace group is installed and `/kickoff <slug>` has run.
 
 Done when: `kickoff` has finished, `INDEX.md` has the slug's row under `## Active`, and the PRD reads as a request someone who never saw this session could discuss.
