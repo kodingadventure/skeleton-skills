@@ -11,9 +11,13 @@ This skill needs a harness that can start a sub-agent with its own context and s
 
 ## 1. Preflight — once per session
 
-1. Get the plan path from the user, or resolve it per the `writing-great-plan` skill's `references/plan-location.md` → "Which plan runs" (entry point `IMPLEMENTATION_PLAN.md` with a Phase Index; if the `writing-great-plan` skill is not installed, ask the user for the plan path). Read the entry point: Phase Index, Open Questions, Manual Test Checkpoints, Notes. Those four are all the guardian keeps in context.
-2. **ADR skill.** When the plan lives in a feature workspace (`CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` two levels above the plan folder), run `grep -c 'ADR: candidate' <workspace>/CONTEXT.md`. A count above 0 needs the `domain-modeling` skill: check your agent lists it. When it does not, stop here, before the baseline and before dispatching anything, and say that `domain-modeling` (from `mattpocock/skills`) is missing — "see this repo's README for the pinned install command". Never defer this check to the phase close: by then a phase is already committed without its ADR.
-3. **Executor names.** Ask the harness which agent types it offers (in Claude Code, ask Claude to list the agent types it can dispatch). You need one executor per weight. Use the names exactly as listed:
+1. Get the plan path from the user, or resolve it per the `writing-great-plan` skill's `references/plan-location.md` → "Which plan runs" (entry point `IMPLEMENTATION_PLAN.md` with a Phase Index; if the `writing-great-plan` skill is not installed, ask the user for the plan path). Read the entry point: Phase Index, Open Questions, Manual Test Checkpoints, Notes, and `## Baseline` (for a `Waiting:` line). Those five are all the guardian keeps in context.
+2. **Pending checkpoint.** Run `grep -n '^Waiting:' <entry point>`. Take the path of the result file from the line.
+   - No line: go on.
+   - A line and its result file exists: finish the preflight, then process the result ("Process the result" in section 3) before the next phase, without asking. Processing it earlier would delete the line the Baseline step reads.
+   - A line but no result file: say that the test for checkpoint N has not been run, print the guide-session command again (`references/manual-test-handoff.md` → The command), and stop.
+3. **ADR skill.** When the plan lives in a feature workspace (`CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` two levels above the plan folder), run `grep -c 'ADR: candidate' <workspace>/CONTEXT.md`. A count above 0 needs the `domain-modeling` skill: check your agent lists it. When it does not, stop here, before the baseline and before dispatching anything, and say that `domain-modeling` (from `mattpocock/skills`) is missing — "see this repo's README for the pinned install command". Never defer this check to the phase close: by then a phase is already committed without its ADR.
+4. **Executor names.** Ask the harness which agent types it offers (in Claude Code, ask Claude to list the agent types it can dispatch). You need one executor per weight. Use the names exactly as listed:
 
    - Installed as files in `.claude/agents/`: `phase-s`, `phase-m`, `phase-l`, `phase-xl`.
    - Installed from the `phase-agents` plugin: `phase-agents:phase-s` and so on. A bare `phase-s` is rejected there ("Agent type 'phase-s' not found").
@@ -22,15 +26,15 @@ This skill needs a harness that can start a sub-agent with its own context and s
 
    The stop message names both install routes: `claude plugin marketplace add <catalog>` then `claude plugin install phase-agents@skeleton-skills --scope project`; or copy the `phase-*.md` files from the catalog's `plugins/phase-agents/agents/` folder into `.claude/agents/`. For a harness without sub-agents, point to the `execute-plan` route above.
 
-4. **Gates runnable.** Take the gates from `docs/agents/verify.md` for the stacks the plan touches. If the repo has no `verify.md`, take them from the plan header's `Verify:` line. If neither exists, write "no gate" under `## Baseline` and say so in every report; do not stop. A phase that creates `verify.md` moves the gates to that file from the next phase on. Every gate must run to a real verdict. A gate that errors on tooling (missing binary, unreachable dependency, linter built for an older toolchain) is a toolchain defect, not a code defect: fix it now or stop and tell the user what access is missing. When the repo keeps `docs/agents/toolchain.md` (one line per symptom and its fix, for the environments its sessions run in), read it first and add every new fix you find to it.
-5. **Baseline.** Run the gates on a clean worktree of `HEAD` (`git worktree add <scratch>/base HEAD`) and record every pre-existing failure in the plan entry point under `## Baseline`. From here on only a failure absent from the baseline counts against a phase.
-6. **Commit mode.** Ask nothing: derive it from the repo's rules, once per session (never reuse an earlier note). Run `grep -inE 'commit|push' CLAUDE.md CLAUDE.local.md AGENTS.md` in the target repo (skip files that do not exist), map the hits to one mode, announce it in one line, and record `Commit mode: <commit | confirm | print> — <the rule line quoted, or "no commit rule">` in the entry point under `## Baseline`.
+5. **Gates runnable.** Take the gates from `docs/agents/verify.md` for the stacks the plan touches. If the repo has no `verify.md`, take them from the plan header's `Verify:` line. If neither exists, write "no gate" under `## Baseline` and say so in every report; do not stop. A phase that creates `verify.md` moves the gates to that file from the next phase on. Every gate must run to a real verdict. A gate that errors on tooling (missing binary, unreachable dependency, linter built for an older toolchain) is a toolchain defect, not a code defect: fix it now or stop and tell the user what access is missing. When the repo keeps `docs/agents/toolchain.md` (one line per symptom and its fix, for the environments its sessions run in), read it first and add every new fix you find to it.
+6. **Baseline.** Run the gates on a clean worktree of `HEAD` (`git worktree add <scratch>/base HEAD`) and record every pre-existing failure in the plan entry point under `## Baseline`. From here on only a failure absent from the baseline counts against a phase. When a `Waiting:` line exists and `git rev-parse HEAD` equals the SHA on that line exactly, keep the recorded `## Baseline` and skip the gate run in the worktree; when HEAD differs, run the baseline as usual. The ADR-skill check, the executor names and the commit mode are always re-derived.
+7. **Commit mode.** Ask nothing: derive it from the repo's rules, once per session (never reuse an earlier note). Run `grep -inE 'commit|push' CLAUDE.md CLAUDE.local.md AGENTS.md` in the target repo (skip files that do not exist), map the hits to one mode, announce it in one line, and record `Commit mode: <commit | confirm | print> — <the rule line quoted, or "no commit rule">` in the entry point under `## Baseline`.
    - **`commit`:** no commit rule, or a rule that lets the agent commit. The guardian commits each phase with its `Suggested commit:` line, then goes on.
    - **`confirm`:** a rule that asks for confirmation before a commit, **or a rule that is ambiguous**. The guardian shows the diff summary (`git diff --cached --stat`), asks, commits when approved, then goes on. Ambiguous rules fall here: "Commit only when the user asks", "Don't commit without review", "Be careful with git operations". Reading a prohibition as permission would commit in a repo that forbids it; the other mistake only costs one question per phase.
    - **`print`:** a rule that forbids the agent to commit. The guardian leaves the phase staged, prints the commit command and waits. When the user says to go on, check `git diff --cached --quiet` (exit 0) and that `git log -1 --format=%s` holds that phase's commit; go on only then, else say what is missing.
    - **Push:** never, and not offered as a choice. Push only when the user asks for it on their own, or when the repo's rules explicitly require it.
 
-Done when the ADR-skill check passed (or the plan has no workspace, or no `ADR: candidate`), every gate has produced output on the baseline (or "no gate" is recorded), `## Baseline` lists its failures (or "none"), and the commit mode is recorded.
+Done when the pending-checkpoint check ended in one of its three states (no line; a line with its result file, queued for processing; a line without it, stopped), the ADR-skill check passed (or the plan has no workspace, or no `ADR: candidate`), every gate has produced output on the baseline (or "no gate" is recorded), `## Baseline` lists its failures (or "none"), and the commit mode is recorded.
 
 ## 2. Phase loop
 
@@ -83,10 +87,24 @@ The ADR and glossary are repo files: they go into this phase's commit. The other
 
 **Advance.** Set the entry point's `Status` to one of `pending`, `in-progress`, `done`, `abandoned`; write progress in a separate `Progress:` line. Then go on to the next phase, unless:
 
-- a Manual Test Checkpoint follows this phase → stop, hand the user the checkpoint text, and wait for their result;
+- a Manual Test Checkpoint follows this phase → run it (see "3. Manual test checkpoints");
 - a blocker or a decision outside the phase's scope → stop and ask;
 - commit mode `print`: the phase waits for the user's commit (see Commit); or the commit step left the phase uncommitted (a gate could not run, or the user declined under `confirm`).
 
-## 3. Report
+## 3. Manual test checkpoints
 
-Per guarded phase, one line: `✅ Phase N — <what changed> · gates: <commands> green (or "no gate") · defects fixed: <n> · workspace: <ID> → <status> (or "n/a") · <commit sha, or "staged, commit command printed">`. At a stop, add what the user must do next. Paste gate output only when it is red.
+A `Runner: guardian` checkpoint is run by a companion (see below). A checkpoint marked `Runner: human`, or with no `Runner:`, goes to a guide session:
+
+1. Prepare the files as `references/checkpoint-files.md` says.
+2. Write the handoff prompt as `references/manual-test-handoff.md` says.
+3. Write the `Waiting:` line under `## Baseline`.
+4. Print the one-line command, then suggest wait or stop with one sentence of reason, and let the user choose.
+5. Wait: when the user says "done", process the result. Stop: in a workspace, rewrite `WHATNEXT.md` (State now: waiting for checkpoint N; Next steps 1: run the guide session with that command, then `/guard-plan` in a new session), report, and end.
+6. **Process the result.** Read the result file. If the user only pasted a summary in chat and no result file exists, write the result file from that summary first, so the file stays the single source. The guide writes the file as it goes, so a file can exist before the test ends: when a scenario of the checkpoint has no row, the test is unfinished. Name the scenarios still missing, print the command again, and wait or stop as in step 5; process nothing.
+   - All `pass`: delete the `Waiting:` line and go on.
+   - Any `fail`: triage and patch the plan as the `execute-plan` skill's "Handling manual-test feedback" says (a regression reopens the item; a coverage gap becomes a new item `Found-in: manual test`), fix it through the usual defect flow in section 2, then write a new handoff for the failed scenarios and any other scenario the fix touched, to be recorded as a `## Re-run … after fix` section in the same result file, and go on from step 3.
+   - Any `not run`: ask the user to run it again, or to accept it with its reason.
+
+## 4. Report
+
+Per guarded phase, one line: `✅ Phase N — <what changed> · gates: <commands> green (or "no gate") · defects fixed: <n> · workspace: <ID> → <status> (or "n/a") · <commit sha, or "staged, commit command printed">`. At a stop, add what the user must do next; at a checkpoint, that is the one-line guide-session command. Paste gate output only when it is red.
