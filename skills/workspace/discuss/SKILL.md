@@ -2,7 +2,7 @@
 name: discuss
 description: Run only when the user asks for it by name. Open a discussion about a feature workspace's topic — loads CONTEXT.md, WHATNEXT.md and only the files the topic touches, then talks it through and records whatever gets settled. No code changes, no commits.
 argument-hint: "<workspace> [topic]"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Discuss

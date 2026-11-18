@@ -1,6 +1,6 @@
 # Workspace and GitHub skills are invoked by name
 
-Status: accepted
+Status: superseded by ADR 0018
 
 ## Context
 

@@ -2,7 +2,7 @@
 name: github-new-issue
 description: Run only when the user asks for it by name. Announce work that already has a feature workspace as a new public GitHub issue, once the user approves the draft, and record the issue in the workspace.
 argument-hint: "[<workspace slug>]"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # GitHub New Issue

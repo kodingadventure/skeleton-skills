@@ -31,9 +31,9 @@ Every group has `skills/<group>/README.md`: add one bullet for the new skill (na
 
 ## Choose who can invoke it
 
-`disable-model-invocation: true` removes a skill from the model's skill list, though the user can still type it. The model then reads the skill as not installed, so another skill's "recommend `/x` if installed" never fires. Choose by how the skill is reached:
+Every skill stays visible to the agent (`disable-model-invocation: false`; `docs/adr/0018-every-skill-stays-visible-to-the-agent.md`). A skill hidden from the model's skill list reads as not installed, so another skill's "recommend `/x` if installed" never fires. The description decides when the skill starts. Choose by how the skill is reached:
 
-- **Manual** (`disable-model-invocation: true`): the skill writes or sends something and should only run when named, such as `tracker`, `wrap-up` or the GitHub skills. Start the description with "Run only when the user asks for it by name."
+- **Manual**: the skill writes or sends something and runs only when the user names it, such as `tracker`, `wrap-up` or the GitHub skills. Start the description with "Run only when the user asks for it by name." and leave out a self-triggering "Use when". Other skills may recommend it when it is installed.
 - **Model-invocable, starts on its own**: only `kickoff`, `pause-here` and `spin-off`. They fit a moment the user would not think to name: closing a session, splitting a topic out, turning a discussion into a workspace. Put the "Use when" triggers in the description and any write behind a user confirmation in the steps.
 - **Model-invocable, reached by other skills or a fixed threshold**: `writing-great-plan`, `verify`, `review-phase`, `review-page`, `skill-from-context`. A skill that others route to by an "installed" condition stays visible to the model.
 - **Model-invocable, picked on a matching request**: `to-plan`, `execute-plan`, `guard-plan`, `whatnext`, `refine-docs`, `what-you-did`. The user asks for the job ("create a plan") rather than naming the skill; the description's "Use when" triggers carry the routing.
