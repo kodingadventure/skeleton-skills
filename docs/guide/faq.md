@@ -50,7 +50,7 @@ Progress reports are optional. `kickoff` asks whether anyone receives them, and 
 
 ## What does a good PRD look like?
 
-A PRD is `.scratch/workspaces/<slug>/PRD.md`, in plain prose. You can write it yourself, or let `spin-off` seed it from a conversation; either way you correct it before `kickoff`. `kickoff` reads it, so these are worth having in it, as far as you know them:
+A PRD is `.scratch/workspaces/<slug>/PRD.md`, in plain prose. You can write it yourself, or let `kickoff` (or `spin-off`) write it from the conversation; its first line then says so, and it is yours to correct. To write one, `kickoff` needs two things in your own words: what you want changed, and the result you expect. It asks for whichever is missing, and leaves the rest open in the PRD. `kickoff` reads it, so these are worth having in it, as far as you know them:
 
 - What the feature is.
 - Decisions already made.

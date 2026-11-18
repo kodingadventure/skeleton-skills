@@ -10,7 +10,7 @@ A workspace is one folder under `.scratch/workspaces/` (the default root).
 .scratch/workspaces/
   INDEX.md                  one row per workspace: active, seeded, shipped
   <slug>/
-    PRD.md                  the request: written by you or seeded by spin-off
+    PRD.md                  the request: written by you, or by kickoff or spin-off
     CONTEXT.md              refined spec and workspace rules
     TRACKER.md              work items, decisions, questions, Action Log
     WHATNEXT.md             what to do next; rewritten, never appended
@@ -42,7 +42,7 @@ You may open these. You do not have to.
 
 | File | What it holds | Who reads it | Main writers |
 | --- | --- | --- | --- |
-| `PRD.md` | The request: the problem, what is known, what is open | You, the agent | You, or `spin-off` or `github-spin-off` from a conversation |
+| `PRD.md` | The request: the problem, what is known, what is open | You, the agent | You, or `kickoff`, `spin-off` or `github-spin-off` from a conversation |
 | `WHATNEXT.md` | State now and the next steps | You, the agent | `kickoff`, `pause-here`, `resume-here`, `discuss`, `spin-off`, `tracker`, `execute-plan`, `guard-plan`, `review-phase`, `wrap-up` |
 | `CONTEXT.md` | Refined spec, rules, decisions | The agent | `kickoff`; updated by `discuss`, `pause-here` and others |
 | `TRACKER.md` | Work items, Action Log, report rules | The agent | `kickoff`, `tracker`, `pause-here`, `discuss`, `spin-off`, `execute-plan`, `guard-plan`, `review-phase` |

@@ -2,7 +2,7 @@
 
 This guide answers one question: how do you try these skills on your own project?
 
-The catalog is a set of agent skills for working with a coding agent in plans and feature workspaces. You start from a PRD (written by you, or by the agent from a conversation with `spin-off`), turn it into a workspace, pause and resume across sessions, run a phased plan with a guardian reviewing every phase, and close the work out. Decisions that need you go to a short review page instead of a wall of chat.
+The catalog is a set of agent skills for working with a coding agent in plans and feature workspaces. You start from an idea or a PRD (written by you, or by the agent from the conversation with `kickoff` or `spin-off`), turn it into a workspace, pause and resume across sessions, run a phased plan with a guardian reviewing every phase, and close the work out. Decisions that need you go to a short review page instead of a wall of chat.
 
 It is for you if you are about to use the skills on a project of your own.
 

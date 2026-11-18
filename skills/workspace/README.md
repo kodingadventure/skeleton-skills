@@ -1,8 +1,8 @@
 # Workspace
 
-Feature workspaces: one git-ignored folder per feature or task, from a hand-written PRD to a shipped feature whose knowledge has moved into the repo. The nine skills reference each other — install them together.
+Feature workspaces: one git-ignored folder per feature or task, from an idea or a hand-written PRD to a shipped feature whose knowledge has moved into the repo. The nine skills reference each other — install them together.
 
-- **[kickoff](./kickoff/SKILL.md)** — Turns a PRD discussion into a workspace: `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`, the folder layout and the `INDEX.md` row, in the PRD's language.
+- **[kickoff](./kickoff/SKILL.md)** — Turns an idea or a PRD discussion into a workspace: `PRD.md` from the conversation when there is none, then `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`, the folder layout and the `INDEX.md` row, in the PRD's language.
 - **[tracker](./tracker/SKILL.md)** — `log` a session, record a stakeholder's `answer`, and — when the workspace has a report audience — draft a progress `report` and mark it `sent`.
 - **[pause-here](./pause-here/SKILL.md)** — Brings the workspace files up to date when they are behind (you stop with work not yet recorded, or work happened without them): tracker logged, findings and questions written, `WHATNEXT.md` rewritten, a handoff when needed. The model may invoke it on its own.
 - **[resume-here](./resume-here/SKILL.md)** — Opens a session: reads `WHATNEXT.md`, `CONTEXT.md` and the handoff, reconciles drift with git, then takes next step 1.
@@ -15,9 +15,9 @@ Feature workspaces: one git-ignored folder per feature or task, from a hand-writ
 ## The flow
 
 ```
-0. User writes PRD.md             .scratch/workspaces/<slug>/PRD.md (+ input files)
+0. An idea, or PRD.md             in the conversation, or .scratch/workspaces/<slug>/PRD.md (+ input files)
 1. Discuss the PRD                free, or /grilling (mattpocock/skills)
-2. /kickoff <slug>                CONTEXT.md, TRACKER.md, WHATNEXT.md, layout, INDEX.md row
+2. /kickoff <slug>                PRD.md when missing, CONTEXT.md, TRACKER.md, WHATNEXT.md, layout, INDEX.md row
 3. /to-plan                       plans/01-<name>/IMPLEMENTATION_PLAN.md (+ phases/)
 4. /execute-plan                  phase by phase; after each: tracker status, Action Log, WHATNEXT.md,
    │                              and the ADR of any decision the phase's code just settled
@@ -37,7 +37,7 @@ Feature workspaces: one git-ignored folder per feature or task, from a hand-writ
 .scratch/workspaces/
   INDEX.md                  # one row per workspace (English): active, seeded, shipped
   <slug>/
-    PRD.md                  # written by the user
+    PRD.md                  # written by the user, or by kickoff / spin-off
     CONTEXT.md              # refined spec + workspace rules (language, layout, conventions)
     TRACKER.md              # work items, weights, decisions, questions, Action Log, report rules
     WHATNEXT.md             # what to do next; rewritten, never appended (~40 lines)

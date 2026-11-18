@@ -6,12 +6,12 @@ This page answers one question: which of two similar skills do you call? Five pa
 
 ## `spin-off` and `kickoff`
 
-Use `spin-off` to move one thread out of a running session. Use `kickoff` to turn a PRD discussion into a full workspace.
+Use `spin-off` to move one thread out of a running session. Use `kickoff` to turn an idea or a PRD into a full workspace. When the session already has commits or changed files for the idea, `spin-off` carries them along, and `kickoff` tells you so.
 
 | | `spin-off` | `kickoff` |
 | --- | --- | --- |
-| Use it when | A long session wandered, and one topic deserves its own workspace | You have a `PRD.md` (yours, or seeded by `spin-off`), discussed it, and want to track the work |
-| What it writes | In an existing workspace: a handoff, findings, and a next step in `WHATNEXT.md`. In a new one: `PRD.md`, an origin brief, and minimal `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`. A new workspace is not live until `kickoff` runs | `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`, the folder layout and the `INDEX.md` row |
+| Use it when | A long session wandered, and one topic deserves its own workspace | You have an idea (in the conversation, in the words after `/kickoff <slug>`, or in a `PRD.md`) and want to track the work |
+| What it writes | In an existing workspace: a handoff, findings, and a next step in `WHATNEXT.md`. In a new one: `PRD.md`, an origin brief, and minimal `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`. A new workspace is not live until `kickoff` runs | `PRD.md` when there is none, `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`, the folder layout and the `INDEX.md` row |
 | Starts on its own? | Yes, when you say so. You still confirm the slice and the destination | Yes, when you say so |
 
 ## `resume-here` and `discuss`
