@@ -50,7 +50,7 @@ Before writing any code, read every file listed under the item's `Files:` and `S
 
 - `Runner: human` — stop and wait for the user's answer; do not do the item.
 - `Runner: guardian` — in a single session, do it yourself after the phase.
-- These markers are for items only. A Manual Test Checkpoint also carries `Runner:`, but `execute-plan` never runs a checkpoint itself: hand every checkpoint to the user, `Runner: guardian` included (that mark is for `guard-plan`'s companion).
+- These markers are for items only. A Manual Test Checkpoint's `Runner:` is for `guard-plan`; see the report Rules.
 - `Execution unit:` with one sub-checkbox per unit — run one unit per round, tick its sub-checkbox, and checkpoint after each unit.
 - `Suggested commit: none — <reason>` — nothing is staged or committed, but the gates still run.
 
@@ -221,6 +221,7 @@ Rules:
 - **Workspace** names what step 2 actually changed, read back from the files — a template field left at its placeholder means the step was skipped.
 - **Verify** is the command and its output, or `not run` plus the reason — never a bare PASS. Same contract as Step B; a checkpoint is where an unrun check gets reported as green.
 - **Under `Review: guardian`** (see Step C): drop the **Commit** line entirely and report `**Handoff:** staged, awaiting /review-phase`, with **Next:** reading `awaiting /review-phase`. The executor prints no commit command in that mode — the commit follows the review.
+- **Manual Test Checkpoints:** when the plan names checkpoints after this phase, list every one of them for the user to run, by number, `Runner: guardian` included (that mark is for `guard-plan`'s companion; `execute-plan` hands every checkpoint to the user). A command you already ran while verifying does not replace the checkpoint: say what it printed and still list it.
 - The closing question always mirrors what **Next:** just named — never hardcode "Phase N+1" literally, since **Next** may be a batch or a differently-numbered phase.
 
 ### Completion report (all items checked, see Completion section)
