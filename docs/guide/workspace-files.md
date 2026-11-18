@@ -8,7 +8,7 @@ A workspace is one folder under `.scratch/workspaces/` (the default root).
 
 ```
 .scratch/workspaces/
-  INDEX.md                  one row per workspace: active, seeded, shipped
+  INDEX.md                  one row per workspace: active, shipped
   <slug>/
     PRD.md                  the request: written by you, or by kickoff or spin-off
     CONTEXT.md              refined spec and workspace rules
