@@ -141,7 +141,7 @@ A question that is still open when the plan is written goes in `## Open Question
 - [ ] Every `## Open Questions` bullet has a `Default:` and an `Affects:`; no `## Decisions` section.
 - [ ] The header has no `Source`, `Format`, Weight legend or `## Relevant Files`; `PlanType` appears only in a maintenance plan.
 - [ ] Every `## Notes` bullet starts `Applies to: all` or `Applies to: <phases>`.
-- [ ] Every item the executor cannot do alone (waits for a person, needs a permission) carries `Runner:`; every phase file carries `Repo:` and uses no placeholder defined only in the entry point.
+- [ ] Every item the executor cannot do alone (waits for a person, needs a permission) carries `Runner:`, and every Manual Test Checkpoint carries `Runner:`; every phase file carries `Repo:` and uses no placeholder defined only in the entry point.
 - [ ] `Status:` is one of the four values; progress text is on a separate `Progress:` line.
 - [ ] Ran `references/runner-check.md` and applied what it found.
 
@@ -296,10 +296,32 @@ Every plan carries a **Manual Test Checkpoints** section, including maintenance 
 Automated verify (build/typecheck/lint) confirms the code compiles, not that the behavior is correct — this section is where a human-observable checkpoint gets flagged so `execute-plan` can
 surface it.
 
-`execute-plan` surfaces each checkpoint to the user right after the phase commits, and owns a defined protocol for handling whatever feedback comes back (see its "Handling manual-test
-feedback on a completed phase" section). A plan-producing skill's only job is to identify and list the checkpoints — never encode the recovery flow in the plan itself.
+`execute-plan` surfaces every checkpoint to the user right after the phase commits, whatever its `Runner:`, and owns a defined protocol for handling whatever feedback comes back (see its
+"Handling manual-test feedback on a completed phase" section). `guard-plan` runs a `Runner: guardian` checkpoint through a companion subagent without stopping, and hands a `Runner: human`
+checkpoint to the user through a guide session. A plan-producing skill's only job is to identify and list the checkpoints and mark who runs each — never encode the recovery flow in the plan itself.
 
-Name the phase, the surface, and the expected result — not the reasoning for why a checkpoint exists there. Never omit the section silently; when no phase changes observable behavior, write
+Name the phase, the surface, and the expected result — not the reasoning for why a checkpoint exists there. Write each scenario the same way for either runner: the action, the input, and
+an expected result that can be observed. The marker changes only who runs it.
+
+Every checkpoint carries a `Runner:` line, written under it with the same field as an item:
+
+```markdown
+## Manual Test Checkpoints
+
+1. After Phase 2 — <surface to drive>: <1–2 concrete scenarios, expected result>
+   - Runner: guardian
+2. After Phase 5 — <surface>: <scenarios, expected result>
+   - Runner: human
+```
+
+How to set it:
+
+- Read the target repo's `docs/agents/verify.md`: `## Runtime policy` and `## Surfaces`. Write `Runner: guardian` only when **every** scenario of that checkpoint drives a surface the runtime policy lets the agent drive, and the surfaces table says how to drive it. Otherwise write `Runner: human`: a physical device, a visual or taste judgement, a login or an outside account, a long-lived server reserved for the person.
+- A repo with no `verify.md`, or one with no runtime policy, gets `Runner: human`.
+- A checkpoint with no `Runner:` line (an older plan) belongs to the person. This is the reverse of an item, where no line means the executor; say so when you explain the field.
+- The user can change a mark while reviewing the plan.
+
+Never omit the section silently; when no phase changes observable behavior, write
 it explicitly:
 
 ```markdown
@@ -347,7 +369,7 @@ A phase that changes nothing in the repo (it only writes notes elsewhere, or onl
 
 These are fixed forms; do not invent variants.
 
-- **`Runner:`** — an optional item field, `Runner: guardian` or `Runner: human`. No line means the executor does it. An item with the field is not dispatched to an executor agent: the guardian does it after the phase, or the run stops and waits for the person. Use it for work an agent cannot finish alone — a page that waits for an answer, installing a tool, a login, a click in a dashboard.
+- **`Runner:`** — an optional item field, `Runner: guardian` or `Runner: human`. No line means the executor does it. An item with the field is not dispatched to an executor agent: the guardian does it after the phase, or the run stops and waits for the person. Use it for work an agent cannot finish alone — a page that waits for an answer, installing a tool, a login, a click in a dashboard. Every Manual Test Checkpoint carries the field too, with a different meaning and default: see "Manual Test Checkpoints" for its rule.
 - **`Applies to:`** — every `## Notes` bullet starts with `Applies to: all` or `Applies to: <phase or range>`. The dispatcher attaches the bullets that apply to the phase it sends out, so a bullet without it may never reach the executor.
 - **`Repo:`** — every phase file carries a `Repo: <absolute path>` line (from the plan's `**Repo:**` line or its `## Environment` table). Phase files use absolute paths, or placeholders defined in the file itself, never ones defined only in the entry point: the executor does not open the entry point.
 - **`Execution unit:`** — for a repeating phase, one checkbox sub-bullet per unit (see "Repeating (per-unit) phases").

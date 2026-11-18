@@ -47,6 +47,11 @@ prettier's output is the fix.
 so in practice the agent may drive every surface below — they are all bounded and exit
 on their own.
 
+`writing-great-plan` reads this section and `## Surfaces` to mark each Manual Test
+Checkpoint `Runner: guardian` or `Runner: human`, and `guard-plan` runs a `guardian`
+checkpoint through a companion sub-agent (ADR 0016 records the marker, ADR 0017 the
+agent's permission).
+
 ## Surfaces
 
 | Change reaches                    | Surface                                                                        |
@@ -56,6 +61,6 @@ on their own.
 | A skill's body or references      | manual test in a fixture repo: `docs/agents/manual-test.md`                    |
 
 A skill whose text changed has no automated surface: the gate proves it is formatted,
-not that it still works. When a phase rewrites a skill's workflow, say so in the
-checkpoint report and let the human decide whether to drive it; the manual test is in
-`docs/agents/manual-test.md`.
+not that it still works. A phase that rewrites a skill's workflow gets a checkpoint that
+runs the manual test in `docs/agents/manual-test.md`, and its `Runner:` marker follows the
+runtime policy above.

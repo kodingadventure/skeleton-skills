@@ -6,7 +6,7 @@ It names model tiers only (Haiku, Sonnet, Opus, Fable), not version numbers, so 
 
 ## What is already automatic
 
-Two things need no choice from you:
+Three things need no choice from you:
 
 - **Phase executors.** `guard-plan` (and `execute-plan`, when it dispatches a batch of phases) picks the agent from the phase's Weight. Each agent carries its own model and effort in its frontmatter. (With the plugin install they are named `phase-agents:phase-s` and so on.)
 
@@ -19,6 +19,7 @@ Two things need no choice from you:
 
   A plan never names a model. It only carries a Weight per phase.
 
+- **Manual test guide sessions.** When `guard-plan` hands you a manual test, the command it prints opens the guide session with a suggested model and effort (Sonnet, medium, unless the test needs diagnosis). A checkpoint the agent runs itself uses a companion sub-agent with the same defaults (Sonnet, medium; high when it must drive a browser or diagnose output).
 - **`msg`.** It sets `model: haiku` in its own frontmatter, because drafting a short chat message is light work.
 
 Only Claude Code honours these settings. Every other skill uses the model and effort of your session. Change them with `/model` and `/effort`.

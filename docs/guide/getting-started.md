@@ -43,7 +43,7 @@ The same skill can be called in other ways; the [README](https://github.com/kodi
 
 Most of the flow is the same. Four things differ.
 
-- **Your rules win.** If `CLAUDE.md` or `AGENTS.md` already says who commits and when, the skills follow it. `review-phase` prints the commit command for you to run when the rules say nothing (and `execute-plan` does, when the plan has no `Review: guardian` line).
+- **Your rules win.** If `CLAUDE.md` or `AGENTS.md` already says who commits and when, the skills follow it. `review-phase` prints the commit command for you to run when the rules say nothing (and `execute-plan` does, when the plan has no `Review: guardian` line). If your rules forbid agent commits but you want `guard-plan` to commit its reviewed phases, add an exception to the rule, for example: `The agent never commits, except guard-plan, which commits each phase after its review.`
 - **Missing gates are set up on first use.** If `docs/agents/verify.md` does not exist, `verify` creates it the first time it runs. It reads your build files and CI, runs each candidate command once, and asks you one question: may the agent start the app itself, or do you drive it. It then shows you the draft before writing it.
 - **Missing doc layout is offered.** If `docs/agents/domain.md` exists but has no `## Docs Layout` block, `refine-docs` infers one, shows you the draft and writes it only after you correct it. If `domain.md` is missing, it stops and points you to `/setup-matt-pocock-skills`.
 - **Teammates see nothing extra.** The workspace folder is git-ignored. They see ordinary commits and, once, the `Workspace root:` line (and a `Plan root:` line if you write a plan outside a workspace) and, if `kickoff` or `spin-off` added it, the `.gitignore` entry.

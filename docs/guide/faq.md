@@ -77,4 +77,10 @@ Run one of these, depending on what you lost:
 
 That is the design goal, but it has not been measured, so this guide gives no number. Each phase runs in an agent with a fresh context, on a model chosen from the phase's Weight, and the main session only checks the result instead of doing the work. See [Model and effort](./model-and-effort.md) for the Weight table.
 
+## What happens at a manual test under guard-plan?
+
+The guardian writes a prompt for a separate session and prints one command per checkpoint that opens it (all at once when several are due after the same phase), with a suggested model and effort. That session guides you through the test step by step and records the result in the plan's folder. The guardian suggests whether to wait for you or to stop, and you choose. If it stops, run `/guard-plan` in a new session: it reads the result and carries on.
+
+A checkpoint the plan marks for the agent is run by a sub-agent instead, without stopping the run. The report lists each such checkpoint with its result file, so you can check it yourself. If the agent cannot drive a scenario, that scenario is handed to you the same way as a manual test.
+
 Back to [Start here](./README.md)

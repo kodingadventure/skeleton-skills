@@ -18,7 +18,7 @@ A workspace is one folder under `.scratch/workspaces/` (the default root).
     findings/  questions/  handoffs/  reports/  docs/  logs/
 ```
 
-`logs/` appears only when the work involves manual tests. If you use `msg`, a `TEAM.md` (names and contacts) sits next to `INDEX.md`, outside any workspace; keep it git-ignored.
+`logs/` appears only when the work involves manual tests. `guard-plan` writes the prompt and the result of a checkpoint test next to the plan, in `plans/<NN>-<name>/manual-tests/`. If you use `msg`, a `TEAM.md` (names and contacts) sits next to `INDEX.md`, outside any workspace; keep it git-ignored.
 
 ## What you read
 

@@ -9,6 +9,9 @@
 #   install-suite DIR [SKILL]  copy a suite skill (default domain-modeling) from the catalog's .claude/skills/
 #   allow-commit DIR        CLAUDE.md: "the agent may commit after the gates pass" (committed)
 #   silent-commit DIR       CLAUDE.md: no commit rule (committed)
+#   forbid-commit DIR       CLAUDE.md: "The agent never commits; the user commits." (committed)
+#   confirm-commit DIR      CLAUDE.md: "Commit only when the user asks." (committed)
+#   checkpoint-plan DIR     commit a Runtime policy and a Surfaces row in verify.md; write .scratch/plans/DATE-cancel-order/ (one phase, three manual test checkpoints: guardian, guardian that cannot be driven, human)
 #   drop-wiki DIR           remove the "### Wiki" table and docs/wiki/ (committed)
 #   behaviour-commit DIR    commit a cross-unit rule (refund) with its test and no docs
 #   workspace DIR           write .scratch/workspaces/demo/ (CONTEXT, TRACKER, WHATNEXT, a two-phase plan) and its INDEX.md
@@ -47,11 +50,17 @@ install_skill() {
   echo "installed $skill"
 }
 
-claude_md() { # $1 = dir, $2 = "allow" | "silent"
+claude_md() { # $1 = dir, $2 = "allow" | "silent" | "forbid" | "confirm"
   {
     printf '# Shop\n\nA tiny shop: orders and payments. Tests: `npm test`.\n'
     if [[ "$2" == "allow" ]]; then
       printf '\n## Commits\n\nThe agent may commit after the gates pass. Use conventional commit messages.\n'
+    fi
+    if [[ "$2" == "forbid" ]]; then
+      printf '\n## Commits\n\nThe agent never commits; the user commits.\n'
+    fi
+    if [[ "$2" == "confirm" ]]; then
+      printf '\n## Commits\n\nCommit only when the user asks.\n'
     fi
   } > "$1/CLAUDE.md"
 }
@@ -229,6 +238,94 @@ silent-commit)
   need_dir "${2:-}"; need_clean "$2"
   claude_md "$2" silent; commit "$2" "docs: no commit rule"
   git -C "$2" log --oneline -1
+  ;;
+forbid-commit)
+  need_dir "${2:-}"; need_clean "$2"
+  claude_md "$2" forbid; commit "$2" "docs: the agent never commits"
+  git -C "$2" log --oneline -1
+  ;;
+confirm-commit)
+  need_dir "${2:-}"; need_clean "$2"
+  claude_md "$2" confirm; commit "$2" "docs: commit only when the user asks"
+  git -C "$2" log --oneline -1
+  ;;
+# Checkpoint 2 is deliberately impossible for anyone to run (there is no order page),
+# to test the agent -> human fallback. It always ends as `not run`; the expected
+# answer is "Accept as not run".
+checkpoint-plan)
+  need_dir "${2:-}"; need_clean "$2"
+  cat > "$2/docs/agents/verify.md" <<'EOF'
+# Verify Config — shop
+
+## Gates
+
+| Touched path | Gate       |
+| ------------ | ---------- |
+| `src/**`     | `node --test` |
+
+## Runtime policy
+
+The agent may run `node` commands against `src/`; it starts no server and no browser.
+
+## Surfaces
+
+| Touched path | Surface |
+| ------------ | ------- |
+| `src/**`     | `node -e "import('./src/orders/orders.js').then(m => console.log(m.orderStatus(m.createOrder('o1', 10))))"` |
+EOF
+  commit "$2" "docs: runtime policy"
+  today="$(date +%F)"
+  p="$2/.scratch/plans/$today-cancel-order"
+  mkdir -p "$p/phases"
+  cat > "$p/IMPLEMENTATION_PLAN.md" <<EOF
+# Implementation Plan: Cancel an order
+
+**Status:** pending
+**Repo:** \`$2\`
+
+## Overview
+
+\`cancelOrder\` cancels a pending order and refuses any other.
+
+## Phase Index
+
+| #   | Phase        | Weight | File                                |
+| --- | ------------ | ------ | ----------------------------------- |
+| 1   | Cancel order | M      | \`phases/phase-01-cancel-order.md\` |
+
+> Open the file for the phase you're executing. Each phase file is self-contained.
+
+## Manual Test Checkpoints
+
+1. After Phase 1 — \`node -e\`: run \`node -e "import('./src/orders/orders.js').then(m => console.log(m.orderStatus(m.cancelOrder(m.createOrder('o1', 10)))))"\`; it prints \`cancelled\`.
+   - Runner: guardian
+2. After Phase 1 — order page in a browser: check the Cancel button is disabled for a paid order.
+   - Runner: guardian
+3. After Phase 1 — \`node -e\`: with \`node -e\`, cancel an order that is already paid (create it, call \`markPaid\`, then \`cancelOrder\`); the message \`cannot cancel a paid order\` is shown.
+   - Runner: human
+
+## Notes
+
+- Applies to: all — keep the change inside \`src/orders/\`.
+EOF
+  cat > "$p/phases/phase-01-cancel-order.md" <<EOF
+# Phase 1: Cancel order
+
+Weight: M
+Depends on: nothing
+Repo: \`$2\`
+
+## Checklist
+
+- [ ] **Add cancelOrder** (M)
+  - What: In \`src/orders/orders.js\`, add \`cancelOrder(order)\`: when \`order.status\` is \`pending\`, return the order with \`status: "cancelled"\`; otherwise throw \`cannot cancel a <status> order\`. Add one test in \`src/orders/orders.test.js\` that cancels an order made with \`createOrder\` and checks \`orderStatus\` is \`cancelled\`.
+  - Files: \`src/orders/orders.js\`, \`src/orders/orders.test.js\`
+
+Suggested commit: feat(orders): cancel a pending order
+EOF
+  git -C "$2" log --oneline -1
+  git -C "$2" status --short
+  echo "plan written under $p (git-ignored); tree stays clean"
   ;;
 drop-wiki)
   need_dir "${2:-}"; need_clean "$2"
@@ -556,6 +653,6 @@ status)
   if [[ -d "$2/.scratch/.git" ]]; then echo "--- notes repo"; git -C "$2/.scratch" log --oneline | wc -l; fi
   ;;
 *)
-  sed -n '2,22p' "$0"; exit 1
+  sed -n '2,25p' "$0"; exit 1
   ;;
 esac
