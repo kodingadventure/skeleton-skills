@@ -1,6 +1,6 @@
 ---
 name: pause-here
-description: Brings a workspace's WHATNEXT.md, TRACKER.md, findings and questions up to date, with a handoff when needed. Use when the user stops for now ("stop for today", "pick this up tomorrow", "udahan dulu", "lanjut besok"), or when WHATNEXT.md is stale because work happened without it ("update WHATNEXT", "phase 4 is done", "phase 4 sudah selesai").
+description: Brings a workspace's WHATNEXT.md, TRACKER.md, findings and questions up to date, with a handoff when needed. Use when they are behind what happened: the user stops with work, findings or questions not yet in them ("stop for today", "udahan dulu"), or work happened without them ("phase 4 is done", "phase 4 sudah selesai").
 argument-hint: "<workspace> [what happened, or what the next session will focus on]"
 disable-model-invocation: false
 ---

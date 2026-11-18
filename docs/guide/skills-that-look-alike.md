@@ -54,9 +54,9 @@ Use `pause-here` to stop for now. Use `wrap-up` when the feature is finished.
 
 | | `pause-here` | `wrap-up` |
 | --- | --- | --- |
-| Use it when | You stop for today, or `WHATNEXT.md` is stale | Every work item is done |
+| Use it when | You stop with work not yet recorded, or `WHATNEXT.md` is behind | Every work item is done |
 | What it writes | `WHATNEXT.md`, `TRACKER.md`, findings, questions, and a handoff when needed. The workspace stays live | The ADRs still owed, durable findings moved into the repo, a final report if the workspace has an audience, and the `INDEX.md` row moved to Shipped. You delete the folder yourself |
-| Starts on its own? | Yes, when you say so | No (manual-only) |
+| Starts on its own? | Yes, when you stop and the workspace files are behind | No (manual-only) |
 
 The reason `wrap-up` exists is in [Documentation and wrap-up](./documentation-and-wrap-up.md).
 
