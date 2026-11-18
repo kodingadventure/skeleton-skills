@@ -19,7 +19,7 @@
 #   root-line DIR [other]   append the "Workspace root" line to CLAUDE.md, uncommitted; with "other", also an unrelated rule line
 #   workspace-root DIR PATH append a committed "Workspace root: PATH" line to CLAUDE.md and git-ignore PATH's top folder
 #   ignore DIR PATH         append PATH to .gitignore (committed)
-#   finish-workspace DIR    needs workspace: mark the demo tracker and plan done, WHATNEXT step 1 = /wrap-up demo, commit the W1 code
+#   finish-workspace DIR    needs workspace: mark the demo tracker and plan done, WHATNEXT step 1 = /wrap-up demo, commit the W1 code and the wiki rule (W2)
 #   phase-done DIR          needs workspace: commit the W1 code only; the workspace files stay behind
 #   feature-branch DIR NAME [merged]  branch NAME off main with one commit and stay on it; with "merged", merge it into main (--no-ff) first
 #   notes-repo DIR [rule]   needs workspace or prd: git init DIR/.scratch and commit its notes; with "rule", write the notes-commit rule to DIR/CLAUDE.local.md (kept out of git via .git/info/exclude)
@@ -616,6 +616,7 @@ test("paying a paid order is refused", () => {
   assert.deepEqual(pay(order, 100), { ok: false, reason: "not-pending" });
 });
 EOF
+  sedi 's/^- Only a pending order can be paid\. (no test)$/- Only a pending order can be paid. `paying a paid order is refused` (`src\/payments\/payments.test.js`)/' "$2/docs/wiki/order-payment.md"
   (cd "$2" && node --test >/dev/null 2>&1) || { echo "error: test suite fails" >&2; exit 1; }
   commit "$2" "feat(payments): refuse paying an order that is not pending"
   git -C "$2" log --oneline -1
