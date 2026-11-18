@@ -140,3 +140,8 @@ follow whichever copy they meet first, and the skill no longer finds the existin
 moved `TEAM.md` next to `INDEX.md`; the group README still said `.scratch/TEAM.md`).
 **Probe:** `git grep` the file name across `skills/`, `docs/` and `README.md`, and check every hit
 names the new location. Name what has to move for users already on the old one.
+
+## trigger-without-condition
+
+**Shows up as:** a skill's description lists only what the user says ("stop for today"), not the state that makes the skill needed. Any closing offer ("continue or stop?") then pulls the agent to that skill even when it has nothing to do: after `guard-plan` had already rewritten `WHATNEXT.md` and `TRACKER.md`, the agent still offered `/pause-here`. An "if installed" route behaves the same way when the target skill is hidden from the agent's skill list: `guard-plan` never printed `/resume-here <slug>` until the workspace skills kept `disable-model-invocation: false` (ADR 0018).
+**Probe:** the description names the state as one leading word (the files are *behind*), and every skill that stops a session says what its last report names instead. Write it as the condition to meet, not as a "Not for" clause: a ban names the skill and makes it more likely.
