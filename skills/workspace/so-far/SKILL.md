@@ -1,6 +1,6 @@
 ---
 name: so-far
-description: Run only when the user asks for it by name. Recaps a workspace for the user — what was done and decided, where they approved unread or skipped a review, why the next step is next, and what it needs from them. Read-only. Use when the user lost the thread of a workspace ("what did we do yesterday?", "kemarin kita ngapain?").
+description: Run only when the user asks for it by name. Recaps a workspace for the user — what was done and decided, where they approved unread or skipped a review, why the next step is next, and what it needs from them. Read-only.
 argument-hint: "<workspace> [period, e.g. yesterday, this week]"
 disable-model-invocation: false
 ---
