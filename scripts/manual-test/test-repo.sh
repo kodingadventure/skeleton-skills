@@ -249,6 +249,9 @@ confirm-commit)
   claude_md "$2" confirm; commit "$2" "docs: commit only when the user asks"
   git -C "$2" log --oneline -1
   ;;
+# Checkpoint 2 is deliberately impossible for anyone to run (there is no order page),
+# to test the agent -> human fallback. It always ends as `not run`; the expected
+# answer is "Accept as not run".
 checkpoint-plan)
   need_dir "${2:-}"; need_clean "$2"
   cat > "$2/docs/agents/verify.md" <<'EOF'

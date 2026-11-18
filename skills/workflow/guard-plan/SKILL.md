@@ -16,6 +16,7 @@ This skill needs a harness that can start a sub-agent with its own context and s
    - No line: go on.
    - A line and its result file exists: finish the preflight, then process the result ("Process the result" in section 3) before the next phase, without asking. Processing it earlier would delete the line the Baseline step reads.
    - A line but no result file: say that the test for checkpoint N has not been run, print the guide-session command again (`references/manual-test-handoff.md` → The command), and stop.
+   - Several `Waiting:` lines: handle each as above, in checkpoint number order. Process every one whose result file exists; for each one without a result file, print the guide-session command again for that checkpoint only, and stop after the others are processed.
 3. **ADR skill.** When the plan lives in a feature workspace (`CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md` two levels above the plan folder), run `grep -c 'ADR: candidate' <workspace>/CONTEXT.md`. A count above 0 needs the `domain-modeling` skill: check your agent lists it. When it does not, stop here, before the baseline and before dispatching anything, and say that `domain-modeling` (from `mattpocock/skills`) is missing — "see this repo's README for the pinned install command". Never defer this check to the phase close: by then a phase is already committed without its ADR.
 4. **Executor names.** Ask the harness which agent types it offers (in Claude Code, ask Claude to list the agent types it can dispatch). You need one executor per weight. Use the names exactly as listed:
 
@@ -101,9 +102,11 @@ A checkpoint marked `Runner: guardian` is run by a companion sub-agent (see "Age
 4. Print the one-line command, then suggest wait or stop with one sentence of reason, and let the user choose.
 5. Wait: when the user says "done", process the result. Stop: in a workspace, rewrite `WHATNEXT.md` (State now: waiting for checkpoint N; Next steps 1: run the guide session with that command, then `/guard-plan` in a new session), report, and end.
 6. **Process the result.** Read the result file. If the user only pasted a summary in chat and no result file exists, write the result file from that summary first, so the file stays the single source. The guide writes the file as it goes, so a file can exist before the test ends: when a scenario of the checkpoint has no row, the test is unfinished. Name the scenarios still missing, print the command again, and wait or stop as in step 5; process nothing.
-   - All `pass`: delete the `Waiting:` line and go on.
+   - All `pass`: delete the `Waiting:` line, add the checkpoint's `🧪` line to the report in exactly the format section 4 gives, and go on.
    - Any `fail`: triage and patch the plan as the `execute-plan` skill's "Handling manual-test feedback" says (a regression reopens the item; a coverage gap becomes a new item `Found-in: manual test`), fix it through the usual defect flow in section 2, then write a new handoff for the failed scenarios and any other scenario the fix touched, to be recorded as a `## Re-run … after fix` section in the same result file, and go on from step 3.
    - Any `not run`: ask the user to run it again, or to accept it with its reason.
+
+**Several human checkpoints at once.** When more than one `Runner: human` checkpoint falls due after the same phase (a fallback from an agent checkpoint counts), prepare all of them before asking anything: one prompt file and one `Waiting:` line per checkpoint (steps 1-3). Then print every guide-session command at once, in checkpoint number order, one line per checkpoint, with one wait-or-stop suggestion for all of them. On wait, process each complete result file in checkpoint number order (step 6); a checkpoint whose result file is incomplete keeps waiting (step 6).
 
 ### Agent checkpoint
 
@@ -126,6 +129,6 @@ When a change to what a scenario expects looks needed, it is a decision outside 
 
 ## 4. Report
 
-Per guarded phase, one line: `✅ Phase N — <what changed> · gates: <commands> green (or "no gate") · defects fixed: <n> · workspace: <ID> → <status> (or "n/a") · <commit sha, or "staged, commit command printed">`. At a stop, add what the user must do next; at a checkpoint, that is the one-line guide-session command. Paste gate output only when it is red.
+Per guarded phase, one line: `✅ Phase N — <what changed> · gates: <commands> green (or "no gate") · defects fixed: <n> · workspace: <ID> → <status> (or "n/a") · <commit sha, or "staged, commit command printed">`. At a stop, add what the user must do next; at a checkpoint, that is the one-line guide-session command, one per checkpoint due. Paste gate output only when it is red.
 
-Per checkpoint a companion ran, one line: `🧪 Checkpoint N — agent · <n> pass, <n> fail, <n> not run · result <path>`. The final report of the plan lists every agent checkpoint with its result file path, so the user can spot-check it.
+Per checkpoint, one line in one format, for agent and human checkpoints alike: `🧪 Checkpoint N — <agent | human | agent → human> · <n> pass, <n> fail, <n> not run · result <path>`. `agent → human` marks a checkpoint that fell back to a person; count it from the person's re-run rows, not from the companion's `not run` row. The guardian writes the line after the result file is processed. The final report of the plan lists every checkpoint with its line, so the user can spot-check it; never add results across checkpoints in a sentence ("two of three passed").

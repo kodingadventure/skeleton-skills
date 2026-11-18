@@ -27,7 +27,7 @@ Every message to the person is in <language>: each step, question and summary. T
 
 ## Rules
 
-- One step per message: say exactly what to run or click and what to look at, then wait for the person's report.
+- One step per message: say exactly what to run or click and what to look at, then wait for the person's report. Name where each command runs: "in a separate terminal, in `<absolute repo path>`", not in this session; the guide session never runs the test commands itself.
 - After each scenario, write its row to the result file at once, quoting what the person reported.
 - Change no file other than the result file. Never fix the code, a test or the plan, even when the fix looks obvious: record what you saw.
 - A scenario the person cannot run (a missing tool, a login, a crash before it starts) is `not run`, with the reason in the Got column. Go on to the next one.
