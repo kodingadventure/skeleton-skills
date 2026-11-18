@@ -18,11 +18,12 @@ Never in this catalog and never in a real project's own folder. Two targets:
 2. **Dispatch the companion.** One Agent call, `model: sonnet`, `effort: medium` (unless the owner sets otherwise), with the scenarios, the script path and the log path. It follows the companion rules below and reports pass or fail per scenario with the evidence quoted.
    Done when: the companion's report is in and its log exists.
 3. **Check the report.** Read the log and confirm the quoted lines match what the report says passed. Then confirm `git status --short` in the catalog is unchanged.
-4. **Fix and re-run each failure.** Find the cause in the skill's text. The cause is often a rule that lives only in a principles section and not in the step that produces the output. Fix it on the work branch with its own commit and changeset, then send the same companion (`SendMessage`) a re-run of that scenario alone. It appends a `## Re-run <scenario> after fix` section and keeps the first run's record. Repeat this until the scenario passes.
-   Done when: every scenario passes, or a failure is handed to the owner as a decision (a changed expectation, not a skipped one).
+4. **Fix and re-run each failure.** Find the cause in the skill's text. The cause is often a rule that lives only in a principles section and not in the step that produces the output. Fix it on the work branch with its own commit and changeset, then send the same companion (`SendMessage`) a re-run of that scenario alone. It appends a `## Re-run <scenario> after fix` section and keeps the first run's record. Re-run only the scenarios the fix touched, once each, one after another. Before a third re-run round, ask the owner: each scenario is a full session on the owner's account (a `guard-plan` scenario starts its executors too), and five rounds of a four-scenario checkpoint once reached the 5-hour usage limit.
+   Done when: every scenario passes, or a failure is handed to the owner as a decision (a changed expectation, an accepted failure outside the change, not a skipped one).
 
 ## Companion rules
 
+- Run test sessions one at a time, never in parallel: several `guard-plan` sessions at once multiply the usage.
 - Run each test session fresh, from inside the test repo: `cd <D> && claude -p --model sonnet --effort medium --permission-mode auto "<prompt>"`. A session reads its skills and agents when it starts, so install first and open a new session after every install.
 - Before each run, record the commit count and `git status --short`. After it, check every expectation yourself and quote the exact line, entry or commit you checked.
 - On a failed expectation, record what you saw and what was expected, word for word, and go on unless a later step depends on it. Leave the skill alone: fixes are the guardian's.
