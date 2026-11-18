@@ -2,7 +2,7 @@
 name: wrap-up
 description: Run only when the user asks for it by name. Close a finished feature workspace — writes the ADRs still owed, moves durable findings and vocabulary into the repo, sends the final report when the workspace has a report audience, updates the workspace index, and hands the folder to the user to delete.
 argument-hint: "<workspace>"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Wrap Up

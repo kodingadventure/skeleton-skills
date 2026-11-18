@@ -2,7 +2,7 @@
 name: msg
 description: Run only when the user asks for it by name. Draft a chat message (Discord, Slack, …) to a teammate about workspace work — ask a question file, give a short update, or follow up — in the recipient's language and tone from TEAM.md. Also marks a message as sent when the user says "sent" or "udah dikirim".
 argument-hint: "[<who>] <question file | workspace file | topic> | sent"
-disable-model-invocation: true
+disable-model-invocation: false
 model: haiku
 ---
 

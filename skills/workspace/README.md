@@ -4,7 +4,7 @@ Feature workspaces: one git-ignored folder per feature or task, from a hand-writ
 
 - **[kickoff](./kickoff/SKILL.md)** — Turns a PRD discussion into a workspace: `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`, the folder layout and the `INDEX.md` row, in the PRD's language.
 - **[tracker](./tracker/SKILL.md)** — `log` a session, record a stakeholder's `answer`, and — when the workspace has a report audience — draft a progress `report` and mark it `sent`.
-- **[pause-here](./pause-here/SKILL.md)** — Closes a session (or syncs a stale `WHATNEXT.md`): tracker logged, findings and questions written, `WHATNEXT.md` rewritten, a handoff when needed. The model may invoke it on its own.
+- **[pause-here](./pause-here/SKILL.md)** — Brings the workspace files up to date when they are behind (you stop with work not yet recorded, or work happened without them): tracker logged, findings and questions written, `WHATNEXT.md` rewritten, a handoff when needed. The model may invoke it on its own.
 - **[resume-here](./resume-here/SKILL.md)** — Opens a session: reads `WHATNEXT.md`, `CONTEXT.md` and the handoff, reconciles drift with git, then takes next step 1.
 - **[discuss](./discuss/SKILL.md)** — Talks a topic through without starting work; loads only what the topic touches and records whatever gets settled.
 - **[so-far](./so-far/SKILL.md)** — Recaps a workspace for a user who lost the thread: stages of work, decisions with how each was made (reviewed, unread, skipped), why the next step is next. Read-only.

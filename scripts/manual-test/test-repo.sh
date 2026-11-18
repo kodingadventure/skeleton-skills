@@ -14,12 +14,13 @@
 #   checkpoint-plan DIR     commit a Runtime policy and a Surfaces row in verify.md; write .scratch/plans/DATE-cancel-order/ (one phase, three manual test checkpoints: guardian, guardian that cannot be driven, human)
 #   drop-wiki DIR           remove the "### Wiki" table and docs/wiki/ (committed)
 #   behaviour-commit DIR    commit a cross-unit rule (refund) with its test and no docs
-#   workspace DIR           write .scratch/workspaces/demo/ (CONTEXT, TRACKER, WHATNEXT, a two-phase plan) and its INDEX.md
+#   workspace DIR [no-checkpoint]  write .scratch/workspaces/demo/ (CONTEXT, TRACKER, WHATNEXT, a two-phase plan) and its INDEX.md; with "no-checkpoint", the plan has no manual test checkpoint
 #   prd DIR                 write .scratch/workspaces/double-pay/PRD.md, a short PRD for /kickoff
 #   root-line DIR [other]   append the "Workspace root" line to CLAUDE.md, uncommitted; with "other", also an unrelated rule line
 #   workspace-root DIR PATH append a committed "Workspace root: PATH" line to CLAUDE.md and git-ignore PATH's top folder
 #   ignore DIR PATH         append PATH to .gitignore (committed)
-#   finish-workspace DIR    needs workspace: mark the demo tracker and plan done, WHATNEXT step 1 = /wrap-up demo, commit the W1 code
+#   finish-workspace DIR    needs workspace: mark the demo tracker and plan done, WHATNEXT step 1 = /wrap-up demo, commit the W1 code and the wiki rule (W2)
+#   phase-done DIR          needs workspace: commit the W1 code only; the workspace files stay behind
 #   feature-branch DIR NAME [merged]  branch NAME off main with one commit and stay on it; with "merged", merge it into main (--no-ff) first
 #   notes-repo DIR [rule]   needs workspace or prd: git init DIR/.scratch and commit its notes; with "rule", write the notes-commit rule to DIR/CLAUDE.local.md (kept out of git via .git/info/exclude)
 #   status DIR              show log, status, installed skills and agents
@@ -48,6 +49,19 @@ install_skill() {
   rm -rf "$dir/.claude/skills/$skill"
   cp -R "$src" "$dir/.claude/skills/$skill"
   echo "installed $skill"
+}
+
+write_refusal() { # $1 = dir: the W1 code, shared by finish-workspace and phase-done
+  cat > "$1/src/payments/payments.js" <<'EOF'
+import { markPaid } from "../orders/orders.js";
+
+export function pay(order, amount) {
+  if (order.status !== "pending") return { ok: false, reason: "not-pending" };
+  if (amount < order.amount) return { ok: false, reason: "insufficient" };
+  markPaid(order);
+  return { ok: true };
+}
+EOF
 }
 
 claude_md() { # $1 = dir, $2 = "allow" | "silent" | "forbid" | "confirm"
@@ -376,6 +390,11 @@ workspace)
   w="$2/.scratch/workspaces/demo"
   p="$w/plans/01-double-pay"
   mkdir -p "$p/phases"
+  if [[ "${3:-}" == "no-checkpoint" ]]; then
+    cp_text='None — the wiki change is checked by the docs review.'
+  else
+    cp_text='1. After Phase 2 — `docs/wiki/order-payment.md` lists the new rule.'
+  fi
   cat > "$2/.scratch/workspaces/INDEX.md" <<'EOF'
 # Workspaces
 
@@ -451,7 +470,7 @@ EOF
 
 ## Manual Test Checkpoints
 
-1. After Phase 2 — \`docs/wiki/order-payment.md\` lists the new rule.
+$cp_text
 
 ## Notes
 
@@ -588,16 +607,7 @@ The plan is done. Both work items are done.
 
 1. Wrap up the workspace: `/wrap-up demo`.
 EOF
-  cat > "$2/src/payments/payments.js" <<'EOF'
-import { markPaid } from "../orders/orders.js";
-
-export function pay(order, amount) {
-  if (order.status !== "pending") return { ok: false, reason: "not-pending" };
-  if (amount < order.amount) return { ok: false, reason: "insufficient" };
-  markPaid(order);
-  return { ok: true };
-}
-EOF
+  write_refusal "$2"
   cat >> "$2/src/payments/payments.test.js" <<'EOF'
 
 test("paying a paid order is refused", () => {
@@ -606,11 +616,22 @@ test("paying a paid order is refused", () => {
   assert.deepEqual(pay(order, 100), { ok: false, reason: "not-pending" });
 });
 EOF
+  sedi 's/^- Only a pending order can be paid\. (no test)$/- Only a pending order can be paid. `paying a paid order is refused` (`src\/payments\/payments.test.js`)/' "$2/docs/wiki/order-payment.md"
   (cd "$2" && node --test >/dev/null 2>&1) || { echo "error: test suite fails" >&2; exit 1; }
   commit "$2" "feat(payments): refuse paying an order that is not pending"
   git -C "$2" log --oneline -1
   git -C "$2" status --short
   echo "demo workspace finished; tree clean"
+  ;;
+phase-done)
+  need_dir "${2:-}"; need_clean "$2"
+  [[ -f "$2/.scratch/workspaces/demo/CONTEXT.md" ]] || { echo "error: no demo workspace in $2 (run workspace first)" >&2; exit 1; }
+  write_refusal "$2"
+  (cd "$2" && node --test >/dev/null 2>&1) || { echo "error: test suite fails" >&2; exit 1; }
+  commit "$2" "feat(payments): refuse paying an order that is not pending"
+  git -C "$2" log --oneline -1
+  git -C "$2" status --short
+  echo "phase 1 committed; workspace files left out"
   ;;
 feature-branch)
   need_dir "${2:-}"; need_clean "$2"
@@ -653,6 +674,6 @@ status)
   if [[ -d "$2/.scratch/.git" ]]; then echo "--- notes repo"; git -C "$2/.scratch" log --oneline | wc -l; fi
   ;;
 *)
-  sed -n '2,25p' "$0"; exit 1
+  sed -n '2,26p' "$0"; exit 1
   ;;
 esac

@@ -2,7 +2,7 @@
 name: github-send-update
 description: Run only when the user asks for it by name. Draft a short public progress comment for a workspace's GitHub issue from the workspace's state, show it, and post it once the user approves.
 argument-hint: "[<workspace slug>] [#<issue number>]"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # GitHub Send Update

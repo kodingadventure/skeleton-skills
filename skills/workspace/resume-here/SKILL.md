@@ -2,7 +2,7 @@
 name: resume-here
 description: Run only when the user asks for it by name. Resume work on a workspace in a fresh session — reads WHATNEXT.md, CONTEXT.md and the linked handoff, reconciles drift with the repo, briefs the user, then starts the first next step.
 argument-hint: "<workspace> [what to do today, if different]"
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Resume Here

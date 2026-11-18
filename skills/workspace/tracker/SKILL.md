@@ -2,7 +2,7 @@
 name: tracker
 description: Run only when the user asks for it by name. Keep a workspace's TRACKER.md current and turn it into progress reports — log a session, record a stakeholder's answer, draft a report in the language of the tracker's `Language:` line, mark a report as sent.
 argument-hint: '<workspace> log | answer "<answer>" | report | sent <YYYY-MM-DD> <N>%'
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # Tracker

@@ -97,7 +97,7 @@ If you are the agent doing the setup, read this section word for word from the r
 
 The rest of this README uses plain names; add the group in front if you installed the plugin.
 
-Asking in words only works for skills the agent may pick by itself (see below). The manual-only skills (`discuss`, `resume-here`, `so-far`, `tracker`, `wrap-up`, `msg` and the GitHub skills) are manual-only on purpose, so they need the slash command: "use the discuss skill" gets you a confused agent, `/discuss` gets you a discussion. On an agent without slash commands, those skills are out of reach.
+Asking in words only works for skills the agent may pick by itself (see below). The manual-only skills (`discuss`, `resume-here`, `so-far`, `tracker`, `wrap-up`, `msg` and the GitHub skills) are manual-only on purpose: they start only when you name them, so they need the slash command (the agent still sees them as installed and may suggest one): "use the discuss skill" gets you a confused agent, `/discuss` gets you a discussion. On an agent without slash commands, those skills are out of reach.
 
 ### Which skills start on their own
 
@@ -106,7 +106,7 @@ Two kinds of skills can start without you typing the name:
 - **Three workspace skills: `pause-here`, `spin-off` and `kickoff`.** They close a session, split a topic out, and turn a discussion into a workspace the moment you say so ("let's stop for today", "spin this off").
 - **The `workflow` and `agent` skills.** The agent may pick one when your request matches what it is for ("create a plan", "verify this"), and some are called by other skills: `to-plan` calls `writing-great-plan`, `execute-plan` calls `verify` and, under `Review: guardian`, stops each phase for the `/review-phase` you run, `review-page` steps in when there are two or more decisions, and `skill-from-context` only offers. Don't count on them starting by themselves, though: call them by name when it matters. A skill that calls another needs that one installed too.
 
-Everything else (the other workspace skills and all GitHub skills) is manual-only: it runs only when you call it by name. That's on purpose: you stay in control.
+Everything else (the other workspace skills and all GitHub skills) is manual-only: it runs only when you call it by name. That's on purpose: you stay in control. The agent still sees these skills as installed, so other skills can recommend them (`whatnext` suggests `/wrap-up <slug>`, `guard-plan` prints `/resume-here <slug>`).
 
 ## What is inside
 

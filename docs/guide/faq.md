@@ -83,4 +83,10 @@ The guardian writes a prompt for a separate session and prints one command per c
 
 A checkpoint the plan marks for the agent is run by a sub-agent instead, without stopping the run. The report lists each such checkpoint with its result file, so you can check it yourself. If the agent cannot drive a scenario, that scenario is handed to you the same way as a manual test.
 
+An agent checkpoint costs more than it looks. Each scenario the sub-agent drives is a full Claude session on your account, and a scenario that runs `guard-plan` also starts its own executors, so one scenario can be three sessions. A few rounds of "fix, then re-run everything" can reach your plan's usage limit even from a fresh start: a four-scenario checkpoint re-run five times did, about 30 nested sessions, with three `guard-plan` runs going at once at the end. To keep it cheap:
+
+- After a fix, re-run only the scenarios the fix touched, once each.
+- Run them one after another, never several `guard-plan` runs in parallel.
+- When a re-run still fails for a reason outside the change you are testing (the agent misread a folder, a session ended early), stop and decide instead of running it again. Say so to the guardian before the third round.
+
 Back to [Start here](./README.md)

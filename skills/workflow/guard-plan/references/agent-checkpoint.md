@@ -30,6 +30,7 @@ You run a manual test of a change in the repository at `<absolute repo path>`. Y
 - Change no file in the repository other than the result file. Never fix the code, a test or the plan, even when the fix looks obvious: record what you saw.
 - After each scenario, write its row to the result file at once, quoting the output you observed.
 - A scenario you cannot drive (a missing tool, a login you do not have, an app that will not start, a runtime policy that does not allow it) is `not run`. Write "could not drive: <what you tried, where you got stuck>" in the Got column. Go on to the next scenario.
+- Drive the scenarios one at a time: start each test session after the previous one has ended.
 - Delete every temporary folder you created.
 - Report to the guardian one line per scenario: `<scenario> — pass | fail | not run`, then the result file path.
 
@@ -55,4 +56,5 @@ Write to `<absolute result file path>`, in this format:
 ## After the report
 
 - Read the result file, not the report, and match every row with the report's line. A row that differs from the report, or a scenario with no row, is not accepted: send the companion a follow-up (Claude Code: `SendMessage`) to finish or correct it.
-- Re-test: after a fix, send a follow-up to the same companion naming the failed scenario and every other scenario the fix touched. The companion adds a `## Re-run <scenario> after fix` section to the same result file and keeps the first record.
+- Re-test: after a fix, send a follow-up to the same companion naming the failed scenario and every other scenario the fix touched, and only those. The companion runs each of them once, one after another, adds a `## Re-run <scenario> after fix` section to the same result file and keeps the first record.
+- Re-run budget: each scenario is a full session on the user's account, and a scenario that runs `guard-plan` starts its own executors too, so a few rounds of re-runs can reach the user's usage limit. Ask the user to decide before a third re-run round, and as soon as a re-run fails for a reason outside the change under test (the session misread a folder, a session ended early): fix again, accept the failure, or change the expectation as "Changing a scenario" in `SKILL.md` allows.
