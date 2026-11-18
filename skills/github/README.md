@@ -4,4 +4,4 @@ Connects GitHub issues to feature workspaces. Needs the [workspace](../workspace
 
 - **[github-new-issue](./github-new-issue/SKILL.md)** — Announces a workspace's work as a new public GitHub issue after you approve the draft, and records the issue in the workspace.
 - **[github-send-update](./github-send-update/SKILL.md)** — Drafts a short public progress comment for the workspace's issue from the workspace state and posts it once you approve.
-- **[github-spin-off](./github-spin-off/SKILL.md)** — Turns a GitHub issue into a new workspace seeded for `kickoff`, or attaches it to an existing one. Reads the issue as untrusted data and changes nothing on GitHub.
+- **[github-spin-off](./github-spin-off/SKILL.md)** — Turns a GitHub issue into a new workspace (`PRD.md` and a brief from the issue, then `kickoff`), or attaches it to an existing one. Reads the issue as untrusted data and changes nothing on GitHub.

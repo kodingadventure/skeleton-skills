@@ -1,6 +1,6 @@
 ---
 name: spin-off
-description: Carves one thread out of the current session and hands it to a feature workspace, an existing one or a new one seeded for /kickoff. Use when the user wants a thread moved out of this session ("split this into its own workspace", "spin this off", "pisahin ke workspace"), or asks to keep a settled design for later in its own workspace. Not for GitHub issues — that is `github-spin-off`.
+description: Carves one thread out of the current session and hands it to a feature workspace, an existing one or a new one it sets up through /kickoff. Use when the user wants a thread moved out of this session ("split this into its own workspace", "spin this off", "pisahin ke workspace"), or asks to keep a settled design for later in its own workspace. Not for GitHub issues — that is `github-spin-off`.
 argument-hint: "[<workspace> | new <slug>] [topic]"
 disable-model-invocation: false
 ---
@@ -14,7 +14,7 @@ The thread is a **slice**: only what belongs to it moves. The rest of the sessio
 Two destinations:
 
 - **Existing workspace**: the thread lands as an inbound handoff plus a next step in its `WHATNEXT.md`.
-- **New workspace**: the thread becomes a seeded `PRD.md`, an origin brief and minimal `CONTEXT.md`, `TRACKER.md` and `WHATNEXT.md`, so decisions made before `/kickoff` already have a home; `/kickoff` completes them.
+- **New workspace**: the thread becomes `PRD.md` and an origin brief, written from the slice only; then `kickoff` sets the workspace up from those two files.
 
 ## Steps
 
@@ -58,26 +58,18 @@ Tick no checkbox: only `/tracker sent` does that.
 
 Done when: a fresh agent reading `CONTEXT.md`, `WHATNEXT.md` and the brief can take the thread up with no access to this conversation, and every finding, question and decision lives in exactly one file.
 
-### 4. Seed a new workspace
+### 4. Start a new workspace
 
 **First workspace in this repo** (no `Workspace root:` line in `CLAUDE.md` / `AGENTS.md`, and no `.scratch/workspaces/INDEX.md`): ask the user once where workspaces live — `.scratch/workspaces/` (the default) or a folder they name — and write the answer as that line, per [`references/workspace-root.md`](references/workspace-root.md). Commit it as that file's "Asking once" says, and list the commit (or the printed command) among the files written.
 
-Create `<root>/<slug>/` and check it is git-ignored (`git check-ignore`). Write in the language the user speaks in this conversation: `kickoff` takes the workspace language from the PRD's prose.
+Create `<root>/<slug>/` and check it is git-ignored (`git check-ignore`). Before writing, compare the areas with every `## Active` row of `INDEX.md` and tell the user about any overlap. Write in the language the user speaks in this conversation: `kickoff` takes the workspace language from the PRD's prose.
 
-- **`PRD.md`**: the seed — the problem, why it matters, what is known, what is open, what is out of scope. First line: `Seeded by /spin-off on YYYY-MM-DD from a session about <one line>. Refine before /kickoff.` The user owns it from here.
-- **The brief** as `docs/YYYY-MM-DD-<topic>-origin.md` (shape below). Findings and questions stay inside it: `kickoff` turns them into files.
-- **`INDEX.md`**: a row under `## Seeded` — slug, goal in one line, today's date, areas — in English. Create the section above `## Shipped` when it is missing; a missing `INDEX.md` starts from [`references/index-template.md`](references/index-template.md). Before writing, compare the areas with every `## Active` row and tell the user about any overlap.
+- **`PRD.md`**, from the slice only: the problem, why it matters, what is known, what is open, what is out of scope. First line, literally: `Written by /spin-off on YYYY-MM-DD from a session about <one line>. The user owns it from here.` Nothing from the rest of the session goes in.
+- **The brief** as `docs/YYYY-MM-DD-<topic>-origin.md` (shape below). What the thread decided goes under its `## Decided`, each decision with how the user decided it. Findings and questions stay inside the brief: `kickoff` turns them into files.
+- **Run the `kickoff` skill** on `<root>/<slug>/`, and tell it to read `PRD.md` and the brief only, not this conversation. Its question round (report audience and the rest) runs here with the user.
+- **`kickoff` is not in your list of available skills**: stop after `PRD.md` and the brief, write no `INDEX.md`, and say that the workspace is complete once the workspace group is installed and `/kickoff <slug>` has run.
 
-- **`CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`** in minimal form, shaped by the `kickoff` skill's `references/context-template.md` and `references/tracker-template.md` and by [`references/whatnext-template.md`](references/whatnext-template.md) (if the `kickoff` skill is not installed, keep the headings the other workspace skills name: `## Workspace rules`, `## Summary`, `## Decisions`, `## Findings`, `## Open questions`), so that `/discuss` has somewhere to record. Fill what the thread already answers and write `TBD (kickoff)` for what is the user's to answer; never guess it.
-  - `CONTEXT.md`: `## Workspace rules` complete (the language of this conversation; exceptions the user stated; the layout, with the root's own-repository note when it applies); `## Summary` = `TBD (kickoff)` plus a pointer to `PRD.md` and the brief; `## Decisions` = the decisions the thread settled, each with its `ADR:` tag; the other sections empty.
-  - `TRACKER.md`: baseline 0; report audience `TBD (kickoff)`; one **placeholder work item** of weight 100, `Refine the PRD, then run /kickoff`, status `todo`; a Decision row per decision above; every row unticked.
-  - `WHATNEXT.md`: next steps `1.` the user shapes the PRD with `/discuss <slug>`, `2.` `/kickoff <slug>` fills the `TBD (kickoff)` fields and replaces the placeholder work item; waiting on the user.
-
-  Create `findings/` and `questions/` too, so `/discuss` can write there; `kickoff` lays out the rest of the folders.
-
-  The seed is not a live workspace yet: its `INDEX.md` row stays under `## Seeded` until `/kickoff`, and no report is built from it.
-
-Done when: the folder holds `PRD.md`, the brief and the three minimal documents, `INDEX.md` lists it under `## Seeded`, and the PRD reads as a request someone who never saw this session could discuss.
+Done when: `kickoff` has finished, `INDEX.md` has the slug's row under `## Active`, and the PRD reads as a request someone who never saw this session could discuss.
 
 ### 5. Close the thread here
 
@@ -87,11 +79,11 @@ Reply in the language of this conversation:
 - uncommitted files that belong to the thread, still in the working tree — commit them under the repo's rules before this session moves on, or leave them as the brief records;
 - the notes commit hash, or "notes not committed" and why;
 - one line: `<thread> now lives in <workspace>`;
-- the line to continue with: `/resume-here <slug>` or `/discuss <slug> <topic>` for an existing workspace; `/discuss` the seeded PRD, then `/kickoff <slug>`, for a new one.
+- the line to continue with: `/resume-here <slug>` or `/discuss <slug> <topic>` for an existing workspace; for a new one, the resume line from the `kickoff` report, `/resume-here <slug>`.
 
 From here on in this session, the thread belongs to the workspace. The continue line above is given once: when the user returns to the thread, say in one line that it now lives in <workspace>, give the continue line again only if they ask how to go on, and carry on with whatever else they bring.
 
-Commit nothing in the main repo in this step. Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there. Secrets (keys, tokens, passwords, personal data) stay out of every file; refer to where they are kept.
+Commit nothing in the main repo in this step. Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there. A new workspace gets one notes commit for the whole run (`PRD.md`, the brief and the files `kickoff` wrote), not two: write `PRD.md` and the brief without committing them, and let the commit of the `kickoff` run cover them. Secrets (keys, tokens, passwords, personal data) stay out of every file; refer to where they are kept.
 
 ## The brief
 
@@ -113,6 +105,10 @@ Spun off: YYYY-MM-DD · From: <what the session was about, one line> · Branch: 
 ## What was tried and learned
 
 <each attempt and its outcome; dead ends and why they failed, linked to their finding files when there are any>
+
+## Decided
+
+<new workspace only: each decision the thread settled, with how the user decided it; for an existing workspace, leave this section out: decisions go to `CONTEXT.md` as step 3 says>
 
 ## Open
 

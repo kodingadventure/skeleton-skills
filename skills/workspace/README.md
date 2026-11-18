@@ -8,7 +8,7 @@ Feature workspaces: one git-ignored folder per feature or task, from an idea or 
 - **[resume-here](./resume-here/SKILL.md)** — Opens a session: reads `WHATNEXT.md`, `CONTEXT.md` and the handoff, reconciles drift with git, then takes next step 1.
 - **[discuss](./discuss/SKILL.md)** — Talks a topic through without starting work; loads only what the topic touches and records whatever gets settled.
 - **[so-far](./so-far/SKILL.md)** — Recaps a workspace for a user who lost the thread: stages of work, decisions with how each was made (reviewed, unread, skipped), why the next step is next. Read-only.
-- **[spin-off](./spin-off/SKILL.md)** — Hands one thread of the current session to a workspace (a brief + a next step), or seeds a new one (`PRD.md` + brief + minimal `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`) that `kickoff` completes. The model may invoke it on its own; the user still confirms the slice and the destination.
+- **[spin-off](./spin-off/SKILL.md)** — Hands one thread of the current session to a workspace (a brief + a next step), or starts a new one: `PRD.md` and a brief written from that thread only, then `kickoff` sets it up. The model may invoke it on its own; the user still confirms the slice and the destination.
 - **[wrap-up](./wrap-up/SKILL.md)** — Closes a finished workspace: ADRs still owed, findings triaged into the repo, final report, `INDEX.md` row to `## Shipped`; the user deletes the folder.
 - **[msg](./msg/SKILL.md)** — Drafts a chat message to a teammate from a question file or workspace file, in the tone recorded in `TEAM.md`, next to the workspace root's `INDEX.md`.
 
@@ -35,7 +35,7 @@ Feature workspaces: one git-ignored folder per feature or task, from an idea or 
 
 ```
 .scratch/workspaces/
-  INDEX.md                  # one row per workspace (English): active, seeded, shipped
+  INDEX.md                  # one row per workspace (English): active, shipped
   <slug>/
     PRD.md                  # written by the user, or by kickoff / spin-off
     CONTEXT.md              # refined spec + workspace rules (language, layout, conventions)

@@ -11,7 +11,7 @@ Use `spin-off` to move one thread out of a running session. Use `kickoff` to tur
 | | `spin-off` | `kickoff` |
 | --- | --- | --- |
 | Use it when | A long session wandered, and one topic deserves its own workspace | You have an idea (in the conversation, in the words after `/kickoff <slug>`, or in a `PRD.md`) and want to track the work |
-| What it writes | In an existing workspace: a handoff, findings, and a next step in `WHATNEXT.md`. In a new one: `PRD.md`, an origin brief, and minimal `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`. A new workspace is not live until `kickoff` runs | `PRD.md` when there is none, `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`, the folder layout and the `INDEX.md` row |
+| What it writes | In an existing workspace: a handoff, findings, and a next step in `WHATNEXT.md`. In a new one: `PRD.md` and an origin brief written from that thread only; then it runs `kickoff`, which sets up the rest | `PRD.md` when there is none, `CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`, the folder layout and the `INDEX.md` row |
 | Starts on its own? | Yes, when you say so. You still confirm the slice and the destination | Yes, when you say so |
 
 ## `resume-here` and `discuss`
