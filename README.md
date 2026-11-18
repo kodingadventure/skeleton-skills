@@ -6,7 +6,7 @@ Skills for working with a coding agent in plans and feature workspaces: start fr
 
 A skill is a folder of instructions (a `SKILL.md`) that your coding agent loads when you call it, for example `/kickoff`. Install the skills into your project, open your agent there, and type `/kickoff`.
 
-- **PRD** (product requirements document): your request in your own words, a `PRD.md` file you write by hand or that `spin-off` seeds from a conversation for you to correct.
+- **PRD** (product requirements document): your request in your own words, a `PRD.md` file you write by hand, or that `kickoff` or `spin-off` writes for you from the conversation.
 - **Workspace**: one git-ignored folder per feature or task, holding the PRD and three living documents (`CONTEXT.md`, `TRACKER.md`, `WHATNEXT.md`); every later session starts from `CONTEXT.md` and `WHATNEXT.md`.
 - **Guardian**: when a plan runs through sub-agents (helper agents that each do one phase), the main session is the guardian: it re-checks each phase and commits it, or prints the commit command when your rules leave commits to you.
 - **Review page**: a short HTML page the agent writes and opens for you when it needs you to read or decide.
@@ -121,9 +121,9 @@ The `workflow` skills work alone; inside a feature workspace they also use the `
 
 ## Your first workspace
 
-1. Get a PRD. Pick a slug, a short name for the work such as `login-page`. Write `.scratch/workspaces/<slug>/PRD.md` yourself (create the folder if needed), in your own words, or skip the writing: talk the idea through with the agent (optionally with `/grilling`), then run `/spin-off new <slug>` and it drafts the PRD from the conversation.
-2. Settle the open points: `/discuss <slug>` on a drafted PRD, or just keep talking about the one you wrote.
-3. Run `/kickoff <slug>`. On the first run, unless `spin-off` already asked, it asks where workspaces live (the default is `.scratch/workspaces/`, where step 1 put the PRD; if you pick another folder, move the PRD there) and checks the folder is git-ignored.
+1. Get the idea down. Pick a slug, a short name for the work such as `login-page`. Either write `.scratch/workspaces/<slug>/PRD.md` yourself (create the folder if needed), in your own words, or skip the writing and talk the idea through with the agent (optionally with `/grilling`). When the idea came up in a session that already changed files for it, `/spin-off new <slug>` moves that thread into its own workspace instead.
+2. Run `/kickoff <slug>`. With no `PRD.md`, it writes one from the conversation, or from the words after the slug (`/kickoff login-page add a login page with email and password`); it asks first when what you want changed or the result you expect is missing. On the first run, unless `spin-off` already asked, it asks where workspaces live (the default is `.scratch/workspaces/`; if you wrote a PRD and pick another folder, move it there) and checks the folder is git-ignored.
+3. Settle what the PRD left open with `/discuss <slug>`, or just keep talking.
 4. Run `/to-plan`, then `/execute-plan` (one session) or `/guard-plan` (sub-agents that each do one phase; needs the executor agents above). If unsure, start with `/execute-plan`.
 5. Stop with `/pause-here <slug>`; come back with `/resume-here <slug>`. Lost? `/whatnext` tells you where you are.
 6. Done? `/wrap-up <slug>` closes it out (and drafts a final report if the workspace has someone to report to).

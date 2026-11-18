@@ -14,8 +14,8 @@ test("activeRows reads the Active table, with and without outer pipes", () => {
     "| alpha | a goal | src/a |",
     "beta | b goal | src/b",
     "| <slug> | placeholder | x |",
-    "## Seeded",
-    "| gamma | g | src/g |",
+    "## Shipped",
+    "| gamma | 2026-01-01 | src/g |",
   ].join("\n");
   assert.deepEqual(activeRows(md), [
     { slug: "alpha", areas: "src/a" },
@@ -24,7 +24,7 @@ test("activeRows reads the Active table, with and without outer pipes", () => {
 });
 
 test("activeRows returns [] without an Active section", () => {
-  assert.deepEqual(activeRows("# nothing\n## Seeded\n| a | b |"), []);
+  assert.deepEqual(activeRows("# nothing\n## Shipped\n| a | b |"), []);
 });
 
 test("rootFromInstructions reads the Workspace root line", () => {

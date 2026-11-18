@@ -7,7 +7,7 @@ disable-model-invocation: false
 
 # Discuss
 
-Talk about a **workspace** (a feature folder set up by `kickoff`, or seeded by `spin-off` and not kicked off yet; `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) without starting work on it. `resume-here` takes the next step; this skill thinks about it instead, and makes sure nothing the discussion settles is lost.
+Talk about a **workspace** (a feature folder set up by `kickoff`; `.scratch/workspaces/<slug>/` unless the repo's `CLAUDE.md` / `AGENTS.md` names another root) without starting work on it. `resume-here` takes the next step; this skill thinks about it instead, and makes sure nothing the discussion settles is lost.
 
 ## Resolving the workspace
 
@@ -57,7 +57,7 @@ A discussion that changes nothing on disk is how decisions get lost. Before your
 - **Changed what comes next** → rewrite the affected part of `WHATNEXT.md` (Next steps, Waiting on) and refresh the workspace's `INDEX.md` row.
 - **Settled nothing** → say so, and write nothing.
 
-Tick no checkbox: only `/tracker sent` does that. A seeded workspace is recorded in like any other: its `TBD (kickoff)` fields and placeholder work item stay for `kickoff` to replace.
+Tick no checkbox: only `/tracker sent` does that.
 
 Never stage anything under the workspace root from the main repo. When the root, or a folder above it, has its own git repository, run git there only when the repo's instructions (`CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`) say to commit the workspace notes: then commit in that repository only the files this run wrote, with explicit paths and a short message, leave out every change this run did not make, and name those in your report. Without such an instruction, run no git there.
 

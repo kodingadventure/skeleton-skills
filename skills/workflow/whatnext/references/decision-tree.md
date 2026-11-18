@@ -15,18 +15,18 @@ Generic routing for any repo. Skills marked _(if installed)_ come from outside t
 
 ## After Discovery / Design
 
-| Completed                        | Next → Skill                                                                                                                                                  |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| /grilling session                | Hand the thread to a workspace → `/spin-off <slug> <topic>` (workspace skills installed), or write a spec → `/to-spec` _(if installed)_, or plan → `/to-plan` |
-| /prototype answered the question | Hand the thread to a workspace → `/spin-off <slug> <topic>` (workspace skills installed), or write a spec → `/to-spec` _(if installed)_, or plan → `/to-plan` |
+| Completed                        | Next → Skill                                                                                                                                                                                                                                                                        |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| /grilling session                | Set up a workspace for the idea → `/kickoff <slug>` (nothing changed for it yet), or hand the thread over → `/spin-off <slug> <topic>` (the session already changed files for it) (workspace skills installed), or write a spec → `/to-spec` _(if installed)_, or plan → `/to-plan` |
+| /prototype answered the question | Hand the thread to a workspace → `/spin-off <slug> <topic>` (workspace skills installed), or write a spec → `/to-spec` _(if installed)_, or plan → `/to-plan`                                                                                                                       |
 
 ## After Specification
 
-| Completed                                                                                                                                          | Next → Skill                                                                       |
-| -------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| PRD discussed in a `.scratch/workspaces/<slug>/` workspace without `CONTEXT.md`, or still under `## Seeded` in `INDEX.md` (a seed from `spin-off`) | Set up the workspace → `/kickoff <slug>`                                           |
-| Spec written                                                                                                                                       | Plan directly → `/to-plan`, or break into tickets → `/to-tickets` _(if installed)_ |
-| Issues created                                                                                                                                     | Plan first issue → `/to-plan <path>`                                               |
+| Completed                                                                                                                        | Next → Skill                                                                       |
+| -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| PRD discussed in a `.scratch/workspaces/<slug>/` workspace without `CONTEXT.md`, or an idea talked through with no workspace yet | Set up the workspace → `/kickoff <slug>`                                           |
+| Spec written                                                                                                                     | Plan directly → `/to-plan`, or break into tickets → `/to-tickets` _(if installed)_ |
+| Issues created                                                                                                                   | Plan first issue → `/to-plan <path>`                                               |
 
 ## After Planning
 
