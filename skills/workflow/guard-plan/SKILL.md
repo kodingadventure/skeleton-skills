@@ -1,6 +1,6 @@
 ---
 name: guard-plan
-description: Runs a multi-file IMPLEMENTATION_PLAN.md with the session as guardian — every phase is dispatched to the phase-s/m/l/xl agent matching its Weight, then the guardian re-verifies, fixes, and commits when the run mode allows. Use when the user wants a plan executed by subagents, wants to save tokens on execution, or says "guard"/"supervise" the plan. Do not use for writing plans (to-plan) or for a single inline phase (execute-plan).
+description: Runs a multi-file IMPLEMENTATION_PLAN.md with the session as guardian — every phase is dispatched to the phase-s/m/l/xl agent matching its Weight, then the guardian re-verifies, fixes, and commits when the repo's commit rules allow. Use when the user wants a plan executed by subagents, wants to save tokens on execution, or says "guard"/"supervise" the plan. Do not use for writing plans (to-plan) or for a single inline phase (execute-plan).
 ---
 
 # Guard Plan
@@ -24,14 +24,13 @@ This skill needs a harness that can start a sub-agent with its own context and s
 
 4. **Gates runnable.** Take the gates from `docs/agents/verify.md` for the stacks the plan touches. If the repo has no `verify.md`, take them from the plan header's `Verify:` line. If neither exists, write "no gate" under `## Baseline` and say so in every report; do not stop. A phase that creates `verify.md` moves the gates to that file from the next phase on. Every gate must run to a real verdict. A gate that errors on tooling (missing binary, unreachable dependency, linter built for an older toolchain) is a toolchain defect, not a code defect: fix it now or stop and tell the user what access is missing. When the repo keeps `docs/agents/toolchain.md` (one line per symptom and its fix, for the environments its sessions run in), read it first and add every new fix you find to it.
 5. **Baseline.** Run the gates on a clean worktree of `HEAD` (`git worktree add <scratch>/base HEAD`) and record every pre-existing failure in the plan entry point under `## Baseline`. From here on only a failure absent from the baseline counts against a phase.
-6. **Run mode.** Ask the user once, then record the answers in the entry point under `## Baseline`:
-   - **Commit:** the guardian commits each phase, or it stages the phase, prints the commit command, and stops. When the repo's rules say nothing, the default is to print the command and stop, the same as `execute-plan` and `review-phase`.
-   - **Push:** never, and not offered as a choice: the question says the run does not push. Push only when the user asks for it on their own, or when the repo's `CLAUDE.md`/`AGENTS.md` explicitly requires it.
-   - **Continue:** go on to the next phase automatically, or stop after each phase.
+6. **Commit mode.** Ask nothing: derive it from the repo's rules, once per session (never reuse an earlier note). Run `grep -inE 'commit|push' CLAUDE.md CLAUDE.local.md AGENTS.md` in the target repo (skip files that do not exist), map the hits to one mode, announce it in one line, and record `Commit mode: <commit | confirm | print> — <the rule line quoted, or "no commit rule">` in the entry point under `## Baseline`.
+   - **`commit`:** no commit rule, or a rule that lets the agent commit. The guardian commits each phase with its `Suggested commit:` line, then goes on.
+   - **`confirm`:** a rule that asks for confirmation before a commit, **or a rule that is ambiguous**. The guardian shows the diff summary (`git diff --cached --stat`), asks, commits when approved, then goes on. Ambiguous rules fall here: "Commit only when the user asks", "Don't commit without review", "Be careful with git operations". Reading a prohibition as permission would commit in a repo that forbids it; the other mistake only costs one question per phase.
+   - **`print`:** a rule that forbids the agent to commit. The guardian leaves the phase staged, prints the commit command and waits. When the user says to go on, check `git diff --cached --quiet` (exit 0) and that `git log -1 --format=%s` holds that phase's commit; go on only then, else say what is missing.
+   - **Push:** never, and not offered as a choice. Push only when the user asks for it on their own, or when the repo's rules explicitly require it.
 
-   The repo's `CLAUDE.md`/`AGENTS.md` rules win over the answer: where they ask for confirmation before a commit or a push, or forbid one, the run mode cannot loosen them.
-
-Done when the ADR-skill check passed (or the plan has no workspace, or no `ADR: candidate`), every gate has produced output on the baseline (or "no gate" is recorded), `## Baseline` lists its failures (or "none"), and the run mode is recorded.
+Done when the ADR-skill check passed (or the plan has no workspace, or no `ADR: candidate`), every gate has produced output on the baseline (or "no gate" is recorded), `## Baseline` lists its failures (or "none"), and the commit mode is recorded.
 
 ## 2. Phase loop
 
@@ -39,7 +38,7 @@ Take the first phase with unchecked items, or its whole `Batch` group.
 
 **Items that are not the executor's.** An item marked `Runner: guardian` or `Runner: human` never goes into the dispatch prompt. The guardian does the `guardian` items itself after the phase is guarded. For a `human` item, the guardian stops and hands the user its text. A phase whose items are all marked is not dispatched.
 
-**Repeating phases.** A phase with `Execution unit:` is dispatched once per unchecked unit sub-item, with "only unit X" in the prompt. Guard it, commit it (per the run mode), then repeat until no unit is left.
+**Repeating phases.** A phase with `Execution unit:` is dispatched once per unchecked unit sub-item, with "only unit X" in the prompt. Guard it, commit it (per the commit mode), then repeat until no unit is left.
 
 **Dispatch (Claude Code: the Agent tool).** One agent per phase, with the agent type taken from the four names recorded at preflight (S, M, L, XL by the phase's Weight). Weight is the only interface to the model: do not pass a model override. The prompt carries only:
 
@@ -73,20 +72,20 @@ Defects:
 
 The ADR and glossary are repo files: they go into this phase's commit. The other workspace files are git-ignored: edit them, never stage them. Done when the item's status, the Action Log row and `WHATNEXT.md` reflect the phase, and `grep -c '^| \[x\]' TRACKER.md` prints the same number as before.
 
-**Commit.** Follow the run mode recorded at preflight. Stage only this phase's paths, its phase file, and the ADR and glossary files the close step wrote (sibling phases in a batch may still be in flight; leave the phase file out when the plan lives in a gitignored folder).
+**Commit.** Follow the commit mode recorded at preflight. Stage only this phase's paths, its phase file, and the ADR and glossary files the close step wrote (sibling phases in a batch may still be in flight; leave the phase file out when the plan lives in a gitignored folder).
 
-- Run mode "commit": commit with the phase's `Suggested commit:` line. A phase is committed only on a green gate: if a gate could not run, the phase stays staged-but-uncommitted and the loop stops with the reason.
-- Run mode "print the command": leave the phase staged, print the commit command with the `Suggested commit:` line, and stop until the user has committed.
+- Commit mode `commit`: commit with the phase's `Suggested commit:` line.
+- Commit mode `confirm`: show `git diff --cached --stat`, ask, and commit with the `Suggested commit:` line only when the user approves.
+- Commit mode `print`: leave the phase staged, print the commit command with the `Suggested commit:` line, and stop until the user has committed (see Advance).
+- A phase is committed only on a green gate: if a gate could not run, the phase stays staged-but-uncommitted and the loop stops with the reason.
 - `Suggested commit: none — <reason>`: nothing is staged or committed, but the gates still run to confirm the tree did not change.
-- Never push unless the run mode allows it.
+- Never push, unless the user asks for it or the repo's rules require it.
 
-The repo's `CLAUDE.md`/`AGENTS.md` commit and push rules win over this step. Where they ask for confirmation before a commit or a push, stage the phase, show the diff summary, and ask before committing or pushing.
-
-**Advance.** Set the entry point's `Status` to one of `pending`, `in-progress`, `done`, `abandoned`; write progress in a separate `Progress:` line. Then follow the run mode's Continue answer: with "automatic", go on to the next phase, unless:
+**Advance.** Set the entry point's `Status` to one of `pending`, `in-progress`, `done`, `abandoned`; write progress in a separate `Progress:` line. Then go on to the next phase, unless:
 
 - a Manual Test Checkpoint follows this phase → stop, hand the user the checkpoint text, and wait for their result;
 - a blocker or a decision outside the phase's scope → stop and ask;
-- the run mode stops after each phase, or the phase was left uncommitted by the commit step.
+- commit mode `print`: the phase waits for the user's commit (see Commit); or the commit step left the phase uncommitted (a gate could not run, or the user declined under `confirm`).
 
 ## 3. Report
 
