@@ -50,6 +50,7 @@ Before writing any code, read every file listed under the item's `Files:` and `S
 
 - `Runner: human` — stop and wait for the user's answer; do not do the item.
 - `Runner: guardian` — in a single session, do it yourself after the phase.
+- These markers are for items only. A Manual Test Checkpoint also carries `Runner:`, but `execute-plan` never runs a checkpoint itself: hand every checkpoint to the user, `Runner: guardian` included (that mark is for `guard-plan`'s companion).
 - `Execution unit:` with one sub-checkbox per unit — run one unit per round, tick its sub-checkbox, and checkpoint after each unit.
 - `Suggested commit: none — <reason>` — nothing is staged or committed, but the gates still run.
 

@@ -110,10 +110,10 @@ A checkpoint marked `Runner: guardian` is run by a companion sub-agent (see "Age
 A `Runner: guardian` checkpoint does not stop the run: no `Waiting:` line, no guide-session command.
 
 1. Prepare the result file as `references/checkpoint-files.md` says.
-2. Start the companion as `references/agent-checkpoint.md` says (model, effort and brief) and wait for its report.
+2. Start the companion as `references/agent-checkpoint.md` says (model, effort and brief) and wait for its report. Never drive a scenario yourself, even one that is a single command: without the companion's result file the checkpoint has no evidence, and its rows are what the report and the re-test rely on.
 3. Read the result file, not the report, and match every row with the report. A row that differs, or a scenario with no row, is unfinished: send the companion a follow-up (Claude Code: `SendMessage`) to finish it.
 4. Process the rows:
-   - All `pass`: go on to the next phase, without stopping and without a `Waiting:` line.
+   - All `pass`: add the checkpoint's `🧪` line to the report, in exactly the format section 4 gives, and go on to the next phase, without stopping and without a `Waiting:` line.
    - Any `fail`: triage, patch the plan and fix as the `fail` bullet of "Process the result" says. Then re-test through the same companion, not through steps 3-5: send it the failed scenarios and any other scenario the fix touched, and it records a `## Re-run … after fix` section in the same result file. Process that section the same way.
    - Any `not run` because the companion could not drive the scenario: hand that scenario, and only that one, to the user as a human checkpoint (steps 1-5 above). Put the companion's "could not drive" text from the result file under `## What the agent already tried` in the prompt (`references/manual-test-handoff.md`). The guide session appends its rows to the same result file as a `## Re-run <scenario> by a person` section and keeps the companion's rows; process that section, not the companion's `not run` row. The marker moves from `guardian` to `human` only this way, never back: the user chooses to look at a scenario, the guardian does not.
 
