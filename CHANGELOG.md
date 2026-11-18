@@ -1,5 +1,41 @@
 # skeleton-skills
 
+## 0.5.0
+
+### Minor Changes
+
+- [#32](https://github.com/kodingadventure/skeleton-skills/pull/32) [`b063639`](https://github.com/kodingadventure/skeleton-skills/commit/b0636393efe828cbfd0a169415d2c10e66773311) Thanks [@budiadiono](https://github.com/budiadiono)! - `to-plan` and `writing-great-plan`: every manual test checkpoint now says who runs it, an agent (`Runner: guardian`) or you (`Runner: human`). The plan writer marks a checkpoint for the agent only when your `docs/agents/verify.md` runtime policy lets the agent drive every surface it needs; you can change the mark when you review the plan.
+
+- [#32](https://github.com/kodingadventure/skeleton-skills/pull/32) [`b063639`](https://github.com/kodingadventure/skeleton-skills/commit/b0636393efe828cbfd0a169415d2c10e66773311) Thanks [@budiadiono](https://github.com/budiadiono)! - `guard-plan`: a manual test checkpoint marked `Runner: guardian` is now run by a companion sub-agent without stopping the run, re-run after each fix, and listed in the report with its result file so you can spot-check it. When the agent cannot drive a scenario, that scenario is handed to you like any manual test. The guardian may adjust how a scenario is run to match the code, never what it expects.
+
+- [#32](https://github.com/kodingadventure/skeleton-skills/pull/32) [`b063639`](https://github.com/kodingadventure/skeleton-skills/commit/b0636393efe828cbfd0a169415d2c10e66773311) Thanks [@budiadiono](https://github.com/budiadiono)! - `guard-plan` no longer asks how to commit and whether to continue: it reads your repo's commit rules, commits each phase and goes on, asks before each commit when your rules ask for confirmation or are unclear, and stages the phase and waits for you when your rules forbid agent commits.
+
+- [#32](https://github.com/kodingadventure/skeleton-skills/pull/32) [`b063639`](https://github.com/kodingadventure/skeleton-skills/commit/b0636393efe828cbfd0a169415d2c10e66773311) Thanks [@budiadiono](https://github.com/budiadiono)! - `guard-plan`: at a manual test you run yourself, the guardian now writes a prompt for a separate guide session and prints one command to open it, with a suggested model and effort. The guide session walks you through the test step by step and records the result next to the plan. The guardian suggests whether to wait or stop; if it stops, `/guard-plan` in a new session reads the result and continues, without re-running the baseline when nothing was committed in between.
+
+- [#35](https://github.com/kodingadventure/skeleton-skills/pull/35) [`5616f2f`](https://github.com/kodingadventure/skeleton-skills/commit/5616f2fee359f9033f6e00860c5b3e430cc3e27f) Thanks [@budiadiono](https://github.com/budiadiono)! - `kickoff` no longer stops without a `PRD.md`. It writes the PRD from the conversation or from the words after the slug once it knows what should change and the expected result, asks in its one question round when either is missing or when the conversation holds several ideas, and suggests `/spin-off` for an idea that already has commits.
+
+- [#34](https://github.com/kodingadventure/skeleton-skills/pull/34) [`d5e58d1`](https://github.com/kodingadventure/skeleton-skills/commit/d5e58d1da6ea4ec162fe3a69e56577d4d6471591) Thanks [@budiadiono](https://github.com/budiadiono)! - `discuss`, `msg`, `resume-here`, `so-far`, `tracker`, `wrap-up` and the GitHub skills are now visible to the agent, so other skills can recommend them when installed (`whatnext` suggests `/wrap-up <slug>`, `guard-plan` suggests `/resume-here <slug>`); they still start only when you name them.
+
+- [#35](https://github.com/kodingadventure/skeleton-skills/pull/35) [`2b24347`](https://github.com/kodingadventure/skeleton-skills/commit/2b2434781f4bc642299be16347fd5ef11abc6a64) Thanks [@budiadiono](https://github.com/budiadiono)! - `discuss` and `whatnext` no longer know a "seeded" workspace: every workspace is active from the start, and `whatnext` suggests `/kickoff <slug>` for an idea talked through in a session.
+
+- [#35](https://github.com/kodingadventure/skeleton-skills/pull/35) [`9302568`](https://github.com/kodingadventure/skeleton-skills/commit/9302568d3ff5abc3534b8d73bcf7e65967d6696e) Thanks [@budiadiono](https://github.com/budiadiono)! - `spin-off` and `github-spin-off` no longer leave a half-set-up "seeded" workspace. For a new workspace they write `PRD.md` and the brief from the thread or issue only, then run `kickoff`, so the workspace is active right away.
+
+### Patch Changes
+
+- [#32](https://github.com/kodingadventure/skeleton-skills/pull/32) [`b063639`](https://github.com/kodingadventure/skeleton-skills/commit/b0636393efe828cbfd0a169415d2c10e66773311) Thanks [@budiadiono](https://github.com/budiadiono)! - `guard-plan` now always sends a companion for an agent-run manual test checkpoint, even a one-command one, so every such checkpoint leaves a result file, and reports it with the fixed `🧪 Checkpoint N — agent` line. `execute-plan` lists every manual test checkpoint for you in its phase report, including those marked `Runner: guardian`.
+
+- [#32](https://github.com/kodingadventure/skeleton-skills/pull/32) [`b063639`](https://github.com/kodingadventure/skeleton-skills/commit/b0636393efe828cbfd0a169415d2c10e66773311) Thanks [@budiadiono](https://github.com/budiadiono)! - `guard-plan` now prints all the guide-session commands at once when several manual tests fall due after the same phase, reports every checkpoint (agent or human) with the same one-line format, and the guide prompt says which terminal each command runs in.
+
+- [#35](https://github.com/kodingadventure/skeleton-skills/pull/35) [`f0a4662`](https://github.com/kodingadventure/skeleton-skills/commit/f0a4662cc47ad7f8b136ce4867034a5442743641) Thanks [@budiadiono](https://github.com/budiadiono)! - `kickoff` keeps the ideas it leaves out of a new `PRD.md` out of the file entirely, out-of-scope list included; they are named in its report only.
+
+- [#34](https://github.com/kodingadventure/skeleton-skills/pull/34) [`d5e58d1`](https://github.com/kodingadventure/skeleton-skills/commit/d5e58d1da6ea4ec162fe3a69e56577d4d6471591) Thanks [@budiadiono](https://github.com/budiadiono)! - `pause-here` now starts only when the workspace files are behind what happened. `guard-plan` ends a stop, and the final report of a plan, in a workspace with next step 1 of `WHATNEXT.md` and the resume line, so it no longer points to `/pause-here` after it has already recorded every phase. `whatnext` no longer recommends `/pause-here` just because a work item finished.
+
+- [#34](https://github.com/kodingadventure/skeleton-skills/pull/34) [`d5e58d1`](https://github.com/kodingadventure/skeleton-skills/commit/d5e58d1da6ea4ec162fe3a69e56577d4d6471591) Thanks [@budiadiono](https://github.com/budiadiono)! - `guard-plan` keeps agent checkpoint re-runs cheap: after a fix the companion re-runs only the scenarios the fix touched, once each and one at a time, and the guardian asks you before a third re-run round or when a re-run fails for a reason outside the change. `so-far`'s description now matches the other manual skills: it runs when you name it.
+
+- [#35](https://github.com/kodingadventure/skeleton-skills/pull/35) [`7ccfe20`](https://github.com/kodingadventure/skeleton-skills/commit/7ccfe204897da37825508b17b41a66cd0a3b2b6f) Thanks [@budiadiono](https://github.com/budiadiono)! - `spin-off` (and `github-spin-off`, which uses the same step) now invokes the `kickoff` skill for a new workspace instead of filling its templates by hand, so `kickoff`'s question round and checks always run.
+
+- [#35](https://github.com/kodingadventure/skeleton-skills/pull/35) [`d3f13dd`](https://github.com/kodingadventure/skeleton-skills/commit/d3f13ddfd22973b837fcd17ed2ae2e4455e740fe) Thanks [@budiadiono](https://github.com/budiadiono)! - `spin-off` keeps the session's other threads out of a new workspace's `PRD.md` entirely, first line and out-of-scope list included.
+
 ## 0.4.0
 
 ### Minor Changes
