@@ -16,11 +16,15 @@ At least one checkpoint must exercise the changed behavior **in its enabled stat
 
 A checkpoint that installs, removes or changes settings outside the project names where (scratch folder, project scope) and how to undo it.
 
+Each checkpoint carries `Runner: guardian` or `Runner: human`, set by the rule in the `writing-great-plan` skill's "Manual Test Checkpoints".
+
 ```markdown
 ## Manual Test Checkpoints
 
 1. After Phase 2 (Backend Module) — call the new endpoint directly (curl/Postman): <1-2 concrete scenarios>
+   - Runner: guardian
 2. After Phase 5 (Frontend Feature) — full smoke test of the flow in the browser
+   - Runner: human
 ```
 
 ## Workflow
@@ -143,7 +147,7 @@ Show the plan and ask:
 - Does the phase order feel right?
 - Are the weights right? (Helps dispatch the right agent.)
 - Any missing mockups or business rules?
-- Are the Manual Test Checkpoints in the right places?
+- Are the Manual Test Checkpoints in the right places, and is each one's runner right (an agent, or you)?
 - Open Questions: ask them in one batch. Each answer removes its bullet and is written into the affected item (`What:`), or `Notes` when it spans phases; a question the user leaves open keeps its `Default:`.
 
 Iterate until approved. Do **not** start implementation — that is `execute-plan`'s job.
